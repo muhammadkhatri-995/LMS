@@ -1,31 +1,44 @@
-using LMS.API.Data;
-using Microsoft.EntityFrameworkCore;
+    using LMS.API.Data;
+    using LMS.API.Interfaces;
+    using LMS.API.Repositories;
+    using LMS.API.Service;
 
-var builder = WebApplication.CreateBuilder(args);
+    using Microsoft.EntityFrameworkCore;
+    using System.Text.Json.Serialization;
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-    ?? throw new InvalidOperationException(
-        "Connection string 'DefaultConnection' is missing. Set it in Manage User Secrets.");
+    var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention());
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+        ?? throw new InvalidOperationException(
+            "Connection string 'DefaultConnection' is missing. Set it in Manage User Secrets.");
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+    builder.Services.AddDbContext<AppDbContext>(options =>
+        options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention());
 
-var app = builder.Build();
+    builder.Services.AddScoped<IUserRepository, UserRepository>();
+    builder.Services.AddScoped<IAuthService, AuthService>();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    builder.Services.AddControllers()
+        .AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        });
 
-app.UseHttpsRedirection();
-app.UseDefaultFiles();
-app.UseStaticFiles();
-app.UseAuthorization();
-app.MapControllers();
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
 
-app.Run();
+    var app = builder.Build();
+
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
+
+    app.UseHttpsRedirection();
+    app.UseDefaultFiles();
+    app.UseStaticFiles();
+    app.UseAuthorization();
+    app.MapControllers();
+
+    app.Run();

@@ -113,3 +113,6 @@ C:\Users\DELL\Desktop\LMS.API\obj\Debug\net8.0\refint\LMS.API.dll
 C:\Users\DELL\Desktop\LMS.API\obj\Debug\net8.0\LMS.API.pdb
 C:\Users\DELL\Desktop\LMS.API\obj\Debug\net8.0\LMS.API.genruntimeconfig.cache
 C:\Users\DELL\Desktop\LMS.API\obj\Debug\net8.0\ref\LMS.API.dll
+C:\Users\DELL\Desktop\LMS.API\obj\Debug\net8.0\LMS.API.sourcelink.json
+C:\Users\DELL\Desktop\LMS.API\bin\Debug\net8.0\BCrypt-Net-Next.dll
+C:\Users\DELL\Desktop\LMS.API\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

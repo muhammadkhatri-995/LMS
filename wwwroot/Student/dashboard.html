@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Dashboard | LearnHub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/js/auth.js"></script>
+    <script>
+        // Runs before the page is drawn: sends the visitor away if they don't belong here.
+        const allowed = Auth.requireRole("Student");
+    </script>
+</head>
+<body class="min-h-screen bg-slate-50">
+
+    <div id="appHeader"></div>
+
+    <main class="max-w-5xl mx-auto px-4 py-8">
+        <h1 id="welcome" class="text-xl font-semibold text-slate-800"></h1>
+        <p class="text-sm text-slate-500 mt-2">Student dashboard. Courses, progress, and quizzes will appear here in later modules.</p>
+    </main>
+
+    <script src="/js/ui.js"></script>
+    <script src="/js/layout.js"></script>
+    <script>
+        if (allowed) {
+            Layout.renderHeader(document.getElementById("appHeader"));
+            document.getElementById("welcome").textContent = "Welcome, " + Auth.getUser().fullName;
+        }
+    </script>
+</body>
+</html>

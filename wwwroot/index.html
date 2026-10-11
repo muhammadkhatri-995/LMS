@@ -3,48 +3,15 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LMS Portal</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="min-h-screen bg-slate-50 flex items-center justify-center">
-
-    <div class="bg-white rounded-xl border border-slate-200 p-8 text-center w-80">
-        <h1 class="text-2xl font-semibold text-slate-800">LMS Portal</h1>
-        <p id="status" class="mt-3 text-slate-500">Checking API...</p>
-        <p id="dbStatus" class="mt-1 text-slate-500">Checking database...</p>
-        <button id="retry" class="mt-5 px-4 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-700">
-            Check again
-        </button>
-    </div>
-
+    <title>LearnHub</title>
+    <script src="/js/auth.js"></script>
     <script>
-        async function check(url, elementId, label, getText) {
-            const el = document.getElementById(elementId);
-            el.textContent = "Checking...";
-            el.className = "mt-1 text-slate-500";
-
-            try {
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error("HTTP " + response.status);
-                }
-                const data = await response.json();
-                el.textContent = getText(data);
-                el.className = "mt-1 text-green-600";
-            } catch (err) {
-                el.textContent = label + " failed: " + err.message;
-                el.className = "mt-1 text-red-600";
-            }
-        }
-
-        function runChecks() {
-            check("/api/health", "status", "API", d => d.status);
-            check("/api/health/db", "dbStatus", "Database", d => "Database " + d.database);
-        }
-
-        document.getElementById("retry").addEventListener("click", runChecks);
-        runChecks();
+        const user = Auth.getToken() ? Auth.getUser() : null;
+        window.location.replace(user ? Auth.homeFor(user.role) : "/login.html");
     </script>
-
+</head>
+<body>
+    <p>Redirecting...</p>
+    <noscript><a href="/login.html">Continue to login</a></noscript>
 </body>
 </html>

@@ -1,21 +1,34 @@
-﻿namespace LMS.API.Common
+﻿namespace LMS.API.Common;
+
+public enum ServiceErrorType
 {
-    public class ServiceResult<T>
+    None,
+    Validation,
+    Conflict,
+    Unauthorized,
+    Forbidden,
+    NotFound
+}
+
+public class ServiceResult<T>
+{
+    public bool Success { get; private set; }
+    public T? Data { get; private set; }
+    public string? Error { get; private set; }
+    public ServiceErrorType ErrorType { get; private set; } = ServiceErrorType.None;
+
+    public static ServiceResult<T> Ok(T data)
     {
-        public bool Success { get; private set; }
-        public T? Data { get; private set; }
-        public string? ErrorMessage { get; private set; }
-        public string Error { get; private set; }
+        return new ServiceResult<T> { Success = true, Data = data };
+    }
 
-        public static ServiceResult<T> Ok(T data)
+    public static ServiceResult<T> Fail(string error, ServiceErrorType errorType)
+    {
+        return new ServiceResult<T>
         {
-            return new ServiceResult<T> { Success = true, Data = data };
-        }
-
-        public static ServiceResult<T> Fail(string error)
-        {
-            return new ServiceResult<T> { Success = false, Error = error };
-        }
-
+            Success = false,
+            Error = error,
+            ErrorType = errorType
+        };
     }
 }

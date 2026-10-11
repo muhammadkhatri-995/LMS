@@ -1,0 +1,180 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Profile | LearnHub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/js/auth.js"></script>
+    <script>
+        const allowed = Auth.requireLogin();
+    </script>
+</head>
+<body class="min-h-screen bg-slate-50">
+
+    <div id="appHeader"></div>
+
+    <main class="max-w-2xl mx-auto px-4 py-8 space-y-6">
+        <h1 class="text-xl font-semibold text-slate-800">My profile</h1>
+
+        <!-- Account details -->
+        <section class="bg-white rounded-xl border border-slate-200 p-6">
+            <h2 class="text-sm font-semibold text-slate-700 mb-4">Account</h2>
+            <dl class="grid grid-cols-3 gap-y-3 text-sm">
+                <dt class="text-slate-500">Email</dt>
+                <dd id="emailText" class="col-span-2 text-slate-800 break-all"></dd>
+                <dt class="text-slate-500">Role</dt>
+                <dd id="roleText" class="col-span-2 text-slate-800"></dd>
+                <dt class="text-slate-500">Member since</dt>
+                <dd id="sinceText" class="col-span-2 text-slate-800"></dd>
+            </dl>
+        </section>
+
+        <!-- Edit name -->
+        <section class="bg-white rounded-xl border border-slate-200 p-6">
+            <h2 class="text-sm font-semibold text-slate-700 mb-4">Edit profile</h2>
+            <div id="profileAlert" class="mb-4"></div>
+
+            <form id="profileForm" class="space-y-4" novalidate>
+                <div>
+                    <label for="fullName" class="block text-sm font-medium text-slate-700 mb-1">Full name</label>
+                    <input id="fullName" type="text" autocomplete="name"
+                           class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+                <button id="profileBtn" type="submit"
+                        class="rounded-lg bg-blue-600 text-white px-4 py-2 text-sm font-medium hover:bg-blue-700">
+                    Save changes
+                </button>
+            </form>
+        </section>
+
+        <!-- Change password -->
+        <section class="bg-white rounded-xl border border-slate-200 p-6">
+            <h2 class="text-sm font-semibold text-slate-700 mb-4">Change password</h2>
+            <div id="passwordAlert" class="mb-4"></div>
+
+            <form id="passwordForm" class="space-y-4" novalidate>
+                <div>
+                    <label for="currentPassword" class="block text-sm font-medium text-slate-700 mb-1">Current password</label>
+                    <input id="currentPassword" type="password" autocomplete="current-password"
+                           class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+                <div>
+                    <label for="newPassword" class="block text-sm font-medium text-slate-700 mb-1">New password</label>
+                    <input id="newPassword" type="password" autocomplete="new-password"
+                           class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    <p class="text-xs text-slate-500 mt-1">At least 8 characters, with a letter and a number.</p>
+                </div>
+                <div>
+                    <label for="confirmPassword" class="block text-sm font-medium text-slate-700 mb-1">Confirm new password</label>
+                    <input id="confirmPassword" type="password" autocomplete="new-password"
+                           class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+                <button id="passwordBtn" type="submit"
+                        class="rounded-lg bg-blue-600 text-white px-4 py-2 text-sm font-medium hover:bg-blue-700">
+                    Change password
+                </button>
+            </form>
+        </section>
+    </main>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/layout.js"></script>
+    <script>
+        if (allowed) {
+            initProfilePage();
+        }
+
+        function initProfilePage() {
+            const headerBox = document.getElementById("appHeader");
+            const profileAlert = document.getElementById("profileAlert");
+            const passwordAlert = document.getElementById("passwordAlert");
+            const profileForm = document.getElementById("profileForm");
+            const passwordForm = document.getElementById("passwordForm");
+            const profileBtn = document.getElementById("profileBtn");
+            const passwordBtn = document.getElementById("passwordBtn");
+
+            Layout.renderHeader(headerBox);
+
+            function showProfile(profile) {
+                document.getElementById("emailText").textContent = profile.email;
+                document.getElementById("roleText").textContent = profile.role;
+                document.getElementById("sinceText").textContent = Ui.formatDate(profile.createdAt);
+                document.getElementById("fullName").value = profile.fullName;
+            }
+
+            async function loadProfile() {
+                try {
+                    const profile = await Api.get("/api/users/profile");
+                    showProfile(profile);
+                } catch (error) {
+                    Ui.showAlert(profileAlert, error.messages || ["Could not load your profile."]);
+                }
+            }
+
+            profileForm.addEventListener("submit", async (event) => {
+                event.preventDefault();
+                Ui.clearAlert(profileAlert);
+
+                const fullName = document.getElementById("fullName").value.trim();
+
+                if (!fullName) {
+                    Ui.showAlert(profileAlert, "Please enter your name.");
+                    return;
+                }
+
+                Ui.setBusy(profileBtn, true, "Saving...");
+
+                try {
+                    const updated = await Api.put("/api/users/profile", { fullName });
+                    showProfile(updated);
+
+                    // Keep the saved user in sync, then redraw the header with the new name.
+                    Auth.updateUser({ fullName: updated.fullName });
+                    Layout.renderHeader(headerBox);
+
+                    Ui.showAlert(profileAlert, "Profile updated.", "success");
+                } catch (error) {
+                    Ui.showAlert(profileAlert, error.messages || ["Something went wrong. Please try again."]);
+                } finally {
+                    Ui.setBusy(profileBtn, false);
+                }
+            });
+
+            passwordForm.addEventListener("submit", async (event) => {
+                event.preventDefault();
+                Ui.clearAlert(passwordAlert);
+
+                const currentPassword = document.getElementById("currentPassword").value;
+                const newPassword = document.getElementById("newPassword").value;
+                const confirmPassword = document.getElementById("confirmPassword").value;
+
+                if (!currentPassword || !newPassword) {
+                    Ui.showAlert(passwordAlert, "Please fill in all password fields.");
+                    return;
+                }
+
+                if (newPassword !== confirmPassword) {
+                    Ui.showAlert(passwordAlert, "The new passwords do not match.");
+                    return;
+                }
+
+                Ui.setBusy(passwordBtn, true, "Changing...");
+
+                try {
+                    await Api.put("/api/users/change-password", { currentPassword, newPassword });
+                    passwordForm.reset();
+                    Ui.showAlert(passwordAlert, "Password changed successfully.", "success");
+                } catch (error) {
+                    Ui.showAlert(passwordAlert, error.messages || ["Something went wrong. Please try again."]);
+                } finally {
+                    Ui.setBusy(passwordBtn, false);
+                }
+            });
+
+            loadProfile();
+        }
+    </script>
+</body>
+</html>

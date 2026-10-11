@@ -1,1 +1,11 @@
+wwwroot\Admin\dashboard.html
 wwwroot\index.html
+wwwroot\Instructor\dashboard.html
+wwwroot\js\api.js
+wwwroot\js\auth.js
+wwwroot\js\layout.js
+wwwroot\js\ui.js
+wwwroot\login.html
+wwwroot\profile.html
+wwwroot\Student\dashboard.html
+wwwroot\Admin\users.html

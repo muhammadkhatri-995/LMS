@@ -16,6 +16,8 @@ public abstract class ApiControllerBase : ControllerBase
         }
     }
 
+    protected bool IsAdmin => User.IsInRole("Admin");
+
     protected IActionResult ToErrorResponse<T>(ServiceResult<T> result)
     {
         var body = new { error = result.Error };

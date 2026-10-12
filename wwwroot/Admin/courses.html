@@ -1,0 +1,266 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Courses | LearnHub Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/js/auth.js"></script>
+    <script>
+        const allowed = Auth.requireRole("Admin");
+    </script>
+</head>
+<body class="min-h-screen bg-slate-50">
+
+    <div id="appHeader"></div>
+
+    <main class="max-w-5xl mx-auto px-4 py-8 space-y-6">
+        <h1 class="text-xl font-semibold text-slate-800">All courses</h1>
+
+        <section class="flex flex-col sm:flex-row gap-3">
+            <input id="searchInput" type="search" placeholder="Search courses"
+                   class="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <select id="categoryFilter"
+                    class="rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </select>
+            <select id="statusFilter"
+                    class="rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="">All statuses</option>
+                <option value="Draft">Draft</option>
+                <option value="Published">Published</option>
+            </select>
+        </section>
+
+        <div id="listAlert"></div>
+
+        <section class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left">
+                    <thead class="bg-slate-50 text-slate-500">
+                        <tr>
+                            <th class="px-4 py-3 font-medium">Title</th>
+                            <th class="px-4 py-3 font-medium">Instructor</th>
+                            <th class="px-4 py-3 font-medium">Category</th>
+                            <th class="px-4 py-3 font-medium">Status</th>
+                            <th class="px-4 py-3 font-medium">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="courseBody"></tbody>
+                </table>
+            </div>
+
+            <div class="flex items-center justify-between px-4 py-3 border-t border-slate-100 text-sm">
+                <span id="pageInfo" class="text-slate-500"></span>
+                <div class="flex gap-2">
+                    <button id="prevBtn" type="button"
+                            class="rounded-lg border border-slate-300 px-3 py-1.5 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed">
+                        Previous
+                    </button>
+                    <button id="nextBtn" type="button"
+                            class="rounded-lg border border-slate-300 px-3 py-1.5 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed">
+                        Next
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/layout.js"></script>
+    <script src="/js/courses.js"></script>
+    <script>
+        if (allowed) {
+            initPage();
+        }
+
+        function initPage() {
+            const state = { page: 1, pageSize: 10, search: "", status: "", categoryId: "" };
+
+            const body = document.getElementById("courseBody");
+            const listAlert = document.getElementById("listAlert");
+            const pageInfo = document.getElementById("pageInfo");
+            const prevBtn = document.getElementById("prevBtn");
+            const nextBtn = document.getElementById("nextBtn");
+            const categoryFilter = document.getElementById("categoryFilter");
+
+            Layout.renderHeader(document.getElementById("appHeader"));
+
+            if (new URLSearchParams(window.location.search).get("deleted")) {
+                Ui.showAlert(listAlert, "Course deleted.", "success");
+            }
+
+            function cell(text, extraClass) {
+                return Ui.el("td", "px-4 py-3 " + (extraClass || ""), text);
+            }
+
+            function smallButton(label, cssClass, handler) {
+                const button = Ui.el("button", "rounded-lg border px-3 py-1 text-xs " + cssClass, label);
+                button.type = "button";
+                button.addEventListener("click", () => handler(button));
+                return button;
+            }
+
+            function buildRow(course) {
+                const row = Ui.el("tr", "border-t border-slate-100");
+
+                const titleCell = Ui.el("td", "px-4 py-3");
+                const titleLink = Ui.el("a", "font-medium text-slate-800 hover:text-blue-600", course.title);
+                titleLink.href = Courses.detailsUrl(course.id);
+                titleCell.appendChild(titleLink);
+                row.appendChild(titleCell);
+
+                row.appendChild(cell(course.instructorName, "text-slate-600"));
+                row.appendChild(cell(course.categoryName, "text-slate-600"));
+
+                const statusCell = Ui.el("td", "px-4 py-3");
+                statusCell.appendChild(Courses.statusBadge(course.status));
+                row.appendChild(statusCell);
+
+                const actionCell = Ui.el("td", "px-4 py-3");
+                const group = Ui.el("div", "flex flex-wrap gap-2");
+
+                const isPublished = course.status === "Published";
+                group.appendChild(smallButton(
+                    isPublished ? "Unpublish" : "Publish",
+                    "border-blue-200 text-blue-700 hover:bg-blue-50",
+                    (button) => togglePublish(course, button)));
+
+                group.appendChild(smallButton(
+                    "Delete",
+                    "border-red-200 text-red-700 hover:bg-red-50",
+                    (button) => deleteCourse(course, button)));
+
+                actionCell.appendChild(group);
+                row.appendChild(actionCell);
+
+                return row;
+            }
+
+            function render(data) {
+                body.replaceChildren();
+
+                if (data.items.length === 0) {
+                    const row = Ui.el("tr");
+                    const empty = Ui.el("td", "px-4 py-8 text-center text-slate-500", "No courses found.");
+                    empty.colSpan = 5;
+                    row.appendChild(empty);
+                    body.appendChild(row);
+                } else {
+                    data.items.forEach(course => body.appendChild(buildRow(course)));
+                }
+
+                pageInfo.textContent = Courses.pagerText(data);
+                prevBtn.disabled = data.page <= 1;
+                nextBtn.disabled = data.page >= Math.max(data.totalPages, 1);
+            }
+
+            async function loadCourses() {
+                const params = new URLSearchParams({ page: state.page, pageSize: state.pageSize });
+
+                if (state.search) {
+                    params.set("search", state.search);
+                }
+
+                if (state.status) {
+                    params.set("status", state.status);
+                }
+
+                if (state.categoryId) {
+                    params.set("categoryId", state.categoryId);
+                }
+
+                try {
+                    const data = await Api.get("/api/courses/all?" + params.toString());
+
+                    if (data.items.length === 0 && data.totalCount > 0 && state.page > 1) {
+                        state.page = data.totalPages;
+                        await loadCourses();
+                        return;
+                    }
+
+                    render(data);
+                } catch (error) {
+                    Ui.showAlert(listAlert, error.messages || ["Could not load courses."]);
+                }
+            }
+
+            async function togglePublish(course, button) {
+                const publish = course.status !== "Published";
+                button.disabled = true;
+
+                try {
+                    await Api.post("/api/courses/" + course.id + (publish ? "/publish" : "/unpublish"));
+                    await loadCourses();
+                    Ui.showAlert(listAlert, "\"" + course.title + "\" was " + (publish ? "published." : "unpublished."), "success");
+                } catch (error) {
+                    Ui.showAlert(listAlert, error.messages || ["Could not update the course."]);
+                    button.disabled = false;
+                }
+            }
+
+            async function deleteCourse(course, button) {
+                if (!window.confirm("Delete \"" + course.title + "\"? This cannot be undone.")) {
+                    return;
+                }
+
+                button.disabled = true;
+
+                try {
+                    await Api.del("/api/courses/" + course.id);
+                    await loadCourses();
+                    Ui.showAlert(listAlert, "Course deleted.", "success");
+                } catch (error) {
+                    Ui.showAlert(listAlert, error.messages || ["Could not delete the course."]);
+                    button.disabled = false;
+                }
+            }
+
+            document.getElementById("searchInput").addEventListener("input", Ui.debounce((event) => {
+                state.search = event.target.value.trim();
+                state.page = 1;
+                Ui.clearAlert(listAlert);
+                loadCourses();
+            }, 300));
+
+            document.getElementById("statusFilter").addEventListener("change", (event) => {
+                state.status = event.target.value;
+                state.page = 1;
+                Ui.clearAlert(listAlert);
+                loadCourses();
+            });
+
+            categoryFilter.addEventListener("change", (event) => {
+                state.categoryId = event.target.value;
+                state.page = 1;
+                Ui.clearAlert(listAlert);
+                loadCourses();
+            });
+
+            prevBtn.addEventListener("click", () => {
+                if (state.page > 1) {
+                    state.page--;
+                    loadCourses();
+                }
+            });
+
+            nextBtn.addEventListener("click", () => {
+                state.page++;
+                loadCourses();
+            });
+
+            async function start() {
+                try {
+                    await Courses.fillCategorySelect(categoryFilter, "All categories");
+                } catch (error) {
+                    Ui.showAlert(listAlert, error.messages || ["Could not load categories."]);
+                }
+
+                await loadCourses();
+            }
+
+            start();
+        }
+    </script>
+</body>
+</html>

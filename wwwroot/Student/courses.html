@@ -1,0 +1,175 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Browse courses | LearnHub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/js/auth.js"></script>
+    <script>
+        const allowed = Auth.requireRole("Student");
+    </script>
+</head>
+<body class="min-h-screen bg-slate-50">
+
+    <div id="appHeader"></div>
+
+    <main class="max-w-5xl mx-auto px-4 py-8 space-y-6">
+        <h1 class="text-xl font-semibold text-slate-800">Browse courses</h1>
+
+        <section class="flex flex-col sm:flex-row gap-3">
+            <input id="searchInput" type="search" placeholder="Search courses"
+                   class="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <select id="categoryFilter"
+                    class="rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </select>
+        </section>
+
+        <div id="listAlert"></div>
+
+        <section id="courseGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></section>
+
+        <div class="flex items-center justify-between text-sm">
+            <span id="pageInfo" class="text-slate-500"></span>
+            <div class="flex gap-2">
+                <button id="prevBtn" type="button"
+                        class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed">
+                    Previous
+                </button>
+                <button id="nextBtn" type="button"
+                        class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed">
+                    Next
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/layout.js"></script>
+    <script src="/js/courses.js"></script>
+    <script>
+        if (allowed) {
+            initPage();
+        }
+
+        function initPage() {
+            const state = { page: 1, pageSize: 9, search: "", categoryId: "" };
+
+            const grid = document.getElementById("courseGrid");
+            const listAlert = document.getElementById("listAlert");
+            const pageInfo = document.getElementById("pageInfo");
+            const prevBtn = document.getElementById("prevBtn");
+            const nextBtn = document.getElementById("nextBtn");
+            const categoryFilter = document.getElementById("categoryFilter");
+
+            Layout.renderHeader(document.getElementById("appHeader"));
+
+            function buildCard(course) {
+                const link = Ui.el(
+                    "a",
+                    "block bg-white rounded-xl border border-slate-200 overflow-hidden hover:border-blue-300 hover:shadow-sm transition");
+                link.href = Courses.detailsUrl(course.id);
+
+                link.appendChild(Ui.el(
+                    "div",
+                    "h-28 bg-slate-100 flex items-center justify-center text-3xl font-semibold text-slate-400",
+                    course.title.charAt(0).toUpperCase()));
+
+                const body = Ui.el("div", "p-4 space-y-2");
+                body.appendChild(Ui.el(
+                    "span",
+                    "inline-block rounded-full bg-blue-50 text-blue-700 px-2 py-0.5 text-xs font-medium",
+                    course.categoryName));
+                body.appendChild(Ui.el("h2", "font-semibold text-slate-800 line-clamp-2", course.title));
+                body.appendChild(Ui.el("p", "text-sm text-slate-500 line-clamp-3", course.description));
+                body.appendChild(Ui.el("p", "text-xs text-slate-400", "By " + course.instructorName));
+
+                link.appendChild(body);
+                return link;
+            }
+
+            function render(data) {
+                grid.replaceChildren();
+
+                if (data.items.length === 0) {
+                    const empty = Ui.el(
+                        "p",
+                        "sm:col-span-2 lg:col-span-3 text-center text-slate-500 py-10",
+                        "No courses found.");
+                    grid.appendChild(empty);
+                } else {
+                    data.items.forEach(course => grid.appendChild(buildCard(course)));
+                }
+
+                pageInfo.textContent = Courses.pagerText(data);
+                prevBtn.disabled = data.page <= 1;
+                nextBtn.disabled = data.page >= Math.max(data.totalPages, 1);
+            }
+
+            async function loadCourses() {
+                const params = new URLSearchParams({ page: state.page, pageSize: state.pageSize });
+
+                if (state.search) {
+                    params.set("search", state.search);
+                }
+
+                if (state.categoryId) {
+                    params.set("categoryId", state.categoryId);
+                }
+
+                try {
+                    const data = await Api.get("/api/courses?" + params.toString());
+
+                    if (data.items.length === 0 && data.totalCount > 0 && state.page > 1) {
+                        state.page = data.totalPages;
+                        await loadCourses();
+                        return;
+                    }
+
+                    Ui.clearAlert(listAlert);
+                    render(data);
+                } catch (error) {
+                    Ui.showAlert(listAlert, error.messages || ["Could not load courses."]);
+                }
+            }
+
+            document.getElementById("searchInput").addEventListener("input", Ui.debounce((event) => {
+                state.search = event.target.value.trim();
+                state.page = 1;
+                loadCourses();
+            }, 300));
+
+            categoryFilter.addEventListener("change", (event) => {
+                state.categoryId = event.target.value;
+                state.page = 1;
+                loadCourses();
+            });
+
+            prevBtn.addEventListener("click", () => {
+                if (state.page > 1) {
+                    state.page--;
+                    loadCourses();
+                }
+            });
+
+            nextBtn.addEventListener("click", () => {
+                state.page++;
+                loadCourses();
+            });
+
+            async function start() {
+                try {
+                    await Courses.fillCategorySelect(categoryFilter, "All categories");
+                } catch (error) {
+                    Ui.showAlert(listAlert, error.messages || ["Could not load categories."]);
+                }
+
+                await loadCourses();
+            }
+
+            start();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Course | LearnHub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/js/auth.js"></script>
+    <script>
+        const allowed = Auth.requireRole("Instructor");
+    </script>
+</head>
+<body class="min-h-screen bg-slate-50">
+
+    <div id="appHeader"></div>
+
+    <main class="max-w-2xl mx-auto px-4 py-8 space-y-4">
+        <a href="/instructor/courses.html" class="text-sm text-blue-600 hover:underline">&larr; Back to my courses</a>
+
+        <h1 id="pageTitle" class="text-xl font-semibold text-slate-800">Create course</h1>
+
+        <section class="bg-white rounded-xl border border-slate-200 p-6">
+            <div id="alertBox" class="mb-4"></div>
+
+            <form id="courseForm" class="space-y-4" novalidate>
+                <div>
+                    <label for="title" class="block text-sm font-medium text-slate-700 mb-1">Title</label>
+                    <input id="title" type="text" maxlength="200"
+                           class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+
+                <div>
+                    <label for="category" class="block text-sm font-medium text-slate-700 mb-1">Category</label>
+                    <select id="category"
+                            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </select>
+                </div>
+
+                <div>
+                    <label for="description" class="block text-sm font-medium text-slate-700 mb-1">Description</label>
+                    <textarea id="description" rows="7" maxlength="4000"
+                              class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    <p class="text-xs text-slate-500 mt-1">At least 10 characters. New courses start as a draft.</p>
+                </div>
+
+                <button id="saveBtn" type="submit"
+                        class="rounded-lg bg-blue-600 text-white px-4 py-2 text-sm font-medium hover:bg-blue-700">
+                    Save course
+                </button>
+            </form>
+        </section>
+    </main>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/layout.js"></script>
+    <script src="/js/courses.js"></script>
+    <script>
+        if (allowed) {
+            initPage();
+        }
+
+        function initPage() {
+            const courseId = new URLSearchParams(window.location.search).get("id");
+            const isEdit = courseId !== null;
+
+            const alertBox = document.getElementById("alertBox");
+            const form = document.getElementById("courseForm");
+            const saveBtn = document.getElementById("saveBtn");
+            const titleInput = document.getElementById("title");
+            const categorySelect = document.getElementById("category");
+            const descriptionInput = document.getElementById("description");
+
+            Layout.renderHeader(document.getElementById("appHeader"));
+
+            async function setup() {
+                if (isEdit) {
+                    document.getElementById("pageTitle").textContent = "Edit course";
+                    document.title = "Edit course | LearnHub";
+
+                    if (!Courses.isGuid(courseId)) {
+                        Ui.showAlert(alertBox, "Course not found.");
+                        form.classList.add("hidden");
+                        return;
+                    }
+                }
+
+                try {
+                    await Courses.fillCategorySelect(categorySelect);
+
+                    if (isEdit) {
+                        const course = await Api.get("/api/courses/" + courseId);
+
+                        // Only the owner may edit. The API enforces this too.
+                        if (course.instructorId !== Auth.getUser().id) {
+                            window.location.replace("/instructor/courses.html");
+                            return;
+                        }
+
+                        titleInput.value = course.title;
+                        descriptionInput.value = course.description;
+                        categorySelect.value = course.categoryId;
+                    }
+                } catch (error) {
+                    Ui.showAlert(alertBox, error.messages || ["Could not load the page."]);
+                    form.classList.add("hidden");
+                }
+            }
+
+            form.addEventListener("submit", async (event) => {
+                event.preventDefault();
+                Ui.clearAlert(alertBox);
+
+                const title = titleInput.value.trim();
+                const description = descriptionInput.value.trim();
+                const categoryId = categorySelect.value;
+
+                if (title.length < 3) {
+                    Ui.showAlert(alertBox, "Please enter a title of at least 3 characters.");
+                    return;
+                }
+
+                if (description.length < 10) {
+                    Ui.showAlert(alertBox, "Please enter a description of at least 10 characters.");
+                    return;
+                }
+
+                if (!categoryId) {
+                    Ui.showAlert(alertBox, "Please choose a category.");
+                    return;
+                }
+
+                const payload = { title, description, categoryId };
+                Ui.setBusy(saveBtn, true, "Saving...");
+
+                try {
+                    const saved = isEdit
+                        ? await Api.put("/api/courses/" + courseId, payload)
+                        : await Api.post("/api/courses", payload);
+
+                    window.location.href = Courses.detailsUrl(saved.id);
+                } catch (error) {
+                    Ui.showAlert(alertBox, error.messages || ["Something went wrong. Please try again."]);
+                    Ui.setBusy(saveBtn, false);
+                }
+            });
+
+            setup();
+        }
+    </script>
+</body>
+</html>

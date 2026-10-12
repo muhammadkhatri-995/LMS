@@ -2,15 +2,18 @@
     const NAV = {
         Student: [
             { label: "Dashboard", href: "/student/dashboard.html" },
+            { label: "Courses", href: "/student/courses.html" },
             { label: "Profile", href: "/profile.html" }
         ],
         Instructor: [
             { label: "Dashboard", href: "/instructor/dashboard.html" },
+            { label: "My courses", href: "/instructor/courses.html" },
             { label: "Profile", href: "/profile.html" }
         ],
         Admin: [
             { label: "Dashboard", href: "/admin/dashboard.html" },
             { label: "Users", href: "/admin/users.html" },
+            { label: "Courses", href: "/admin/courses.html" },
             { label: "Profile", href: "/profile.html" }
         ]
     };
@@ -32,7 +35,7 @@
         const left = Ui.el("div", "flex items-center gap-6");
         left.appendChild(Ui.el("span", "font-semibold text-slate-800", "LearnHub"));
 
-        const nav = Ui.el("nav", "flex items-center gap-4 text-sm");
+        const nav = Ui.el("nav", "flex flex-wrap items-center gap-4 text-sm");
         links.forEach(link => {
             const isActive = currentPath === link.href.toLowerCase();
             const cssClass = isActive

@@ -1,0 +1,173 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Course | LearnHub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/js/auth.js"></script>
+    <script>
+        const allowed = Auth.requireLogin();
+    </script>
+</head>
+<body class="min-h-screen bg-slate-50">
+
+    <div id="appHeader"></div>
+
+    <main class="max-w-3xl mx-auto px-4 py-8 space-y-4">
+        <a id="backLink" href="#" class="text-sm text-blue-600 hover:underline">&larr; Back to courses</a>
+
+        <div id="pageAlert"></div>
+
+        <article id="courseCard" class="hidden bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div id="thumb" class="h-36 bg-slate-100 flex items-center justify-center text-5xl font-semibold text-slate-400"></div>
+
+            <div class="p-6 space-y-4">
+                <div class="flex flex-wrap items-center gap-2">
+                    <span id="categoryBadge" class="inline-block rounded-full bg-blue-50 text-blue-700 px-2 py-0.5 text-xs font-medium"></span>
+                    <span id="statusBadge"></span>
+                </div>
+
+                <h1 id="title" class="text-2xl font-semibold text-slate-800"></h1>
+                <p id="instructor" class="text-sm text-slate-500"></p>
+                <p id="description" class="text-slate-700 whitespace-pre-line"></p>
+                <p id="dates" class="text-xs text-slate-400"></p>
+
+                <div id="actions" class="flex flex-wrap gap-2 pt-2"></div>
+            </div>
+        </article>
+    </main>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/layout.js"></script>
+    <script src="/js/courses.js"></script>
+    <script>
+        if (allowed) {
+            initPage();
+        }
+
+        function initPage() {
+            const user = Auth.getUser();
+            const courseId = new URLSearchParams(window.location.search).get("id");
+
+            const BACK = {
+                Student: "/student/courses.html",
+                Instructor: "/instructor/courses.html",
+                Admin: "/admin/courses.html"
+            };
+            const backUrl = BACK[user.role] || "/login.html";
+
+            const pageAlert = document.getElementById("pageAlert");
+            const card = document.getElementById("courseCard");
+            const actions = document.getElementById("actions");
+
+            Layout.renderHeader(document.getElementById("appHeader"));
+            document.getElementById("backLink").href = backUrl;
+
+            function render(course) {
+                document.title = course.title + " | LearnHub";
+                document.getElementById("thumb").textContent = course.title.charAt(0).toUpperCase();
+                document.getElementById("categoryBadge").textContent = course.categoryName;
+                document.getElementById("statusBadge").replaceChildren(Courses.statusBadge(course.status));
+                document.getElementById("title").textContent = course.title;
+                document.getElementById("instructor").textContent = "Instructor: " + course.instructorName;
+                document.getElementById("description").textContent = course.description;
+
+                let dates = "Created " + Ui.formatDate(course.createdAt);
+                if (course.publishedAt) {
+                    dates += " \u00B7 Published " + Ui.formatDate(course.publishedAt);
+                }
+                document.getElementById("dates").textContent = dates;
+
+                buildActions(course);
+                card.classList.remove("hidden");
+            }
+
+            function actionButton(label, cssClass, handler) {
+                const button = Ui.el("button", "rounded-lg px-4 py-2 text-sm font-medium " + cssClass, label);
+                button.type = "button";
+                button.addEventListener("click", () => handler(button));
+                return button;
+            }
+
+            function buildActions(course) {
+                actions.replaceChildren();
+
+                const isOwner = user.role === "Instructor" && course.instructorId === user.id;
+                const isAdmin = user.role === "Admin";
+
+                if (isOwner) {
+                    const edit = Ui.el(
+                        "a",
+                        "rounded-lg border border-slate-300 px-4 py-2 text-sm hover:bg-slate-100",
+                        "Edit");
+                    edit.href = "/instructor/create-course.html?id=" + encodeURIComponent(course.id);
+                    actions.appendChild(edit);
+                }
+
+                if (isOwner || isAdmin) {
+                    const isPublished = course.status === "Published";
+
+                    actions.appendChild(actionButton(
+                        isPublished ? "Unpublish" : "Publish",
+                        "bg-blue-600 text-white hover:bg-blue-700",
+                        (button) => togglePublish(course, button)));
+
+                    actions.appendChild(actionButton(
+                        "Delete",
+                        "border border-red-200 text-red-700 hover:bg-red-50",
+                        (button) => deleteCourse(course, button)));
+                }
+            }
+
+            async function togglePublish(course, button) {
+                const publish = course.status !== "Published";
+                button.disabled = true;
+
+                try {
+                    const updated = await Api.post(
+                        "/api/courses/" + course.id + (publish ? "/publish" : "/unpublish"));
+                    render(updated);
+                    Ui.showAlert(pageAlert, publish ? "Course published." : "Course unpublished.", "success");
+                } catch (error) {
+                    Ui.showAlert(pageAlert, error.messages || ["Could not update the course."]);
+                    button.disabled = false;
+                }
+            }
+
+            async function deleteCourse(course, button) {
+                if (!window.confirm("Delete \"" + course.title + "\"? This cannot be undone.")) {
+                    return;
+                }
+
+                button.disabled = true;
+
+                try {
+                    await Api.del("/api/courses/" + course.id);
+                    window.location.href = backUrl + "?deleted=1";
+                } catch (error) {
+                    Ui.showAlert(pageAlert, error.messages || ["Could not delete the course."]);
+                    button.disabled = false;
+                }
+            }
+
+            async function load() {
+                if (!Courses.isGuid(courseId)) {
+                    Ui.showAlert(pageAlert, "Course not found.");
+                    return;
+                }
+
+                try {
+                    const course = await Api.get("/api/courses/" + courseId);
+                    render(course);
+                } catch (error) {
+                    Ui.showAlert(pageAlert, error.messages || ["Could not load the course."]);
+                }
+            }
+
+            load();
+        }
+    </script>
+</body>
+</html>

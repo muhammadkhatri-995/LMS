@@ -1,52 +1,82 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Users | LearnHub Admin</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="/js/auth.js"></script>
+
     <script>
         const allowed = Auth.requireRole("Admin");
     </script>
 </head>
+
 <body class="min-h-screen bg-slate-50">
 
     <div id="appHeader"></div>
 
     <main class="max-w-5xl mx-auto px-4 py-8 space-y-6">
 
+        <!-- HEADER -->
         <div class="flex items-center justify-between">
             <h1 class="text-xl font-semibold text-slate-800">Users</h1>
+
             <button id="toggleCreateBtn" type="button"
                     class="rounded-lg bg-blue-600 text-white px-4 py-2 text-sm font-medium hover:bg-blue-700">
                 Add user
             </button>
         </div>
 
-        <!-- Create user panel (hidden until "Add user" is clicked) -->
-        <section id="createPanel" class="hidden bg-white rounded-xl border border-slate-200 p-6">
-            <h2 class="text-sm font-semibold text-slate-700 mb-4">New user</h2>
+        <!-- CREATE USER PANEL -->
+        <section id="createPanel"
+                 class="hidden bg-white rounded-xl border border-slate-200 p-6">
+
+            <h2 class="text-sm font-semibold text-slate-700 mb-4">
+                New user
+            </h2>
+
             <div id="createAlert" class="mb-4"></div>
 
-            <form id="createForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4" novalidate>
+            <form id="createForm"
+                  class="grid grid-cols-1 sm:grid-cols-2 gap-4"
+                  novalidate>
+
                 <div>
-                    <label for="newFullName" class="block text-sm font-medium text-slate-700 mb-1">Full name</label>
-                    <input id="newFullName" type="text"
+                    <label for="newFullName"
+                           class="block text-sm font-medium text-slate-700 mb-1">
+                        Full name
+                    </label>
+                    <input id="newFullName" type="text" required
                            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
+
                 <div>
-                    <label for="newEmail" class="block text-sm font-medium text-slate-700 mb-1">Email</label>
-                    <input id="newEmail" type="email"
+                    <label for="newEmail"
+                           class="block text-sm font-medium text-slate-700 mb-1">
+                        Email
+                    </label>
+                    <input id="newEmail" type="email" required
                            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
+
                 <div>
-                    <label for="newPassword" class="block text-sm font-medium text-slate-700 mb-1">Password</label>
-                    <input id="newPassword" type="password" autocomplete="new-password"
+                    <label for="newPassword"
+                           class="block text-sm font-medium text-slate-700 mb-1">
+                        Password
+                    </label>
+                    <input id="newPassword" type="password"
+                           autocomplete="new-password" required
                            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
+
                 <div>
-                    <label for="newRole" class="block text-sm font-medium text-slate-700 mb-1">Role</label>
+                    <label for="newRole"
+                           class="block text-sm font-medium text-slate-700 mb-1">
+                        Role
+                    </label>
                     <select id="newRole"
                             class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="Student">Student</option>
@@ -54,11 +84,13 @@
                         <option value="Admin">Admin</option>
                     </select>
                 </div>
+
                 <div class="sm:col-span-2 flex gap-3">
                     <button id="createBtn" type="submit"
                             class="rounded-lg bg-blue-600 text-white px-4 py-2 text-sm font-medium hover:bg-blue-700">
                         Create user
                     </button>
+
                     <button id="cancelCreateBtn" type="button"
                             class="rounded-lg border border-slate-300 px-4 py-2 text-sm hover:bg-slate-100">
                         Cancel
@@ -67,10 +99,73 @@
             </form>
         </section>
 
-        <!-- Filters -->
+        <!-- EDIT USER PANEL -->
+        <section id="editPanel"
+                 class="hidden bg-white rounded-xl border border-slate-200 p-6">
+
+            <h2 class="text-sm font-semibold text-slate-700 mb-4">
+                Edit user
+            </h2>
+
+            <div id="editAlert" class="mb-4"></div>
+
+            <form id="editForm"
+                  class="grid grid-cols-1 sm:grid-cols-2 gap-4"
+                  novalidate>
+
+                <input id="editUserId" type="hidden" />
+
+                <div>
+                    <label for="editFullName"
+                           class="block text-sm font-medium text-slate-700 mb-1">
+                        Full name
+                    </label>
+                    <input id="editFullName" type="text" required
+                           class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+
+                <div>
+                    <label for="editEmail"
+                           class="block text-sm font-medium text-slate-700 mb-1">
+                        Email
+                    </label>
+                    <input id="editEmail" type="email" required
+                           class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                </div>
+
+                <div>
+                    <label for="editRole"
+                           class="block text-sm font-medium text-slate-700 mb-1">
+                        Role
+                    </label>
+                    <select id="editRole"
+                            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="Student">Student</option>
+                        <option value="Instructor">Instructor</option>
+                        <option value="Admin">Admin</option>
+                    </select>
+                </div>
+
+                <div class="sm:col-span-2 flex gap-3">
+                    <button id="saveEditBtn" type="submit"
+                            class="rounded-lg bg-blue-600 text-white px-4 py-2 text-sm font-medium hover:bg-blue-700">
+                        Save changes
+                    </button>
+
+                    <button id="cancelEditBtn" type="button"
+                            class="rounded-lg border border-slate-300 px-4 py-2 text-sm hover:bg-slate-100">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- SEARCH AND FILTERS -->
         <section class="flex flex-col sm:flex-row gap-3">
-            <input id="searchInput" type="search" placeholder="Search by name or email"
+            <input id="searchInput" type="search"
+                   placeholder="Search by name or email"
                    class="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
             <select id="roleFilter"
                     class="rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="">All roles</option>
@@ -80,9 +175,9 @@
             </select>
         </section>
 
-        <div id="listAlert"></div>
+        <div id="listAlert" aria-live="polite"></div>
 
-        <!-- Table -->
+        <!-- USERS TABLE -->
         <section class="bg-white rounded-xl border border-slate-200 overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left">
@@ -93,15 +188,17 @@
                             <th class="px-4 py-3 font-medium">Role</th>
                             <th class="px-4 py-3 font-medium">Status</th>
                             <th class="px-4 py-3 font-medium">Created</th>
-                            <th class="px-4 py-3 font-medium">Action</th>
+                            <th class="px-4 py-3 font-medium">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="usersBody"></tbody>
                 </table>
             </div>
 
+            <!-- PAGINATION -->
             <div class="flex items-center justify-between px-4 py-3 border-t border-slate-100 text-sm">
                 <span id="pageInfo" class="text-slate-500"></span>
+
                 <div class="flex gap-2">
                     <button id="prevBtn" type="button"
                             class="rounded-lg border border-slate-300 px-3 py-1.5 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed">
@@ -119,14 +216,22 @@
     <script src="/js/api.js"></script>
     <script src="/js/ui.js"></script>
     <script src="/js/layout.js"></script>
+
     <script>
         if (allowed) {
             initUsersPage();
         }
 
         function initUsersPage() {
-            const state = { page: 1, pageSize: 10, search: "", role: "" };
-            const currentUserId = Auth.getUser().id;
+            const state = {
+                page: 1,
+                pageSize: 10,
+                search: "",
+                role: ""
+            };
+
+            const currentUserId =
+                String(Auth.getUser().id).toLowerCase();
 
             const ROLE_STYLES = {
                 Admin: "bg-purple-50 text-purple-700",
@@ -145,17 +250,61 @@
             const createAlert = document.getElementById("createAlert");
             const createBtn = document.getElementById("createBtn");
 
+            const editPanel = document.getElementById("editPanel");
+            const editForm = document.getElementById("editForm");
+            const editAlert = document.getElementById("editAlert");
+            const saveEditBtn = document.getElementById("saveEditBtn");
+
             Layout.renderHeader(document.getElementById("appHeader"));
 
-            // ---------- Table ----------
+            // ---------- ALERT HELPERS: AUTO HIDE AFTER 1 SECOND ----------
 
-            function cell(text, extraClass) {
-                return Ui.el("td", "px-4 py-3 " + (extraClass || ""), text);
+            const alertTimers = new WeakMap();
+
+            function showTimedAlert(element, message, type = "error") {
+                if (!element) return;
+
+                // Cancel any previous timer for this alert.
+                const oldTimer = alertTimers.get(element);
+                if (oldTimer) clearTimeout(oldTimer);
+
+                Ui.showAlert(element, message, type);
+
+                const timer = setTimeout(() => {
+                    element.replaceChildren();
+                    alertTimers.delete(element);
+                }, 1000);
+
+                alertTimers.set(element, timer);
+            }
+
+            function clearTimedAlert(element) {
+                const timer = alertTimers.get(element);
+                if (timer) clearTimeout(timer);
+
+                alertTimers.delete(element);
+                Ui.clearAlert(element);
+            }
+
+            // ---------- TABLE HELPERS ----------
+
+            function cell(text, extraClass = "") {
+                return Ui.el(
+                    "td",
+                    "px-4 py-3 " + extraClass,
+                    text == null ? "" : String(text)
+                );
             }
 
             function badge(text, styleClass) {
-                return Ui.el("span", "inline-block rounded-full px-2 py-0.5 text-xs font-medium " + styleClass, text);
+                return Ui.el(
+                    "span",
+                    "inline-block rounded-full px-2 py-0.5 text-xs font-medium " + styleClass,
+                    text
+                );
             }
+
+            // ---------- BUILD USER ROW ----------
 
             function buildRow(user) {
                 const row = Ui.el("tr", "border-t border-slate-100");
@@ -164,125 +313,352 @@
                 row.appendChild(cell(user.email, "text-slate-600 break-all"));
 
                 const roleCell = Ui.el("td", "px-4 py-3");
-                roleCell.appendChild(badge(user.role, ROLE_STYLES[user.role] || ROLE_STYLES.Student));
+                roleCell.appendChild(
+                    badge(user.role, ROLE_STYLES[user.role] || ROLE_STYLES.Student)
+                );
                 row.appendChild(roleCell);
 
                 const statusCell = Ui.el("td", "px-4 py-3");
-                statusCell.appendChild(user.isActive
-                    ? badge("Active", "bg-green-50 text-green-700")
-                    : badge("Inactive", "bg-red-50 text-red-700"));
+                statusCell.appendChild(
+                    user.isActive
+                        ? badge("Active", "bg-green-50 text-green-700")
+                        : badge("Inactive", "bg-red-50 text-red-700")
+                );
                 row.appendChild(statusCell);
 
-                row.appendChild(cell(Ui.formatDate(user.createdAt), "text-slate-600 whitespace-nowrap"));
+                row.appendChild(
+                    cell(Ui.formatDate(user.createdAt), "text-slate-600 whitespace-nowrap")
+                );
 
                 const actionCell = Ui.el("td", "px-4 py-3");
-                const isSelf = user.id === currentUserId;
-                const button = Ui.el(
+                const isSelf =
+                    String(user.id).toLowerCase() === currentUserId;
+
+                const actionWrap = Ui.el("div", "flex flex-wrap gap-2");
+
+                const editButton = Ui.el(
+                    "button",
+                    "rounded-lg border border-blue-200 text-blue-700 px-3 py-1 text-xs hover:bg-blue-50",
+                    "Edit"
+                );
+                editButton.type = "button";
+                editButton.addEventListener("click", () => openEditPanel(user));
+                actionWrap.appendChild(editButton);
+
+                const statusButton = Ui.el(
                     "button",
                     "rounded-lg border px-3 py-1 text-xs disabled:opacity-50 disabled:cursor-not-allowed " +
                     (user.isActive
-                        ? "border-red-200 text-red-700 hover:bg-red-50"
+                        ? "border-amber-200 text-amber-700 hover:bg-amber-50"
                         : "border-green-200 text-green-700 hover:bg-green-50"),
-                    user.isActive ? "Deactivate" : "Activate");
-                button.type = "button";
+                    user.isActive ? "Deactivate" : "Activate"
+                );
+
+                statusButton.type = "button";
 
                 if (isSelf) {
-                    // The API also refuses this, so the button is only a convenience.
-                    button.disabled = true;
-                    button.title = "You cannot deactivate your own account.";
+                    statusButton.disabled = true;
+                    statusButton.title = "You cannot deactivate your own account.";
                 } else {
-                    button.addEventListener("click", () => toggleStatus(user, button));
+                    statusButton.addEventListener(
+                        "click",
+                        () => toggleStatus(user, statusButton)
+                    );
                 }
 
-                actionCell.appendChild(button);
+                actionWrap.appendChild(statusButton);
+
+                const deleteButton = Ui.el(
+                    "button",
+                    "rounded-lg border border-red-200 text-red-700 px-3 py-1 text-xs hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed",
+                    "Delete"
+                );
+
+                deleteButton.type = "button";
+
+                if (isSelf) {
+                    deleteButton.disabled = true;
+                    deleteButton.title = "You cannot delete your own account.";
+                } else {
+                    deleteButton.addEventListener(
+                        "click",
+                        () => deleteUser(user, deleteButton)
+                    );
+                }
+
+                actionWrap.appendChild(deleteButton);
+                actionCell.appendChild(actionWrap);
                 row.appendChild(actionCell);
 
                 return row;
             }
 
+            // ---------- RENDER TABLE ----------
+
             function renderTable(data) {
                 usersBody.replaceChildren();
 
-                if (data.items.length === 0) {
+                if (!data.items || data.items.length === 0) {
                     const row = Ui.el("tr");
-                    const empty = Ui.el("td", "px-4 py-8 text-center text-slate-500", "No users found.");
+                    const empty = Ui.el(
+                        "td",
+                        "px-4 py-8 text-center text-slate-500",
+                        "No users found."
+                    );
+
                     empty.colSpan = 6;
                     row.appendChild(empty);
                     usersBody.appendChild(row);
                 } else {
-                    data.items.forEach(user => usersBody.appendChild(buildRow(user)));
+                    data.items.forEach(user => {
+                        usersBody.appendChild(buildRow(user));
+                    });
                 }
 
-                const totalPages = Math.max(data.totalPages, 1);
-                pageInfo.textContent = "Page " + data.page + " of " + totalPages + " \u00B7 " + data.totalCount + " users";
+                const totalPages = Math.max(data.totalPages || 1, 1);
+
+                pageInfo.textContent =
+                    "Page " + data.page + " of " + totalPages +
+                    " · " + data.totalCount + " users";
+
                 prevBtn.disabled = data.page <= 1;
                 nextBtn.disabled = data.page >= totalPages;
             }
 
+            // ---------- LOAD USERS ----------
+
             async function loadUsers() {
-                const params = new URLSearchParams({ page: state.page, pageSize: state.pageSize });
+                const params = new URLSearchParams({
+                    page: state.page,
+                    pageSize: state.pageSize
+                });
 
-                if (state.search) {
-                    params.set("search", state.search);
-                }
-
-                if (state.role) {
-                    params.set("role", state.role);
-                }
+                if (state.search) params.set("search", state.search);
+                if (state.role) params.set("role", state.role);
 
                 try {
                     const data = await Api.get("/api/users?" + params.toString());
 
-                    // Asked for a page that no longer exists (e.g. after a filter): go to the last one.
-                    if (data.items.length === 0 && data.totalCount > 0 && state.page > 1) {
-                        state.page = data.totalPages;
+                    if (
+                        data.items &&
+                        data.items.length === 0 &&
+                        data.totalCount > 0 &&
+                        state.page > 1
+                    ) {
+                        state.page = data.totalPages || 1;
                         await loadUsers();
                         return;
                     }
 
                     renderTable(data);
                 } catch (error) {
-                    Ui.showAlert(listAlert, error.messages || ["Could not load users."]);
+                    console.error("Load users failed:", error);
+                    showTimedAlert(
+                        listAlert,
+                        error.messages || ["Could not load users."]
+                    );
                 }
             }
 
-            // ---------- Activate / deactivate ----------
+            // ---------- ACTIVATE / DEACTIVATE ----------
 
             async function toggleStatus(user, button) {
                 const makeActive = !user.isActive;
                 const verb = makeActive ? "activate" : "deactivate";
 
-                if (!window.confirm("Are you sure you want to " + verb + " " + user.fullName + "?")) {
+                if (!window.confirm(
+                    "Are you sure you want to " + verb + " " + user.fullName + "?"
+                )) {
                     return;
                 }
 
                 button.disabled = true;
 
                 try {
-                    await Api.put("/api/users/" + user.id + "/status", { isActive: makeActive });
+                    await Api.put(
+                        "/api/users/" + user.id + "/status",
+                        { isActive: makeActive }
+                    );
+
                     await loadUsers();
-                    Ui.showAlert(listAlert, user.fullName + " was " + verb + "d.", "success");
+
+                    showTimedAlert(
+                        listAlert,
+                        user.fullName + " was " + verb + "d.",
+                        "success"
+                    );
                 } catch (error) {
-                    Ui.showAlert(listAlert, error.messages || ["Could not update the user."]);
+                    console.error("Change status failed:", error);
+                    showTimedAlert(
+                        listAlert,
+                        error.messages || ["Could not update the user."]
+                    );
+                } finally {
                     button.disabled = false;
                 }
             }
 
-            // ---------- Filters and paging ----------
+            // ---------- EDIT USER ----------
 
-            document.getElementById("searchInput").addEventListener("input", Ui.debounce((event) => {
-                state.search = event.target.value.trim();
-                state.page = 1;
-                Ui.clearAlert(listAlert);
-                loadUsers();
-            }, 300));
+            function openEditPanel(user) {
+                clearTimedAlert(editAlert);
 
-            document.getElementById("roleFilter").addEventListener("change", (event) => {
+                document.getElementById("editUserId").value = user.id;
+                document.getElementById("editFullName").value = user.fullName || "";
+                document.getElementById("editEmail").value = user.email || "";
+                document.getElementById("editRole").value = user.role || "Student";
+
+                editPanel.classList.remove("hidden");
+                createPanel.classList.add("hidden");
+
+                editPanel.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+            }
+
+            document.getElementById("cancelEditBtn").addEventListener("click", () => {
+                editForm.reset();
+                editPanel.classList.add("hidden");
+                clearTimedAlert(editAlert);
+            });
+
+            editForm.addEventListener("submit", async event => {
+                event.preventDefault();
+                clearTimedAlert(editAlert);
+
+                const id = document.getElementById("editUserId").value;
+                const fullName = document.getElementById("editFullName").value.trim();
+                const email = document.getElementById("editEmail").value.trim();
+                const role = document.getElementById("editRole").value;
+
+                if (!fullName || !email) {
+                    showTimedAlert(editAlert, "Full name and email are required.");
+                    return;
+                }
+
+                Ui.setBusy(saveEditBtn, true, "Saving...");
+
+                try {
+                    await Api.put("/api/users/" + id, {
+                        fullName,
+                        email,
+                        role
+                    });
+
+                    editForm.reset();
+                    editPanel.classList.add("hidden");
+
+                    await loadUsers();
+
+                    showTimedAlert(
+                        listAlert,
+                        "User details updated successfully.",
+                        "success"
+                    );
+                } catch (error) {
+                    console.error("Update user failed:", error);
+
+                    showTimedAlert(
+                        editAlert,
+                        error.messages || ["Could not update the user."]
+                    );
+                } finally {
+                    Ui.setBusy(saveEditBtn, false);
+                }
+            });
+
+            // ---------- DELETE USER ----------
+
+            async function deleteUser(user, button) {
+                const confirmed = window.confirm(
+                    "Delete " + user.fullName + " (" + user.email +
+                    ")? This action cannot be undone."
+                );
+
+                if (!confirmed) return;
+
+                button.disabled = true;
+                const originalText = button.textContent;
+                button.textContent = "Deleting...";
+
+                clearTimedAlert(listAlert);
+
+                try {
+                    console.log("Deleting user:", user.id);
+
+                    await Api.del("/api/users/" + encodeURIComponent(user.id));
+
+                    await loadUsers();
+
+                    showTimedAlert(
+                        listAlert,
+                        user.fullName + " was deleted successfully.",
+                        "success"
+                    );
+
+                    if (
+                        document.getElementById("editUserId").value === user.id
+                    ) {
+                        editForm.reset();
+                        editPanel.classList.add("hidden");
+                    }
+                } catch (error) {
+                    console.error("Delete failed:", error);
+                    console.error("HTTP status:", error.status);
+                    console.error("Server response:", error.data);
+
+                    let message = "Could not delete the user.";
+
+                    if (error.status === 0) {
+                        message = "Cannot connect to the API server.";
+                    } else if (error.status === 401) {
+                        message = "Your session has expired. Please log in again.";
+                    } else if (error.status === 403) {
+                        message = "You do not have permission to delete users.";
+                    } else if (error.status === 404) {
+                        message = "This user was not found.";
+                    } else if (error.status === 409) {
+                        message =
+                            "This user cannot be deleted because related records may exist.";
+                    } else if (error.status >= 500) {
+                        message =
+                            "The server failed to delete this user. Check the API console for details.";
+                    } else if (error.messages && error.messages.length > 0) {
+                        message = error.messages.join(" ");
+                    } else if (error.message) {
+                        message = error.message;
+                    }
+
+                    showTimedAlert(listAlert, message);
+                } finally {
+                    button.disabled = false;
+                    button.textContent = originalText;
+                }
+            }
+
+            // ---------- SEARCH AND ROLE FILTER ----------
+
+            document.getElementById("searchInput").addEventListener(
+                "input",
+                Ui.debounce(event => {
+                    state.search = event.target.value.trim();
+                    state.page = 1;
+
+                    clearTimedAlert(listAlert);
+                    loadUsers();
+                }, 300)
+            );
+
+            document.getElementById("roleFilter").addEventListener("change", event => {
                 state.role = event.target.value;
                 state.page = 1;
-                Ui.clearAlert(listAlert);
+
+                clearTimedAlert(listAlert);
                 loadUsers();
             });
+
+            // ---------- PAGINATION ----------
 
             prevBtn.addEventListener("click", () => {
                 if (state.page > 1) {
@@ -296,22 +672,23 @@
                 loadUsers();
             });
 
-            // ---------- Create user ----------
+            // ---------- CREATE USER ----------
 
             document.getElementById("toggleCreateBtn").addEventListener("click", () => {
                 createPanel.classList.toggle("hidden");
-                Ui.clearAlert(createAlert);
+                editPanel.classList.add("hidden");
+                clearTimedAlert(createAlert);
             });
 
             document.getElementById("cancelCreateBtn").addEventListener("click", () => {
                 createForm.reset();
                 createPanel.classList.add("hidden");
-                Ui.clearAlert(createAlert);
+                clearTimedAlert(createAlert);
             });
 
-            createForm.addEventListener("submit", async (event) => {
+            createForm.addEventListener("submit", async event => {
                 event.preventDefault();
-                Ui.clearAlert(createAlert);
+                clearTimedAlert(createAlert);
 
                 const fullName = document.getElementById("newFullName").value.trim();
                 const email = document.getElementById("newEmail").value.trim();
@@ -319,23 +696,38 @@
                 const role = document.getElementById("newRole").value;
 
                 if (!fullName || !email || !password) {
-                    Ui.showAlert(createAlert, "Please fill in all fields.");
+                    showTimedAlert(createAlert, "Please fill in all fields.");
                     return;
                 }
 
                 Ui.setBusy(createBtn, true, "Creating...");
 
                 try {
-                    await Api.post("/api/users", { fullName, email, password, role });
+                    await Api.post("/api/users", {
+                        fullName,
+                        email,
+                        password,
+                        role
+                    });
 
                     createForm.reset();
                     createPanel.classList.add("hidden");
-
                     state.page = 1;
+
                     await loadUsers();
-                    Ui.showAlert(listAlert, "User created: " + fullName + " (" + role + ").", "success");
+
+                    showTimedAlert(
+                        listAlert,
+                        "User created: " + fullName + " (" + role + ").",
+                        "success"
+                    );
                 } catch (error) {
-                    Ui.showAlert(createAlert, error.messages || ["Something went wrong. Please try again."]);
+                    console.error("Create user failed:", error);
+
+                    showTimedAlert(
+                        createAlert,
+                        error.messages || ["Something went wrong. Please try again."]
+                    );
                 } finally {
                     Ui.setBusy(createBtn, false);
                 }

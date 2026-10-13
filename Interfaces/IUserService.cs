@@ -12,4 +12,7 @@ public interface IUserService
     Task<ServiceResult<PagedResult<UserResponseDto>>> GetUsersAsync(string? search, UserRole? role, int page, int pageSize);
     Task<ServiceResult<UserResponseDto>> CreateUserAsync(CreateUserRequestDto request);
     Task<ServiceResult<UserResponseDto>> SetStatusAsync(Guid targetUserId, bool isActive, Guid currentUserId);
+
+    Task<ServiceResult<UserResponseDto>> UpdateUserAsync(Guid targetUserId, UpdateUserRequestDto request, Guid currentUserId);
+    Task<ServiceResult<bool>> DeleteUserAsync(Guid targetUserId, Guid currentUserId);
 }

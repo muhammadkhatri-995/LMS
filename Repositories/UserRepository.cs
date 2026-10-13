@@ -71,6 +71,22 @@ public class UserRepository : IUserRepository
         await _db.SaveChangesAsync();
     }
 
+
+    public async Task DeleteAsync(Guid id)
+    {
+        var user = await _db.Users.FindAsync(id);
+
+        if (user == null)
+        {
+            throw new KeyNotFoundException("User not found.");
+        }
+
+        _db.Users.Remove(user);
+        await _db.SaveChangesAsync();
+    }
+
+
+
     // Stops a search for "50%" or "a_b" from acting as a wildcard.
     private static string EscapeLike(string value)
     {

@@ -4,118 +4,257 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Users | LearnHub Admin</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="/js/auth.js"></script>
     <script>
         const allowed = Auth.requireRole("Admin");
     </script>
+    <style>
+        /* Y2K Keyframe Animations */
+        @keyframes cyberFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-8px) rotate(-1deg);
+            }
+        }
+
+        @keyframes scanline {
+            0% {
+                transform: translateY(-100%);
+            }
+
+            100% {
+                transform: translateY(1000%);
+            }
+        }
+
+        @keyframes glitchSnap {
+            0%, 100% {
+                transform: translate(0);
+            }
+
+            20% {
+                transform: translate(-3px, 2px);
+            }
+
+            40% {
+                transform: translate(3px, -2px);
+            }
+
+            60% {
+                transform: translate(-2px, -1px);
+            }
+
+            80% {
+                transform: translate(2px, 1px);
+            }
+        }
+
+        @keyframes y2kPop {
+            0% {
+                opacity: 0;
+                transform: scale(0.88) translateY(25px);
+                filter: blur(10px);
+            }
+
+            60% {
+                transform: scale(1.02) translateY(-4px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+                filter: blur(0);
+            }
+        }
+
+        .animate-cyber-float {
+            animation: cyberFloat 5s ease-in-out infinite;
+        }
+
+        .card-enter {
+            animation: y2kPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .glitch-hover:hover {
+            animation: glitchSnap 0.2s ease-in-out;
+        }
+
+        /* Y2K Tech Grid Pattern */
+        .y2k-grid {
+            background-size: 30px 30px;
+            background-image: linear-gradient(to right, rgba(56, 189, 248, 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(56, 189, 248, 0.08) 1px, transparent 1px);
+        }
+
+        /* Y2K Glass Card styling */
+        .y2k-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 2px solid rgba(186, 230, 253, 0.85);
+            box-shadow: 6px 6px 0px 0px rgba(14, 165, 233, 0.15), 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+            border-radius: 1.75rem;
+        }
+
+        /* Input Focus Glow */
+        input:focus, select:focus {
+            box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.25), 0 0 15px rgba(14, 165, 233, 0.2);
+        }
+    </style>
 </head>
-<body class="min-h-screen bg-slate-50">
+<body class="min-h-screen bg-slate-50 text-slate-800 relative overflow-x-hidden font-sans y2k-grid">
 
-    <div id="appHeader"></div>
+    <!-- AMBIENT BRIGHT BLUE & CYAN BACKGROUND ORBS -->
+    <div class="fixed -top-24 -left-24 w-[450px] h-[450px] bg-cyan-300/40 rounded-full blur-[100px] pointer-events-none animate-cyber-float z-0"></div>
+    <div class="fixed -bottom-24 -right-24 w-[450px] h-[450px] bg-blue-300/40 rounded-full blur-[100px] pointer-events-none animate-cyber-float z-0" style="animation-direction: reverse;"></div>
 
-    <main class="max-w-5xl mx-auto px-4 py-8 space-y-6">
+    <div id="appHeader" class="relative z-10"></div>
 
-        <div class="flex items-center justify-between">
-            <h1 class="text-xl font-semibold text-slate-800">Users</h1>
+    <main class="max-w-6xl mx-auto px-4 py-8 space-y-8 relative z-10">
+
+        <!-- Page Header -->
+        <div class="y2k-card p-6 rounded-3xl relative overflow-hidden flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <!-- Scanline Effect -->
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-400/5 to-transparent h-12 w-full pointer-events-none animate-[scanline_8s_linear_infinite]"></div>
+
+            <div class="relative z-10">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-100/80 border border-sky-300 text-sky-800 text-xs font-black tracking-wider uppercase mb-2">
+                    <span>⚡ Admin Dashboard v2.6</span>
+                </div>
+                <h1 class="text-3xl font-black text-slate-900 tracking-tight">User Management 👥</h1>
+                <p class="text-xs font-bold text-slate-500 mt-1">Manage accounts, assign roles, and control member access</p>
+            </div>
+
             <button id="addUserBtn" type="button"
-                    class="rounded-lg bg-blue-600 text-white px-4 py-2 text-sm font-medium hover:bg-blue-700">
-                Add user
+                    class="glitch-hover relative z-10 inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-5 py-3 text-xs font-black shadow-md shadow-sky-500/20 transition-all active:scale-95">
+                <i data-lucide="user-plus" class="w-4 h-4"></i>
+                <span>Add New User</span>
             </button>
         </div>
 
-        <!-- Create / edit panel -->
-        <section id="userPanel" class="hidden bg-white rounded-xl border border-slate-200 p-6">
-            <h2 id="formTitle" class="text-sm font-semibold text-slate-700 mb-4">New user</h2>
-            <div id="formAlert" class="mb-4"></div>
+        <!-- Create / Edit User Glass Panel -->
+        <section id="userPanel" class="hidden y2k-card p-6 lg:p-8 card-enter relative overflow-hidden">
+            <!-- Scanline Effect -->
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-400/5 to-transparent h-12 w-full pointer-events-none animate-[scanline_8s_linear_infinite]"></div>
 
-            <form id="userForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4" novalidate>
-                <div>
-                    <label for="formFullName" class="block text-sm font-medium text-slate-700 mb-1">Full name</label>
-                    <input id="formFullName" type="text" maxlength="100"
-                           class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <div class="flex items-center justify-between mb-6 pb-4 border-b border-sky-100 relative z-10">
+                <div class="flex items-center gap-2">
+                    <span class="text-xl">🛠️</span>
+                    <h2 id="formTitle" class="text-lg font-black text-slate-900">New User</h2>
                 </div>
-                <div>
-                    <label for="formEmail" class="block text-sm font-medium text-slate-700 mb-1">Email</label>
-                    <input id="formEmail" type="email" maxlength="255"
-                           class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <button id="closePanelX" type="button" class="text-slate-400 hover:text-slate-700 p-1 rounded-xl hover:bg-slate-100 transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div id="formAlert" class="mb-4 relative z-10"></div>
+
+            <form id="userForm" class="grid grid-cols-1 sm:grid-cols-2 gap-5 relative z-10" novalidate>
+                <div class="space-y-1">
+                    <label for="formFullName" class="block text-xs font-black text-slate-700 uppercase tracking-wider">Full Name</label>
+                    <div class="relative group">
+                        <i data-lucide="user" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors"></i>
+                        <input id="formFullName" type="text" maxlength="100" placeholder="e.g. Alex Johnson"
+                               class="w-full rounded-2xl bg-white border border-slate-200 pl-10 pr-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-all font-bold" />
+                    </div>
                 </div>
-                <div>
-                    <label id="passwordLabel" for="formPassword" class="block text-sm font-medium text-slate-700 mb-1">Password</label>
-                    <input id="formPassword" type="password" autocomplete="new-password" maxlength="72"
-                           class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                    <p id="passwordHint" class="text-xs text-slate-500 mt-1"></p>
+
+                <div class="space-y-1">
+                    <label for="formEmail" class="block text-xs font-black text-slate-700 uppercase tracking-wider">Email Address</label>
+                    <div class="relative group">
+                        <i data-lucide="mail" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors"></i>
+                        <input id="formEmail" type="email" maxlength="255" placeholder="alex@learnhub.com"
+                               class="w-full rounded-2xl bg-white border border-slate-200 pl-10 pr-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-all font-bold" />
+                    </div>
                 </div>
-                <div>
-                    <label for="formRole" class="block text-sm font-medium text-slate-700 mb-1">Role</label>
-                    <select id="formRole"
-                            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="Student">Student</option>
-                        <option value="Instructor">Instructor</option>
-                        <option id="adminOption" value="Admin">Admin</option>
-                    </select>
-                    <p id="roleHint" class="hidden text-xs text-slate-500 mt-1">Changing the role signs the user out. They log in again to continue.</p>
+
+                <div class="space-y-1">
+                    <label id="passwordLabel" for="formPassword" class="block text-xs font-black text-slate-700 uppercase tracking-wider">Password</label>
+                    <div class="relative group">
+                        <i data-lucide="lock" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors"></i>
+                        <input id="formPassword" type="password" autocomplete="new-password" maxlength="72" placeholder="••••••••"
+                               class="w-full rounded-2xl bg-white border border-slate-200 pl-10 pr-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-all font-bold" />
+                    </div>
+                    <p id="passwordHint" class="text-[11px] font-bold text-slate-500 mt-1"></p>
                 </div>
-                <div class="sm:col-span-2 flex gap-3">
+
+                <div class="space-y-1">
+                    <label for="formRole" class="block text-xs font-black text-slate-700 uppercase tracking-wider">Role</label>
+                    <div class="relative group">
+                        <i data-lucide="shield" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors"></i>
+                        <select id="formRole"
+                                class="w-full rounded-2xl bg-white border border-slate-200 pl-10 pr-8 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-500 transition-all font-bold appearance-none cursor-pointer">
+                            <option value="Student">Student 🎓</option>
+                            <option value="Instructor">Instructor 👨‍🏫</option>
+                            <option id="adminOption" value="Admin">Admin 👑</option>
+                        </select>
+                        <i data-lucide="chevron-down" class="w-4 h-4 absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></i>
+                    </div>
+                    <p id="roleHint" class="hidden text-[11px] font-bold text-amber-600 mt-1">⚠️ Changing role signs the user out immediately.</p>
+                </div>
+
+                <div class="sm:col-span-2 flex gap-3 pt-2">
                     <button id="submitBtn" type="submit"
-                            class="rounded-lg bg-blue-600 text-white px-4 py-2 text-sm font-medium hover:bg-blue-700">
-                        Create user
+                            class="glitch-hover rounded-2xl bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-6 py-2.5 text-xs font-black shadow-md shadow-sky-500/20 transition-all active:scale-95">
+                        Create User
                     </button>
                     <button id="cancelBtn" type="button"
-                            class="rounded-lg border border-slate-300 px-4 py-2 text-sm hover:bg-slate-100">
+                            class="rounded-2xl border border-slate-200 bg-white px-6 py-2.5 text-xs font-black text-slate-700 hover:bg-slate-100 transition-all active:scale-95">
                         Cancel
                     </button>
                 </div>
             </form>
         </section>
 
-        <!-- Filters -->
-        <section class="flex flex-col sm:flex-row gap-3">
-            <input id="searchInput" type="search" placeholder="Search by name or email"
-                   class="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
-            <select id="roleFilter"
-                    class="rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option value="">All roles</option>
-                <option value="Student">Students</option>
-                <option value="Instructor">Instructors</option>
-                <option value="Admin">Admins</option>
-            </select>
+        <!-- Search & Role Filter Bar -->
+        <section class="grid grid-cols-1 sm:grid-cols-12 gap-3">
+            <div class="sm:col-span-8 relative group">
+                <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors"></i>
+                <input id="searchInput" type="search" placeholder="Search users by name or email..."
+                       class="w-full rounded-2xl bg-white border border-slate-200 pl-10 pr-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-all font-bold shadow-sm" />
+            </div>
+
+            <div class="sm:col-span-4 relative group">
+                <i data-lucide="filter" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors"></i>
+                <select id="roleFilter"
+                        class="w-full rounded-2xl bg-white border border-slate-200 pl-10 pr-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-blue-500 transition-all font-bold appearance-none shadow-sm cursor-pointer">
+                    <option value="">All Roles 🌐</option>
+                    <option value="Student">Students 🎓</option>
+                    <option value="Instructor">Instructors 👨‍🏫</option>
+                    <option value="Admin">Admins 👑</option>
+                </select>
+                <i data-lucide="chevron-down" class="w-4 h-4 absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></i>
+            </div>
         </section>
 
         <div id="listAlert"></div>
 
-        <!-- Table -->
-        <section class="bg-white rounded-xl border border-slate-200 overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm text-left">
-                    <thead class="bg-slate-50 text-slate-500">
-                        <tr>
-                            <th class="px-4 py-3 font-medium">Name</th>
-                            <th class="px-4 py-3 font-medium">Email</th>
-                            <th class="px-4 py-3 font-medium">Role</th>
-                            <th class="px-4 py-3 font-medium">Status</th>
-                            <th class="px-4 py-3 font-medium">Created</th>
-                            <th class="px-4 py-3 font-medium">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="usersBody"></tbody>
-                </table>
-            </div>
+        <!-- User Cards Container (Grid) -->
+        <section id="userCardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></section>
 
-            <div class="flex items-center justify-between px-4 py-3 border-t border-slate-100 text-sm">
-                <span id="pageInfo" class="text-slate-500"></span>
-                <div class="flex gap-2">
-                    <button id="prevBtn" type="button"
-                            class="rounded-lg border border-slate-300 px-3 py-1.5 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed">
-                        Previous
-                    </button>
-                    <button id="nextBtn" type="button"
-                            class="rounded-lg border border-slate-300 px-3 py-1.5 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed">
-                        Next
-                    </button>
-                </div>
+        <!-- Pagination Bar -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 y2k-card p-4 rounded-2xl">
+            <span id="pageInfo" class="text-xs font-black text-slate-600"></span>
+            <div class="flex gap-2">
+                <button id="prevBtn" type="button"
+                        class="inline-flex items-center gap-1.5 rounded-2xl border border-slate-200 bg-white px-4 py-2 text-xs font-black text-slate-700 hover:border-blue-300 hover:text-blue-600 transition-all disabled:opacity-40 disabled:cursor-not-allowed active:scale-95">
+                    <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                    <span>Previous</span>
+                </button>
+                <button id="nextBtn" type="button"
+                        class="inline-flex items-center gap-1.5 rounded-2xl border border-slate-200 bg-white px-4 py-2 text-xs font-black text-slate-700 hover:border-blue-300 hover:text-blue-600 transition-all disabled:opacity-40 disabled:cursor-not-allowed active:scale-95">
+                    <span>Next</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                </button>
             </div>
-        </section>
+        </div>
+
     </main>
 
     <script src="/js/api.js"></script>
@@ -127,17 +266,11 @@
         }
 
         function initUsersPage() {
-            const state = { page: 1, pageSize: 10, search: "", role: "" };
+            const state = { page: 1, pageSize: 9, search: "", role: "" };
             const currentUserId = Auth.getUser().id;
-            let editingId = null; // null means the form is creating a new user
+            let editingId = null;
 
-            const ROLE_STYLES = {
-                Admin: "bg-purple-50 text-purple-700",
-                Instructor: "bg-blue-50 text-blue-700",
-                Student: "bg-slate-100 text-slate-700"
-            };
-
-            const usersBody = document.getElementById("usersBody");
+            const grid = document.getElementById("userCardsGrid");
             const listAlert = document.getElementById("listAlert");
             const pageInfo = document.getElementById("pageInfo");
             const prevBtn = document.getElementById("prevBtn");
@@ -156,28 +289,165 @@
             const roleSelect = document.getElementById("formRole");
             const roleHint = document.getElementById("roleHint");
             const adminOption = document.getElementById("adminOption");
+            const closePanelX = document.getElementById("closePanelX");
 
             Layout.renderHeader(document.getElementById("appHeader"));
 
-            // ---------- Create / edit form ----------
+            // Role Badge Mapping
+            const ROLE_CONFIG = {
+                Admin: { label: "Admin", emoji: "👑", badgeClass: "bg-purple-100 text-purple-800 border-purple-200" },
+                Instructor: { label: "Instructor", emoji: "👨‍🏫", badgeClass: "bg-sky-100 text-sky-800 border-sky-200" },
+                Student: { label: "Student", emoji: "🎓", badgeClass: "bg-cyan-100 text-cyan-800 border-cyan-200" }
+            };
 
-            // Pass a user to edit them, or null to create a new one.
+            // Glassmorphic User Card Builder (Y2K Aesthetic)
+            function buildUserCard(user, index) {
+                const isSelf = user.id === currentUserId;
+                const isAdminRow = user.role === "Admin";
+                const roleConfig = ROLE_CONFIG[user.role] || ROLE_CONFIG.Student;
+
+                const card = document.createElement("div");
+                card.className = "y2k-card rounded-3xl p-6 transition-all duration-300 hover:-translate-y-1.5 hover:border-blue-400 card-enter flex flex-col justify-between space-y-4 relative overflow-hidden group cursor-pointer";
+                card.style.animationDelay = `${(index % 9) * 0.08}s`;
+
+                // Top row: Y2K Cyber Avatar Frame + Role badge + Status Pill
+                const topRow = document.createElement("div");
+                topRow.className = "flex items-start justify-between gap-3";
+
+                // Y2K Avatar Frame
+                const avatarBox = document.createElement("div");
+                avatarBox.className = "w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 via-sky-500 to-cyan-400 p-[2px] shadow-md shadow-sky-500/15 group-hover:scale-105 transition-transform duration-200";
+                avatarBox.innerHTML = `
+                        <div class="w-full h-full bg-white rounded-[13px] flex items-center justify-center text-blue-600 font-black text-lg select-none">
+                            ${user.fullName.charAt(0).toUpperCase()}
+                        </div>
+                    `;
+
+                const badgesGroup = document.createElement("div");
+                badgesGroup.className = "flex flex-col items-end gap-1.5";
+
+                const roleBadge = document.createElement("span");
+                roleBadge.className = `inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-black border ${roleConfig.badgeClass}`;
+                roleBadge.innerHTML = `<span>${roleConfig.emoji}</span><span>${roleConfig.label}</span>`;
+
+                const statusBadge = document.createElement("span");
+                statusBadge.className = `inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-black border ${user.isActive
+                        ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                        : "bg-rose-50 text-rose-700 border-rose-200"
+                    }`;
+                statusBadge.innerHTML = `<span>${user.isActive ? "🟢" : "🔴"}</span><span>${user.isActive ? "Active" : "Inactive"}</span>`;
+
+                badgesGroup.appendChild(roleBadge);
+                badgesGroup.appendChild(statusBadge);
+
+                topRow.appendChild(avatarBox);
+                topRow.appendChild(badgesGroup);
+
+                // User details
+                const details = document.createElement("div");
+                details.className = "space-y-1";
+
+                const nameHeading = document.createElement("h3");
+                nameHeading.className = "font-black text-slate-900 text-base flex items-center gap-1.5 truncate group-hover:text-blue-600 transition-colors";
+                nameHeading.textContent = user.fullName;
+                if (isSelf) {
+                    const selfTag = document.createElement("span");
+                    selfTag.className = "text-[10px] bg-blue-100 text-blue-700 font-black px-2 py-0.5 rounded-md";
+                    selfTag.textContent = "You";
+                    nameHeading.appendChild(selfTag);
+                }
+
+                const emailP = document.createElement("p");
+                emailP.className = "text-xs font-bold text-slate-500 truncate flex items-center gap-1";
+                emailP.innerHTML = `<i data-lucide="mail" class="w-3.5 h-3.5 text-blue-600"></i> ${user.email}`;
+
+                const createdP = document.createElement("p");
+                createdP.className = "text-[11px] font-bold text-slate-400 pt-1 flex items-center gap-1";
+                createdP.innerHTML = `<i data-lucide="calendar" class="w-3.5 h-3.5 text-slate-400"></i> Joined ${Ui.formatDate(user.createdAt)}`;
+
+                details.appendChild(nameHeading);
+                details.appendChild(emailP);
+                details.appendChild(createdP);
+
+                // Action Buttons Footer
+                const actionsContainer = document.createElement("div");
+                actionsContainer.className = "pt-3 border-t border-slate-100 flex items-center justify-end gap-2";
+
+                // Edit Button
+                const editBtn = createActionButton(
+                    "Edit",
+                    "border-slate-200 bg-white text-slate-700 hover:border-blue-300 hover:text-blue-600",
+                    "✏️",
+                    () => openForm(user),
+                    isAdminRow ? "Admin accounts are edited from Profile." : null
+                );
+
+                // Toggle Status Button
+                const toggleBtn = createActionButton(
+                    user.isActive ? "Deactivate" : "Activate",
+                    user.isActive
+                        ? "border-amber-200 bg-amber-50/60 text-amber-700 hover:bg-amber-100"
+                        : "border-emerald-200 bg-emerald-50/60 text-emerald-700 hover:bg-emerald-100",
+                    user.isActive ? "🛑" : "⚡",
+                    (btn) => toggleStatus(user, btn),
+                    isSelf ? "You cannot deactivate your own account." : null
+                );
+
+                // Delete Button
+                const deleteBtn = createActionButton(
+                    "Delete",
+                    "border-rose-200 bg-rose-50/60 text-rose-600 hover:bg-rose-100",
+                    "🗑️",
+                    (btn) => deleteUser(user, btn),
+                    isAdminRow ? "Admin accounts cannot be deleted here." : null
+                );
+
+                actionsContainer.appendChild(editBtn);
+                actionsContainer.appendChild(toggleBtn);
+                actionsContainer.appendChild(deleteBtn);
+
+                card.appendChild(topRow);
+                card.appendChild(details);
+                card.appendChild(actionsContainer);
+
+                return card;
+            }
+
+            function createActionButton(label, cssClass, emoji, handler, disabledReason) {
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = `glitch-hover inline-flex items-center gap-1 rounded-xl border px-3 py-1.5 text-xs font-black transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed ${cssClass}`;
+                btn.innerHTML = `<span>${emoji}</span><span>${label}</span>`;
+
+                if (disabledReason) {
+                    btn.disabled = true;
+                    btn.title = disabledReason;
+                } else {
+                    btn.addEventListener("click", (e) => {
+                        e.stopPropagation();
+                        handler(btn);
+                    });
+                }
+
+                return btn;
+            }
+
+            // Form Open/Close Handlers
             function openForm(user) {
                 const editing = user !== null;
                 editingId = editing ? user.id : null;
 
                 userForm.reset();
-                Ui.clearAlert(formAlert);
+                clearFormAlert();
 
-                formTitle.textContent = editing ? "Edit user" : "New user";
-                submitBtn.textContent = editing ? "Save changes" : "Create user";
-                passwordLabel.textContent = editing ? "New password (optional)" : "Password";
+                formTitle.textContent = editing ? "Edit User Account" : "Create New User";
+                submitBtn.textContent = editing ? "Save Changes" : "Create User";
+                passwordLabel.textContent = editing ? "New Password (Optional)" : "Password";
                 passwordHint.textContent = editing
-                    ? "Leave blank to keep the current password."
-                    : "At least 8 characters, with a letter and a number.";
+                    ? "Leave blank to preserve current password."
+                    : "Minimum 8 characters with letters & numbers.";
                 roleHint.classList.toggle("hidden", !editing);
 
-                // Admin accounts can only be created, never assigned by editing.
                 adminOption.hidden = editing;
                 adminOption.disabled = editing;
 
@@ -188,20 +458,25 @@
                 }
 
                 userPanel.classList.remove("hidden");
-                userPanel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                userPanel.scrollIntoView({ behavior: "smooth", block: "start" });
                 fullNameInput.focus();
             }
 
             function closeForm() {
                 editingId = null;
                 userForm.reset();
-                Ui.clearAlert(formAlert);
+                clearFormAlert();
                 userPanel.classList.add("hidden");
             }
 
+            closePanelX.addEventListener("click", closeForm);
+            document.getElementById("cancelBtn").addEventListener("click", closeForm);
+            document.getElementById("addUserBtn").addEventListener("click", () => openForm(null));
+
+            // Form Submission
             userForm.addEventListener("submit", async (event) => {
                 event.preventDefault();
-                Ui.clearAlert(formAlert);
+                clearFormAlert();
 
                 const fullName = fullNameInput.value.trim();
                 const email = emailInput.value.trim();
@@ -210,15 +485,12 @@
                 const editing = editingId !== null;
 
                 if (!fullName || !email || (!editing && !password)) {
-                    Ui.showAlert(formAlert, "Please fill in all required fields.");
+                    showFormAlert("Please fill in all required fields.", "error", "⚠️");
                     return;
                 }
 
                 const payload = { fullName, email, role };
-
-                if (password) {
-                    payload.password = password;
-                }
+                if (password) payload.password = password;
 
                 Ui.setBusy(submitBtn, true, editing ? "Saving..." : "Creating...");
 
@@ -232,198 +504,130 @@
 
                     closeForm();
                     await loadUsers();
-                    Ui.showAlert(
-                        listAlert,
-                        editing ? "Changes saved for " + fullName + "." : "User created: " + fullName + " (" + role + ").",
-                        "success");
+                    showListAlert(
+                        editing ? `Changes saved for ${fullName}!` : `User created: ${fullName} (${role}).`,
+                        "success",
+                        "🎉"
+                    );
                 } catch (error) {
-                    Ui.showAlert(formAlert, error.messages || ["Something went wrong. Please try again."]);
+                    showFormAlert(error.messages || ["Something went wrong."], "error", "❌");
                 } finally {
                     Ui.setBusy(submitBtn, false);
                 }
             });
 
-            document.getElementById("addUserBtn").addEventListener("click", () => openForm(null));
-            document.getElementById("cancelBtn").addEventListener("click", closeForm);
-
-            // ---------- Table ----------
-
-            function cell(text, extraClass) {
-                return Ui.el("td", "px-4 py-3 " + (extraClass || ""), text);
-            }
-
-            function badge(text, styleClass) {
-                return Ui.el("span", "inline-block rounded-full px-2 py-0.5 text-xs font-medium " + styleClass, text);
-            }
-
-            function rowButton(label, cssClass, handler, disabledReason) {
-                const button = Ui.el(
-                    "button",
-                    "rounded-lg border px-3 py-1 text-xs disabled:opacity-50 disabled:cursor-not-allowed " + cssClass,
-                    label);
-                button.type = "button";
-
-                if (disabledReason) {
-                    // The API also refuses these actions, so a disabled button is only a convenience.
-                    button.disabled = true;
-                    button.title = disabledReason;
-                } else {
-                    button.addEventListener("click", () => handler(button));
-                }
-
-                return button;
-            }
-
-            function buildRow(user) {
-                const row = Ui.el("tr", "border-t border-slate-100");
-                const isSelf = user.id === currentUserId;
-                const isAdminRow = user.role === "Admin";
-
-                row.appendChild(cell(user.fullName, "font-medium text-slate-800"));
-                row.appendChild(cell(user.email, "text-slate-600 break-all"));
-
-                const roleCell = Ui.el("td", "px-4 py-3");
-                roleCell.appendChild(badge(user.role, ROLE_STYLES[user.role] || ROLE_STYLES.Student));
-                row.appendChild(roleCell);
-
-                const statusCell = Ui.el("td", "px-4 py-3");
-                statusCell.appendChild(user.isActive
-                    ? badge("Active", "bg-green-50 text-green-700")
-                    : badge("Inactive", "bg-red-50 text-red-700"));
-                row.appendChild(statusCell);
-
-                row.appendChild(cell(Ui.formatDate(user.createdAt), "text-slate-600 whitespace-nowrap"));
-
-                const actionCell = Ui.el("td", "px-4 py-3");
-                const group = Ui.el("div", "flex flex-wrap gap-2");
-
-                group.appendChild(rowButton(
-                    "Edit",
-                    "border-slate-300 hover:bg-slate-100",
-                    () => openForm(user),
-                    isAdminRow ? "Admin accounts are edited from the Profile page." : null));
-
-                group.appendChild(rowButton(
-                    user.isActive ? "Deactivate" : "Activate",
-                    user.isActive
-                        ? "border-amber-200 text-amber-700 hover:bg-amber-50"
-                        : "border-green-200 text-green-700 hover:bg-green-50",
-                    (button) => toggleStatus(user, button),
-                    isSelf ? "You cannot deactivate your own account." : null));
-
-                group.appendChild(rowButton(
-                    "Delete",
-                    "border-red-200 text-red-700 hover:bg-red-50",
-                    (button) => deleteUser(user, button),
-                    isAdminRow ? "Admin accounts cannot be deleted here." : null));
-
-                actionCell.appendChild(group);
-                row.appendChild(actionCell);
-
-                return row;
-            }
-
-            function renderTable(data) {
-                usersBody.replaceChildren();
+            // Render Function
+            function renderCards(data) {
+                grid.replaceChildren();
 
                 if (data.items.length === 0) {
-                    const row = Ui.el("tr");
-                    const empty = Ui.el("td", "px-4 py-8 text-center text-slate-500", "No users found.");
-                    empty.colSpan = 6;
-                    row.appendChild(empty);
-                    usersBody.appendChild(row);
+                    grid.innerHTML = `
+                            <div class="col-span-full py-16 text-center y2k-card rounded-3xl space-y-3">
+                                <span class="text-4xl block">🔍</span>
+                                <h3 class="text-base font-black text-slate-800">No users found</h3>
+                                <p class="text-xs font-bold text-slate-500">Try adjusting your search query or role filter.</p>
+                            </div>
+                        `;
                 } else {
-                    data.items.forEach(user => usersBody.appendChild(buildRow(user)));
+                    data.items.forEach((user, idx) => grid.appendChild(buildUserCard(user, idx)));
                 }
 
                 const totalPages = Math.max(data.totalPages, 1);
-                pageInfo.textContent = "Page " + data.page + " of " + totalPages + " \u00B7 " + data.totalCount + " users";
+                pageInfo.textContent = `Page ${data.page} of ${totalPages} \u00B7 ${data.totalCount} users total`;
                 prevBtn.disabled = data.page <= 1;
                 nextBtn.disabled = data.page >= totalPages;
+
+                lucide.createIcons();
             }
 
             async function loadUsers() {
                 const params = new URLSearchParams({ page: state.page, pageSize: state.pageSize });
-
-                if (state.search) {
-                    params.set("search", state.search);
-                }
-
-                if (state.role) {
-                    params.set("role", state.role);
-                }
+                if (state.search) params.set("search", state.search);
+                if (state.role) params.set("role", state.role);
 
                 try {
                     const data = await Api.get("/api/users?" + params.toString());
-
-                    // Asked for a page that no longer exists (e.g. after a delete): go to the last one.
                     if (data.items.length === 0 && data.totalCount > 0 && state.page > 1) {
                         state.page = data.totalPages;
                         await loadUsers();
                         return;
                     }
-
-                    renderTable(data);
+                    renderCards(data);
                 } catch (error) {
-                    Ui.showAlert(listAlert, error.messages || ["Could not load users."]);
+                    showListAlert(error.messages || ["Could not load users."], "error", "❌");
                 }
             }
-
-            // ---------- Activate / deactivate / delete ----------
 
             async function toggleStatus(user, button) {
                 const makeActive = !user.isActive;
                 const verb = makeActive ? "activate" : "deactivate";
 
-                if (!window.confirm("Are you sure you want to " + verb + " " + user.fullName + "?")) {
-                    return;
-                }
+                if (!window.confirm(`Are you sure you want to ${verb} ${user.fullName}?`)) return;
 
                 button.disabled = true;
 
                 try {
                     await Api.put("/api/users/" + user.id + "/status", { isActive: makeActive });
                     await loadUsers();
-                    Ui.showAlert(listAlert, user.fullName + " was " + verb + "d.", "success");
+                    showListAlert(`${user.fullName} was ${verb}d successfully.`, "success", makeActive ? "⚡" : "🛑");
                 } catch (error) {
-                    Ui.showAlert(listAlert, error.messages || ["Could not update the user."]);
+                    showListAlert(error.messages || ["Could not update user status."], "error", "⚠️");
                     button.disabled = false;
                 }
             }
 
             async function deleteUser(user, button) {
-                const question = "Permanently delete " + user.fullName + " (" + user.email + ")? This cannot be undone.";
-
-                if (!window.confirm(question)) {
-                    return;
-                }
+                if (!window.confirm(`Permanently delete ${user.fullName} (${user.email})? This action cannot be undone.`)) return;
 
                 button.disabled = true;
 
                 try {
                     await Api.del("/api/users/" + user.id);
                     await loadUsers();
-                    Ui.showAlert(listAlert, user.fullName + " was deleted.", "success");
+                    showListAlert(`${user.fullName} was deleted.`, "success", "🗑️");
                 } catch (error) {
-                    // For example: "This user owns courses and cannot be deleted. Deactivate the account instead."
-                    Ui.showAlert(listAlert, error.messages || ["Could not delete the user."]);
+                    showListAlert(error.messages || ["Could not delete the user."], "error", "⚠️");
                     button.disabled = false;
                 }
             }
 
-            // ---------- Filters and paging ----------
+            // Alerts
+            function showListAlert(message, type = "error", emoji = "⚠️") {
+                renderAlertInto(listAlert, message, type, emoji);
+            }
 
-            document.getElementById("searchInput").addEventListener("input", Ui.debounce((event) => {
-                state.search = event.target.value.trim();
+            function showFormAlert(message, type = "error", emoji = "⚠️") {
+                renderAlertInto(formAlert, message, type, emoji);
+            }
+
+            function renderAlertInto(container, message, type, emoji) {
+                const msg = Array.isArray(message) ? message.join(" ") : message;
+                const styles = {
+                    error: "bg-rose-500/10 border-rose-300 text-rose-700",
+                    success: "bg-emerald-500/10 border-emerald-300 text-emerald-700",
+                    info: "bg-sky-500/10 border-sky-300 text-sky-700"
+                };
+
+                container.innerHTML = `
+                        <div class="flex items-center gap-2.5 p-3.5 rounded-2xl border ${styles[type]} text-xs font-black backdrop-blur-md">
+                            <span class="text-base">${emoji}</span>
+                            <span>${msg}</span>
+                        </div>
+                    `;
+            }
+
+            function clearFormAlert() { formAlert.innerHTML = ""; }
+
+            // Search & Filters
+            document.getElementById("searchInput").addEventListener("input", Ui.debounce((e) => {
+                state.search = e.target.value.trim();
                 state.page = 1;
-                Ui.clearAlert(listAlert);
                 loadUsers();
             }, 300));
 
-            document.getElementById("roleFilter").addEventListener("change", (event) => {
-                state.role = event.target.value;
+            document.getElementById("roleFilter").addEventListener("change", (e) => {
+                state.role = e.target.value;
                 state.page = 1;
-                Ui.clearAlert(listAlert);
                 loadUsers();
             });
 

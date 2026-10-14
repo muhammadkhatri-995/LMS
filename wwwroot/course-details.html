@@ -3,37 +3,172 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Course | LearnHub</title>
+    <title>Course Details | LearnHub</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="/js/auth.js"></script>
     <script>
         const allowed = Auth.requireLogin();
     </script>
+    <style>
+        /* Ambient Y2K Keyframes */
+        @keyframes cyberFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-8px) rotate(-1deg);
+            }
+        }
+
+        @keyframes scanline {
+            0% {
+                transform: translateY(-100%);
+            }
+
+            100% {
+                transform: translateY(1000%);
+            }
+        }
+
+        @keyframes glitchSnap {
+            0%, 100% {
+                transform: translate(0);
+            }
+
+            20% {
+                transform: translate(-3px, 2px);
+            }
+
+            40% {
+                transform: translate(3px, -2px);
+            }
+
+            60% {
+                transform: translate(-2px, -1px);
+            }
+
+            80% {
+                transform: translate(2px, 1px);
+            }
+        }
+
+        @keyframes y2kPop {
+            0% {
+                opacity: 0;
+                transform: scale(0.88) translateY(25px);
+                filter: blur(10px);
+            }
+
+            60% {
+                transform: scale(1.02) translateY(-4px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+                filter: blur(0);
+            }
+        }
+
+        .animate-cyber-float {
+            animation: cyberFloat 5s ease-in-out infinite;
+        }
+
+        .card-enter {
+            animation: y2kPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .glitch-hover:hover {
+            animation: glitchSnap 0.2s ease-in-out;
+        }
+
+        /* Y2K Tech Grid Background */
+        .y2k-grid {
+            background-size: 30px 30px;
+            background-image: linear-gradient(to right, rgba(56, 189, 248, 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(56, 189, 248, 0.08) 1px, transparent 1px);
+        }
+
+        /* Y2K Glass Card Container */
+        .y2k-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 2px solid rgba(186, 230, 253, 0.85);
+            box-shadow: 6px 6px 0px 0px rgba(14, 165, 233, 0.15), 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+            border-radius: 1.75rem;
+        }
+    </style>
 </head>
-<body class="min-h-screen bg-slate-50">
+<body class="min-h-screen bg-slate-50 text-slate-800 relative overflow-x-hidden font-sans y2k-grid">
 
-    <div id="appHeader"></div>
+    <!-- AMBIENT BRIGHT BLUE & CYAN BACKGROUND ORBS -->
+    <div class="fixed -top-24 -left-24 w-[450px] h-[450px] bg-cyan-300/40 rounded-full blur-[100px] pointer-events-none animate-cyber-float z-0"></div>
+    <div class="fixed -bottom-24 -right-24 w-[450px] h-[450px] bg-blue-300/40 rounded-full blur-[100px] pointer-events-none animate-cyber-float z-0" style="animation-direction: reverse;"></div>
 
-    <main class="max-w-3xl mx-auto px-4 py-8 space-y-4">
-        <a id="backLink" href="#" class="text-sm text-blue-600 hover:underline">&larr; Back to courses</a>
+    <div id="appHeader" class="relative z-10"></div>
+
+    <main class="max-w-3xl mx-auto px-4 py-8 space-y-6 relative z-10">
+        <!-- Back Link Button -->
+        <div>
+            <a id="backLink" href="#" class="glitch-hover inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-white border border-sky-200 text-xs font-black text-slate-800 hover:text-blue-600 hover:border-blue-300 transition-all shadow-sm">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                <span>Back to Courses</span>
+            </a>
+        </div>
 
         <div id="pageAlert"></div>
 
-        <article id="courseCard" class="hidden bg-white rounded-xl border border-slate-200 overflow-hidden">
-            <div id="thumb" class="h-36 bg-slate-100 flex items-center justify-center text-5xl font-semibold text-slate-400"></div>
+        <!-- Course Details Glass Card -->
+        <article id="courseCard" class="hidden y2k-card rounded-3xl overflow-hidden card-enter relative">
 
-            <div class="p-6 space-y-4">
+            <!-- Dynamic Banner Header with Y2K Scanlines -->
+            <div id="thumb" class="h-48 bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-500 flex items-center justify-center text-6xl font-black text-white relative overflow-hidden">
+                <!-- Scanline FX -->
+                <div class="absolute inset-0 bg-gradient-to-b from-transparent via-white/10 to-transparent h-10 w-full pointer-events-none animate-[scanline_6s_linear_infinite]"></div>
+                <span class="absolute -right-4 -bottom-4 text-9xl opacity-15 select-none">🎓</span>
+                <span id="thumbText" class="drop-shadow-lg transform hover:scale-110 transition-transform duration-300 select-none"></span>
+            </div>
+
+            <div class="p-6 md:p-8 space-y-6 relative z-10">
+                <!-- Category & Status Badges -->
                 <div class="flex flex-wrap items-center gap-2">
-                    <span id="categoryBadge" class="inline-block rounded-full bg-blue-50 text-blue-700 px-2 py-0.5 text-xs font-medium"></span>
-                    <span id="statusBadge"></span>
+                    <span id="categoryBadge" class="inline-flex items-center gap-1.5 rounded-full bg-sky-100 border border-sky-300 text-sky-900 px-3.5 py-1 text-xs font-black uppercase tracking-wider shadow-sm">
+                        <span>🏷️</span>
+                        <span id="categoryName"></span>
+                    </span>
+                    <span id="statusBadge" class="inline-flex items-center gap-1"></span>
                 </div>
 
-                <h1 id="title" class="text-2xl font-semibold text-slate-800"></h1>
-                <p id="instructor" class="text-sm text-slate-500"></p>
-                <p id="description" class="text-slate-700 whitespace-pre-line"></p>
-                <p id="dates" class="text-xs text-slate-400"></p>
+                <!-- Course Header Info -->
+                <div class="space-y-2">
+                    <h1 id="title" class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight leading-snug"></h1>
 
-                <div id="actions" class="flex flex-wrap gap-2 pt-2"></div>
+                    <div class="flex items-center gap-2 text-xs font-bold text-slate-600">
+                        <span class="p-1 rounded-lg bg-sky-50 border border-sky-200 text-xs">👨‍🏫</span>
+                        <p id="instructor" class="text-slate-900 font-black"></p>
+                    </div>
+                </div>
+
+                <hr class="border-sky-100" />
+
+                <!-- Description -->
+                <div class="space-y-1.5">
+                    <h2 class="text-xs font-black text-slate-400 tracking-wider uppercase">Course Overview 📖</h2>
+                    <p id="description" class="text-sm text-slate-800 leading-relaxed whitespace-pre-line font-bold bg-white/90 p-4 rounded-2xl border border-sky-100 shadow-sm"></p>
+                </div>
+
+                <!-- Timestamps -->
+                <div class="flex items-center gap-2 text-xs font-bold text-slate-500 bg-white/90 p-3.5 rounded-2xl border border-sky-100 shadow-sm">
+                    <i data-lucide="calendar" class="w-4 h-4 text-blue-600"></i>
+                    <p id="dates"></p>
+                </div>
+
+                <!-- Action Buttons Container -->
+                <div id="actions" class="flex flex-wrap gap-3 pt-3"></div>
             </div>
         </article>
     </main>
@@ -67,8 +202,8 @@
 
             function render(course) {
                 document.title = course.title + " | LearnHub";
-                document.getElementById("thumb").textContent = course.title.charAt(0).toUpperCase();
-                document.getElementById("categoryBadge").textContent = course.categoryName;
+                document.getElementById("thumbText").textContent = course.title.charAt(0).toUpperCase();
+                document.getElementById("categoryName").textContent = course.categoryName;
                 document.getElementById("statusBadge").replaceChildren(Courses.statusBadge(course.status));
                 document.getElementById("title").textContent = course.title;
                 document.getElementById("instructor").textContent = "Instructor: " + course.instructorName;
@@ -82,11 +217,15 @@
 
                 buildActions(course);
                 card.classList.remove("hidden");
+                lucide.createIcons();
             }
 
-            function actionButton(label, cssClass, handler) {
-                const button = Ui.el("button", "rounded-lg px-4 py-2 text-sm font-medium " + cssClass, label);
+            function actionButton(label, cssClass, emoji, handler) {
+                const button = document.createElement("button");
                 button.type = "button";
+                button.className = "glitch-hover inline-flex items-center gap-2 rounded-2xl px-5 py-2.5 text-xs font-black transition-all shadow-md active:scale-95 disabled:opacity-50 " + cssClass;
+
+                button.innerHTML = `<span>${emoji}</span><span>${label}</span>`;
                 button.addEventListener("click", () => handler(button));
                 return button;
             }
@@ -98,11 +237,10 @@
                 const isAdmin = user.role === "Admin";
 
                 if (isOwner) {
-                    const edit = Ui.el(
-                        "a",
-                        "rounded-lg border border-slate-300 px-4 py-2 text-sm hover:bg-slate-100",
-                        "Edit");
+                    const edit = document.createElement("a");
+                    edit.className = "glitch-hover inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-2.5 text-xs font-black text-slate-800 hover:border-blue-300 hover:text-blue-600 transition-all active:scale-95 shadow-sm";
                     edit.href = "/instructor/create-course.html?id=" + encodeURIComponent(course.id);
+                    edit.innerHTML = `<span>✏️</span><span>Edit Course</span>`;
                     actions.appendChild(edit);
                 }
 
@@ -111,12 +249,14 @@
 
                     actions.appendChild(actionButton(
                         isPublished ? "Unpublish" : "Publish",
-                        "bg-blue-600 text-white hover:bg-blue-700",
+                        "bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 text-white shadow-sky-500/20 hover:from-blue-700 hover:to-cyan-700",
+                        isPublished ? "🔒" : "🚀",
                         (button) => togglePublish(course, button)));
 
                     actions.appendChild(actionButton(
                         "Delete",
-                        "border border-red-200 text-red-700 hover:bg-red-50",
+                        "border border-rose-200 bg-rose-50/60 text-rose-600 hover:bg-rose-100 hover:text-rose-700",
+                        "🗑️",
                         (button) => deleteCourse(course, button)));
                 }
             }
@@ -129,9 +269,9 @@
                     const updated = await Api.post(
                         "/api/courses/" + course.id + (publish ? "/publish" : "/unpublish"));
                     render(updated);
-                    Ui.showAlert(pageAlert, publish ? "Course published." : "Course unpublished.", "success");
+                    showAlert(pageAlert, publish ? "Course published successfully!" : "Course unpublished.", "success", publish ? "🎉" : "🔒");
                 } catch (error) {
-                    Ui.showAlert(pageAlert, error.messages || ["Could not update the course."]);
+                    showAlert(pageAlert, error.messages || ["Could not update the course."], "error", "⚠️");
                     button.disabled = false;
                 }
             }
@@ -147,14 +287,31 @@
                     await Api.del("/api/courses/" + course.id);
                     window.location.href = backUrl + "?deleted=1";
                 } catch (error) {
-                    Ui.showAlert(pageAlert, error.messages || ["Could not delete the course."]);
+                    showAlert(pageAlert, error.messages || ["Could not delete the course."], "error", "⚠️");
                     button.disabled = false;
                 }
             }
 
+            function showAlert(container, message, type = "error", emoji = "⚠️") {
+                const styles = {
+                    error: "bg-rose-500/10 border-rose-300 text-rose-700",
+                    success: "bg-emerald-500/10 border-emerald-300 text-emerald-700",
+                    info: "bg-sky-500/10 border-sky-300 text-sky-700"
+                };
+
+                const msg = Array.isArray(message) ? message.join(" ") : message;
+
+                container.innerHTML = `
+                        <div class="flex items-center gap-2.5 p-3.5 rounded-2xl border ${styles[type]} text-xs font-black backdrop-blur-md transition-all shadow-sm">
+                            <span class="text-base">${emoji}</span>
+                            <span>${msg}</span>
+                        </div>
+                    `;
+            }
+
             async function load() {
                 if (!Courses.isGuid(courseId)) {
-                    Ui.showAlert(pageAlert, "Course not found.");
+                    showAlert(pageAlert, "Course not found.", "error", "🔍");
                     return;
                 }
 
@@ -162,7 +319,7 @@
                     const course = await Api.get("/api/courses/" + courseId);
                     render(course);
                 } catch (error) {
-                    Ui.showAlert(pageAlert, error.messages || ["Could not load the course."]);
+                    showAlert(pageAlert, error.messages || ["Could not load the course."], "error", "❌");
                 }
             }
 

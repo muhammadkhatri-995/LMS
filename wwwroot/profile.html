@@ -4,78 +4,279 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>My Profile | LearnHub</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="/js/auth.js"></script>
     <script>
         const allowed = Auth.requireLogin();
     </script>
+    <style>
+        /* Ambient Y2K Keyframes */
+        @keyframes cyberFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-10px) rotate(-2deg);
+            }
+        }
+
+        @keyframes scanline {
+            0% {
+                transform: translateY(-100%);
+            }
+
+            100% {
+                transform: translateY(1000%);
+            }
+        }
+
+        @keyframes glitchSnap {
+            0%, 100% {
+                transform: translate(0);
+            }
+
+            20% {
+                transform: translate(-3px, 2px);
+            }
+
+            40% {
+                transform: translate(3px, -2px);
+            }
+
+            60% {
+                transform: translate(-2px, -1px);
+            }
+
+            80% {
+                transform: translate(2px, 1px);
+            }
+        }
+
+        @keyframes y2kPop {
+            0% {
+                opacity: 0;
+                transform: scale(0.85) translateY(20px);
+                filter: blur(10px);
+            }
+
+            60% {
+                transform: scale(1.02) translateY(-4px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+                filter: blur(0);
+            }
+        }
+
+        .animate-cyber-float {
+            animation: cyberFloat 5s ease-in-out infinite;
+        }
+
+        .y2k-enter {
+            animation: y2kPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .glitch-hover:hover {
+            animation: glitchSnap 0.2s ease-in-out;
+        }
+
+        /* Y2K Grid Background Pattern */
+        .y2k-grid {
+            background-size: 30px 30px;
+            background-image: linear-gradient(to right, rgba(56, 189, 248, 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(56, 189, 248, 0.08) 1px, transparent 1px);
+        }
+
+        /* Y2K Cyber Card Container */
+        .y2k-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 2px solid rgba(186, 230, 253, 0.8);
+            box-shadow: 6px 6px 0px 0px rgba(14, 165, 233, 0.15), 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+            border-radius: 1.5rem;
+        }
+
+        /* Input Hyper Focus Ring */
+        input:focus {
+            box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.25), 0 0 15px rgba(14, 165, 233, 0.2);
+        }
+    </style>
 </head>
-<body class="min-h-screen bg-slate-50">
+<body class="min-h-screen bg-slate-50 text-slate-800 relative overflow-x-hidden font-sans y2k-grid">
 
-    <div id="appHeader"></div>
+    <!-- Ambient Gradient Glow Orbs -->
+    <div class="fixed -top-24 -left-24 w-[400px] h-[400px] bg-cyan-300/40 rounded-full blur-[90px] pointer-events-none z-0"></div>
+    <div class="fixed -bottom-24 -right-24 w-[400px] h-[400px] bg-blue-300/40 rounded-full blur-[90px] pointer-events-none z-0"></div>
 
-    <main class="max-w-2xl mx-auto px-4 py-8 space-y-6">
-        <h1 class="text-xl font-semibold text-slate-800">My profile</h1>
+    <div id="appHeader" class="relative z-10"></div>
 
-        <!-- Account details -->
-        <section class="bg-white rounded-xl border border-slate-200 p-6">
-            <h2 class="text-sm font-semibold text-slate-700 mb-4">Account</h2>
-            <dl class="grid grid-cols-3 gap-y-3 text-sm">
-                <dt class="text-slate-500">Email</dt>
-                <dd id="emailText" class="col-span-2 text-slate-800 break-all"></dd>
-                <dt class="text-slate-500">Role</dt>
-                <dd id="roleText" class="col-span-2 text-slate-800"></dd>
-                <dt class="text-slate-500">Member since</dt>
-                <dd id="sinceText" class="col-span-2 text-slate-800"></dd>
-            </dl>
-        </section>
+    <main class="max-w-3xl mx-auto px-4 py-8 space-y-8 relative z-10">
 
-        <!-- Edit name -->
-        <section class="bg-white rounded-xl border border-slate-200 p-6">
-            <h2 class="text-sm font-semibold text-slate-700 mb-4">Edit profile</h2>
-            <div id="profileAlert" class="mb-4"></div>
+        <!-- ================= HERO HEADER: CLEAN Y2K AVATAR ================= -->
+        <div class="y2k-card y2k-enter p-6 sm:p-8 relative overflow-hidden">
+
+            <!-- Scanline FX Accent -->
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-400/5 to-transparent h-12 w-full pointer-events-none animate-[scanline_8s_linear_infinite]"></div>
+
+            <div class="flex flex-col sm:flex-row items-center gap-6 relative z-10">
+
+                <!-- Y2K CLEAN CYBER AVATAR (Replaced old multi-circle ring) -->
+                <div class="relative shrink-0 group cursor-pointer">
+                    <!-- Outer Y2K Cyber Shield Frame -->
+                    <div class="w-20 h-20 rounded-2xl bg-gradient-to-tr from-blue-600 via-sky-500 to-cyan-400 p-[3px] shadow-lg shadow-sky-500/20 group-hover:scale-105 transition-transform duration-300">
+                        <!-- Inner Container -->
+                        <div class="w-full h-full bg-white rounded-[13px] flex items-center justify-center relative overflow-hidden">
+                            <!-- Matrix Initial Letter -->
+                            <span id="avatarBox" class="text-3xl font-black bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent select-none">
+                                ?
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Cyber Status Tag Badge -->
+                    <div class="absolute -bottom-2 -right-2 bg-slate-900 text-cyan-300 text-[9px] font-black px-2 py-0.5 rounded-full border border-cyan-400 flex items-center gap-1 shadow-md">
+                        <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
+                        <span>ONLINE</span>
+                    </div>
+                </div>
+
+                <!-- Profile Info & Cyber Pill -->
+                <div class="text-center sm:text-left space-y-2 flex-1">
+                    <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-sky-100 border border-sky-300 text-sky-800 text-[11px] font-black tracking-wide uppercase">
+                            <span>⚡</span>
+                            <span>MEMBER SPACE</span>
+                        </span>
+                        <span class="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
+                            Y2K_OS v2.6
+                        </span>
+                    </div>
+
+                    <h1 id="heroName" class="text-3xl font-black text-slate-900 tracking-tight leading-none">Loading Profile...</h1>
+
+                    <p id="heroEmail" class="text-xs font-bold text-slate-500 flex items-center justify-center sm:justify-start gap-1.5">
+                        <i data-lucide="mail" class="w-3.5 h-3.5 text-blue-600"></i>
+                        <span>---</span>
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ================= SECTION 1: ACCOUNT INTEL ================= -->
+        <div class="y2k-card y2k-enter p-6 sm:p-8 space-y-5" style="animation-delay: 0.1s;">
+            <div class="flex items-center justify-between border-b border-sky-100 pb-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl">🪪</span>
+                    <h2 class="text-lg font-black text-slate-900">Account Intel</h2>
+                </div>
+                <span class="text-[10px] font-mono font-bold text-sky-600 bg-sky-50 px-2.5 py-1 rounded-lg border border-sky-200">
+                    [SYS_ID: VERIFIED]
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-semibold">
+                <!-- Email Card -->
+                <div class="p-4 rounded-2xl bg-white border border-sky-100 space-y-1.5 hover:border-blue-400 hover:-translate-y-1 transition-all duration-200 shadow-sm group">
+                    <span class="text-slate-400 uppercase tracking-wider text-[10px] font-black block group-hover:text-blue-600 transition-colors">Email Address 📧</span>
+                    <p id="emailText" class="text-slate-900 font-black break-all leading-relaxed"></p>
+                </div>
+
+                <!-- Role Badge Card -->
+                <div class="p-4 rounded-2xl bg-white border border-sky-100 space-y-1.5 hover:border-blue-400 hover:-translate-y-1 transition-all duration-200 shadow-sm group">
+                    <span class="text-slate-400 uppercase tracking-wider text-[10px] font-black block group-hover:text-blue-600 transition-colors">Access Role 🛡️</span>
+                    <span id="roleBadge" class="inline-flex items-center gap-1.5 rounded-full bg-sky-100 text-sky-900 px-3 py-0.5 text-xs font-black border border-sky-300">
+                        <span id="roleText">Student</span>
+                    </span>
+                </div>
+
+                <!-- Member Since Card -->
+                <div class="p-4 rounded-2xl bg-white border border-sky-100 space-y-1.5 hover:border-blue-400 hover:-translate-y-1 transition-all duration-200 shadow-sm group">
+                    <span class="text-slate-400 uppercase tracking-wider text-[10px] font-black block group-hover:text-blue-600 transition-colors">Joined Date 🗓️</span>
+                    <p id="sinceText" class="text-slate-900 font-black leading-relaxed"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= SECTION 2: EDIT PROFILE ================= -->
+        <div class="y2k-card y2k-enter p-6 sm:p-8 space-y-5" style="animation-delay: 0.2s;">
+            <div class="flex items-center gap-2 border-b border-sky-100 pb-4">
+                <span class="text-2xl">✏️</span>
+                <h2 class="text-lg font-black text-slate-900">Update Identity</h2>
+            </div>
+
+            <div id="profileAlert"></div>
 
             <form id="profileForm" class="space-y-4" novalidate>
-                <div>
-                    <label for="fullName" class="block text-sm font-medium text-slate-700 mb-1">Full name</label>
-                    <input id="fullName" type="text" autocomplete="name"
-                           class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <div class="space-y-1.5">
+                    <label for="fullName" class="block text-xs font-black text-slate-700 uppercase tracking-wider">Full Name</label>
+                    <div class="relative group">
+                        <i data-lucide="user" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors"></i>
+                        <input id="fullName" type="text" autocomplete="name" placeholder="Enter full name"
+                               class="w-full rounded-2xl bg-white border border-slate-200 pl-10 pr-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-all font-bold" />
+                    </div>
                 </div>
+
                 <button id="profileBtn" type="submit"
-                        class="rounded-lg bg-blue-600 text-white px-4 py-2 text-sm font-medium hover:bg-blue-700">
-                    Save changes
+                        class="glitch-hover inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-7 py-3 text-xs font-black shadow-md shadow-sky-500/20 active:scale-95 transition-all">
+                    <i data-lucide="save" class="w-4 h-4"></i>
+                    <span>Save Identity</span>
                 </button>
             </form>
-        </section>
+        </div>
 
-        <!-- Change password -->
-        <section class="bg-white rounded-xl border border-slate-200 p-6">
-            <h2 class="text-sm font-semibold text-slate-700 mb-4">Change password</h2>
-            <div id="passwordAlert" class="mb-4"></div>
+        <!-- ================= SECTION 3: CHANGE PASSWORD ================= -->
+        <div class="y2k-card y2k-enter p-6 sm:p-8 space-y-5" style="animation-delay: 0.3s;">
+            <div class="flex items-center gap-2 border-b border-sky-100 pb-4">
+                <span class="text-2xl">🔑</span>
+                <h2 class="text-lg font-black text-slate-900">Security Credentials</h2>
+            </div>
+
+            <div id="passwordAlert"></div>
 
             <form id="passwordForm" class="space-y-4" novalidate>
-                <div>
-                    <label for="currentPassword" class="block text-sm font-medium text-slate-700 mb-1">Current password</label>
-                    <input id="currentPassword" type="password" autocomplete="current-password"
-                           class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <div class="space-y-1.5">
+                    <label for="currentPassword" class="block text-xs font-black text-slate-700 uppercase tracking-wider">Current Password</label>
+                    <div class="relative group">
+                        <i data-lucide="lock" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors"></i>
+                        <input id="currentPassword" type="password" autocomplete="current-password" placeholder="••••••••"
+                               class="w-full rounded-2xl bg-white border border-slate-200 pl-10 pr-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-all font-bold" />
+                    </div>
                 </div>
-                <div>
-                    <label for="newPassword" class="block text-sm font-medium text-slate-700 mb-1">New password</label>
-                    <input id="newPassword" type="password" autocomplete="new-password"
-                           class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                    <p class="text-xs text-slate-500 mt-1">At least 8 characters, with a letter and a number.</p>
+
+                <div class="space-y-1.5">
+                    <label for="newPassword" class="block text-xs font-black text-slate-700 uppercase tracking-wider">New Password</label>
+                    <div class="relative group">
+                        <i data-lucide="key-round" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors"></i>
+                        <input id="newPassword" type="password" autocomplete="new-password" placeholder="••••••••"
+                               class="w-full rounded-2xl bg-white border border-slate-200 pl-10 pr-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-all font-bold" />
+                    </div>
+                    <p class="text-[11px] font-bold text-slate-500 pt-0.5">⚠️ At least 8 characters, containing letters & numbers.</p>
                 </div>
-                <div>
-                    <label for="confirmPassword" class="block text-sm font-medium text-slate-700 mb-1">Confirm new password</label>
-                    <input id="confirmPassword" type="password" autocomplete="new-password"
-                           class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+                <div class="space-y-1.5">
+                    <label for="confirmPassword" class="block text-xs font-black text-slate-700 uppercase tracking-wider">Confirm New Password</label>
+                    <div class="relative group">
+                        <i data-lucide="check-circle-2" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors"></i>
+                        <input id="confirmPassword" type="password" autocomplete="new-password" placeholder="••••••••"
+                               class="w-full rounded-2xl bg-white border border-slate-200 pl-10 pr-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-all font-bold" />
+                    </div>
                 </div>
+
                 <button id="passwordBtn" type="submit"
-                        class="rounded-lg bg-blue-600 text-white px-4 py-2 text-sm font-medium hover:bg-blue-700">
-                    Change password
+                        class="glitch-hover inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-7 py-3 text-xs font-black shadow-md shadow-sky-500/20 active:scale-95 transition-all">
+                    <i data-lucide="shield-check" class="w-4 h-4"></i>
+                    <span>Update Security Key</span>
                 </button>
             </form>
-        </section>
+        </div>
+
     </main>
 
     <script src="/js/api.js"></script>
@@ -98,10 +299,18 @@
             Layout.renderHeader(headerBox);
 
             function showProfile(profile) {
+                const initial = profile.fullName ? profile.fullName.charAt(0).toUpperCase() : "?";
+
+                document.getElementById("avatarBox").textContent = initial;
+                document.getElementById("heroName").textContent = profile.fullName || "User Profile";
+                document.getElementById("heroEmail").querySelector("span").textContent = profile.email;
+
                 document.getElementById("emailText").textContent = profile.email;
                 document.getElementById("roleText").textContent = profile.role;
                 document.getElementById("sinceText").textContent = Ui.formatDate(profile.createdAt);
                 document.getElementById("fullName").value = profile.fullName;
+
+                lucide.createIcons();
             }
 
             async function loadProfile() {
@@ -109,34 +318,33 @@
                     const profile = await Api.get("/api/users/profile");
                     showProfile(profile);
                 } catch (error) {
-                    Ui.showAlert(profileAlert, error.messages || ["Could not load your profile."]);
+                    showAlert(profileAlert, error.messages || ["Could not load profile."], "error", "❌");
                 }
             }
 
             profileForm.addEventListener("submit", async (event) => {
                 event.preventDefault();
-                Ui.clearAlert(profileAlert);
+                clearAlert(profileAlert);
 
                 const fullName = document.getElementById("fullName").value.trim();
 
                 if (!fullName) {
-                    Ui.showAlert(profileAlert, "Please enter your name.");
+                    showAlert(profileAlert, "Please enter your name.", "error", "⚠️");
                     return;
                 }
 
                 Ui.setBusy(profileBtn, true, "Saving...");
 
                 try {
-                    const updated = await Api.put("/api/users/profile", { fullName });
-                    showProfile(updated);
+                    const response = await Api.put("/api/users/profile", { fullName });
 
-                    // Keep the saved user in sync, then redraw the header with the new name.
-                    Auth.updateUser({ fullName: updated.fullName });
+                    showProfile(response);
+                    Auth.updateUser({ fullName: response.fullName });
                     Layout.renderHeader(headerBox);
 
-                    Ui.showAlert(profileAlert, "Profile updated.", "success");
+                    showAlert(profileAlert, "Profile identity updated!", "success", "🎉");
                 } catch (error) {
-                    Ui.showAlert(profileAlert, error.messages || ["Something went wrong. Please try again."]);
+                    showAlert(profileAlert, error.messages || ["Something went wrong. Try again."], "error", "❌");
                 } finally {
                     Ui.setBusy(profileBtn, false);
                 }
@@ -144,34 +352,54 @@
 
             passwordForm.addEventListener("submit", async (event) => {
                 event.preventDefault();
-                Ui.clearAlert(passwordAlert);
+                clearAlert(passwordAlert);
 
                 const currentPassword = document.getElementById("currentPassword").value;
                 const newPassword = document.getElementById("newPassword").value;
                 const confirmPassword = document.getElementById("confirmPassword").value;
 
                 if (!currentPassword || !newPassword) {
-                    Ui.showAlert(passwordAlert, "Please fill in all password fields.");
+                    showAlert(passwordAlert, "Please fill in all password fields.", "error", "⚠️");
                     return;
                 }
 
                 if (newPassword !== confirmPassword) {
-                    Ui.showAlert(passwordAlert, "The new passwords do not match.");
+                    showAlert(passwordAlert, "The new passwords do not match.", "error", "⚠️");
                     return;
                 }
 
-                Ui.setBusy(passwordBtn, true, "Changing...");
+                Ui.setBusy(passwordBtn, true, "Updating...");
 
                 try {
                     await Api.put("/api/users/change-password", { currentPassword, newPassword });
                     passwordForm.reset();
-                    Ui.showAlert(passwordAlert, "Password changed successfully.", "success");
+                    showAlert(passwordAlert, "Password updated successfully!", "success", "🔒");
                 } catch (error) {
-                    Ui.showAlert(passwordAlert, error.messages || ["Something went wrong. Please try again."]);
+                    showAlert(passwordAlert, error.messages || ["Something went wrong. Try again."], "error", "❌");
                 } finally {
                     Ui.setBusy(passwordBtn, false);
                 }
             });
+
+            function showAlert(container, message, type = "error", emoji = "⚠️") {
+                const msg = Array.isArray(message) ? message.join(" ") : message;
+                const styles = {
+                    error: "bg-rose-500/10 border-rose-300 text-rose-700",
+                    success: "bg-emerald-500/10 border-emerald-300 text-emerald-700",
+                    info: "bg-sky-500/10 border-sky-300 text-sky-700"
+                };
+
+                container.innerHTML = `
+                        <div class="flex items-center gap-2.5 p-3.5 rounded-2xl border ${styles[type]} text-xs font-black backdrop-blur-md transition-all shadow-sm">
+                            <span class="text-base">${emoji}</span>
+                            <span>${msg}</span>
+                        </div>
+                    `;
+            }
+
+            function clearAlert(container) {
+                container.innerHTML = "";
+            }
 
             loadProfile();
         }

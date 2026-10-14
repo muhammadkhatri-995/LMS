@@ -4,41 +4,182 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Browse courses | LearnHub</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="/js/auth.js"></script>
     <script>
         const allowed = Auth.requireRole("Student");
     </script>
+    <style>
+        /* Ambient Y2K Motion Keyframes */
+        @keyframes cyberFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-8px) rotate(-1deg);
+            }
+        }
+
+        @keyframes scanline {
+            0% {
+                transform: translateY(-100%);
+            }
+
+            100% {
+                transform: translateY(1000%);
+            }
+        }
+
+        @keyframes glitchSnap {
+            0%, 100% {
+                transform: translate(0);
+            }
+
+            20% {
+                transform: translate(-3px, 2px);
+            }
+
+            40% {
+                transform: translate(3px, -2px);
+            }
+
+            60% {
+                transform: translate(-2px, -1px);
+            }
+
+            80% {
+                transform: translate(2px, 1px);
+            }
+        }
+
+        @keyframes y2kPop {
+            0% {
+                opacity: 0;
+                transform: scale(0.88) translateY(25px);
+                filter: blur(10px);
+            }
+
+            60% {
+                transform: scale(1.02) translateY(-4px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+                filter: blur(0);
+            }
+        }
+
+        .animate-cyber-float {
+            animation: cyberFloat 5s ease-in-out infinite;
+        }
+
+        .card-enter {
+            animation: y2kPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .glitch-hover:hover {
+            animation: glitchSnap 0.2s ease-in-out;
+        }
+
+        /* Y2K Tech Grid Pattern Background */
+        .y2k-grid {
+            background-size: 30px 30px;
+            background-image: linear-gradient(to right, rgba(56, 189, 248, 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(56, 189, 248, 0.08) 1px, transparent 1px);
+        }
+
+        /* Y2K Glass Card Container */
+        .y2k-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 2px solid rgba(186, 230, 253, 0.85);
+            box-shadow: 6px 6px 0px 0px rgba(14, 165, 233, 0.15), 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+            border-radius: 1.75rem;
+        }
+
+        /* Input & Filter Focus Pulse */
+        input:focus, select:focus {
+            box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.25), 0 0 15px rgba(14, 165, 233, 0.2);
+        }
+    </style>
 </head>
-<body class="min-h-screen bg-slate-50">
+<body class="min-h-screen bg-slate-50 text-slate-800 relative overflow-x-hidden font-sans y2k-grid">
 
-    <div id="appHeader"></div>
+    <!-- AMBIENT BRIGHT BLUE & CYAN BACKGROUND ORBS -->
+    <div class="fixed -top-24 -left-24 w-[450px] h-[450px] bg-cyan-300/40 rounded-full blur-[100px] pointer-events-none animate-cyber-float z-0"></div>
+    <div class="fixed -bottom-24 -right-24 w-[450px] h-[450px] bg-blue-300/40 rounded-full blur-[100px] pointer-events-none animate-cyber-float z-0" style="animation-direction: reverse;"></div>
 
-    <main class="max-w-5xl mx-auto px-4 py-8 space-y-6">
-        <h1 class="text-xl font-semibold text-slate-800">Browse courses</h1>
+    <div id="appHeader" class="relative z-10"></div>
 
-        <section class="flex flex-col sm:flex-row gap-3">
-            <input id="searchInput" type="search" placeholder="Search courses"
-                   class="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500" />
-            <select id="categoryFilter"
-                    class="rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-            </select>
+    <main class="max-w-6xl mx-auto px-4 py-8 space-y-8 relative z-10">
+
+        <!-- Header Banner -->
+        <div class="y2k-card p-6 rounded-3xl relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <!-- Scanline FX -->
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-400/5 to-transparent h-12 w-full pointer-events-none animate-[scanline_8s_linear_infinite]"></div>
+
+            <div class="relative z-10">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-100/80 border border-sky-300 text-sky-800 text-xs font-black tracking-wider uppercase mb-2">
+                    <span>⚡ LearnHub Academy v2.6</span>
+                </div>
+                <h1 class="text-3xl font-black text-slate-900 tracking-tight">Explore Courses 🎓</h1>
+                <p class="text-xs font-bold text-slate-500 mt-1">Discover new skills and level up your knowledge workspace</p>
+            </div>
+
+            <!-- Quick Stat Badge -->
+            <div class="relative z-10 flex items-center gap-3 bg-white/90 border border-sky-200 px-4 py-3 rounded-2xl shadow-sm">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-sky-500 to-cyan-400 p-[2px] shadow-md shadow-sky-500/20">
+                    <div class="w-full h-full bg-white rounded-[10px] flex items-center justify-center text-xl font-black">
+                        📚
+                    </div>
+                </div>
+                <div>
+                    <span class="text-xs font-black text-slate-900 block">Student Terminal</span>
+                    <span class="text-[10px] text-sky-600 uppercase tracking-wider font-extrabold">Self-Paced Mode</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search & Filter Bar -->
+        <section class="grid grid-cols-1 sm:grid-cols-12 gap-3">
+            <div class="sm:col-span-8 relative group">
+                <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors"></i>
+                <input id="searchInput" type="search" placeholder="Search courses by title or keyword..."
+                       class="w-full rounded-2xl bg-white border border-slate-200 pl-10 pr-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-all font-bold shadow-sm" />
+            </div>
+
+            <div class="sm:col-span-4 relative group">
+                <i data-lucide="filter" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors"></i>
+                <select id="categoryFilter"
+                        class="w-full rounded-2xl bg-white border border-slate-200 pl-10 pr-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-blue-500 transition-all font-bold appearance-none shadow-sm cursor-pointer">
+                </select>
+                <i data-lucide="chevron-down" class="w-4 h-4 absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></i>
+            </div>
         </section>
 
         <div id="listAlert"></div>
 
-        <section id="courseGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></section>
+        <!-- Course Cards Grid -->
+        <section id="courseGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></section>
 
-        <div class="flex items-center justify-between text-sm">
-            <span id="pageInfo" class="text-slate-500"></span>
+        <!-- Pagination Controls -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 y2k-card p-4 rounded-2xl">
+            <span id="pageInfo" class="text-xs font-black text-slate-600"></span>
             <div class="flex gap-2">
                 <button id="prevBtn" type="button"
-                        class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed">
-                    Previous
+                        class="glitch-hover inline-flex items-center gap-1.5 rounded-2xl border border-slate-200 bg-white px-4 py-2 text-xs font-black text-slate-700 hover:border-blue-300 hover:text-blue-600 transition-all disabled:opacity-40 disabled:cursor-not-allowed active:scale-95">
+                    <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                    <span>Previous</span>
                 </button>
                 <button id="nextBtn" type="button"
-                        class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed">
-                    Next
+                        class="glitch-hover inline-flex items-center gap-1.5 rounded-2xl border border-slate-200 bg-white px-4 py-2 text-xs font-black text-slate-700 hover:border-blue-300 hover:text-blue-600 transition-all disabled:opacity-40 disabled:cursor-not-allowed active:scale-95">
+                    <span>Next</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
                 </button>
             </div>
         </div>
@@ -65,26 +206,73 @@
 
             Layout.renderHeader(document.getElementById("appHeader"));
 
-            function buildCard(course) {
-                const link = Ui.el(
-                    "a",
-                    "block bg-white rounded-xl border border-slate-200 overflow-hidden hover:border-blue-300 hover:shadow-sm transition");
+            // Gradient combinations for Y2K course banners
+            const gradients = [
+                "from-blue-600 via-sky-600 to-cyan-500",
+                "from-indigo-600 via-blue-600 to-sky-500",
+                "from-cyan-600 via-sky-600 to-blue-600",
+                "from-sky-600 via-blue-600 to-indigo-600"
+            ];
+
+            function buildCard(course, index) {
+                const gradientClass = gradients[index % gradients.length];
+
+                const link = document.createElement("a");
+                link.className = `group y2k-card rounded-3xl overflow-hidden hover:border-blue-400 transition-all duration-300 hover:-translate-y-1.5 card-enter flex flex-col justify-between relative cursor-pointer`;
+                link.style.animationDelay = `${(index % 9) * 0.08}s`;
                 link.href = Courses.detailsUrl(course.id);
 
-                link.appendChild(Ui.el(
-                    "div",
-                    "h-28 bg-slate-100 flex items-center justify-center text-3xl font-semibold text-slate-400",
-                    course.title.charAt(0).toUpperCase()));
+                // Dynamic Banner Header with Y2K Initial Badge
+                const banner = document.createElement("div");
+                banner.className = `h-32 bg-gradient-to-r ${gradientClass} flex items-center justify-center text-4xl font-black text-white relative overflow-hidden`;
+                banner.innerHTML = `
+                        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-white/10 to-transparent h-8 w-full pointer-events-none animate-[scanline_6s_linear_infinite]"></div>
+                        <span class="absolute -right-2 -bottom-2 text-7xl opacity-15 select-none">📖</span>
+                        <span class="drop-shadow-md group-hover:scale-110 transition-transform duration-300 select-none">${course.title.charAt(0).toUpperCase()}</span>
+                    `;
 
-                const body = Ui.el("div", "p-4 space-y-2");
-                body.appendChild(Ui.el(
-                    "span",
-                    "inline-block rounded-full bg-blue-50 text-blue-700 px-2 py-0.5 text-xs font-medium",
-                    course.categoryName));
-                body.appendChild(Ui.el("h2", "font-semibold text-slate-800 line-clamp-2", course.title));
-                body.appendChild(Ui.el("p", "text-sm text-slate-500 line-clamp-3", course.description));
-                body.appendChild(Ui.el("p", "text-xs text-slate-400", "By " + course.instructorName));
+                // Body content
+                const body = document.createElement("div");
+                body.className = "p-5 space-y-3 flex-1 flex flex-col justify-between relative z-10";
 
+                const mainInfo = document.createElement("div");
+                mainInfo.className = "space-y-2";
+
+                // Category Tag
+                const catTag = document.createElement("span");
+                catTag.className = "inline-flex items-center gap-1.5 rounded-full bg-sky-100 border border-sky-300 text-sky-900 px-3 py-0.5 text-[11px] font-black uppercase tracking-wider";
+                catTag.innerHTML = `<span>🏷️</span><span>${course.categoryName}</span>`;
+                mainInfo.appendChild(catTag);
+
+                // Title
+                const title = document.createElement("h2");
+                title.className = "font-black text-slate-900 text-lg leading-snug line-clamp-2 group-hover:text-blue-600 transition-colors";
+                title.textContent = course.title;
+                mainInfo.appendChild(title);
+
+                // Description
+                const desc = document.createElement("p");
+                desc.className = "text-xs font-bold text-slate-500 line-clamp-2 leading-relaxed";
+                desc.textContent = course.description;
+                mainInfo.appendChild(desc);
+
+                body.appendChild(mainInfo);
+
+                // Footer Info (Instructor + Arrow)
+                const footer = document.createElement("div");
+                footer.className = "pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-slate-500";
+                footer.innerHTML = `
+                        <span class="flex items-center gap-1.5">
+                            <span class="p-1 rounded-lg bg-sky-50 border border-sky-200 text-xs">👨‍🏫</span>
+                            <span class="truncate max-w-[140px] text-slate-800 font-black">${course.instructorName}</span>
+                        </span>
+                        <span class="text-blue-600 font-black flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                            Launch <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                        </span>
+                    `;
+                body.appendChild(footer);
+
+                link.appendChild(banner);
                 link.appendChild(body);
                 return link;
             }
@@ -93,18 +281,22 @@
                 grid.replaceChildren();
 
                 if (data.items.length === 0) {
-                    const empty = Ui.el(
-                        "p",
-                        "sm:col-span-2 lg:col-span-3 text-center text-slate-500 py-10",
-                        "No courses found.");
-                    grid.appendChild(empty);
+                    grid.innerHTML = `
+                            <div class="col-span-full py-16 text-center y2k-card rounded-3xl space-y-3">
+                                <span class="text-4xl block">🔍</span>
+                                <h3 class="text-base font-black text-slate-800">No courses found</h3>
+                                <p class="text-xs font-bold text-slate-500">Try adjusting your search terms or filter selections.</p>
+                            </div>
+                        `;
                 } else {
-                    data.items.forEach(course => grid.appendChild(buildCard(course)));
+                    data.items.forEach((course, idx) => grid.appendChild(buildCard(course, idx)));
                 }
 
                 pageInfo.textContent = Courses.pagerText(data);
                 prevBtn.disabled = data.page <= 1;
                 nextBtn.disabled = data.page >= Math.max(data.totalPages, 1);
+
+                lucide.createIcons();
             }
 
             async function loadCourses() {
@@ -127,11 +319,25 @@
                         return;
                     }
 
-                    Ui.clearAlert(listAlert);
+                    clearAlert();
                     render(data);
                 } catch (error) {
-                    Ui.showAlert(listAlert, error.messages || ["Could not load courses."]);
+                    showAlert(error.messages || ["Could not load courses."], "error", "❌");
                 }
+            }
+
+            function showAlert(message, type = "error", emoji = "⚠️") {
+                const msg = Array.isArray(message) ? message.join(" ") : message;
+                listAlert.innerHTML = `
+                        <div class="flex items-center gap-2.5 p-3.5 rounded-2xl bg-rose-500/10 border border-rose-300 text-rose-700 text-xs font-black backdrop-blur-md">
+                            <span class="text-base">${emoji}</span>
+                            <span>${msg}</span>
+                        </div>
+                    `;
+            }
+
+            function clearAlert() {
+                listAlert.innerHTML = "";
             }
 
             document.getElementById("searchInput").addEventListener("input", Ui.debounce((event) => {
@@ -162,7 +368,7 @@
                 try {
                     await Courses.fillCategorySelect(categoryFilter, "All categories");
                 } catch (error) {
-                    Ui.showAlert(listAlert, error.messages || ["Could not load categories."]);
+                    showAlert(error.messages || ["Could not load categories."], "error", "⚠️");
                 }
 
                 await loadCourses();

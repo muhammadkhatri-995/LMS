@@ -4,90 +4,412 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign in | LearnHub</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Ambient Y2K Keyframes */
+        @keyframes cyberFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-10px) rotate(-2deg);
+            }
+        }
+
+        @keyframes scanline {
+            0% {
+                transform: translateY(-100%);
+            }
+
+            100% {
+                transform: translateY(1000%);
+            }
+        }
+
+        @keyframes glitchSnap {
+            0%, 100% {
+                transform: translate(0);
+            }
+
+            20% {
+                transform: translate(-3px, 2px);
+            }
+
+            40% {
+                transform: translate(3px, -2px);
+            }
+
+            60% {
+                transform: translate(-2px, -1px);
+            }
+
+            80% {
+                transform: translate(2px, 1px);
+            }
+        }
+
+        @keyframes y2kPop {
+            0% {
+                opacity: 0;
+                transform: scale(0.88) translateY(25px);
+                filter: blur(10px);
+            }
+
+            60% {
+                transform: scale(1.02) translateY(-4px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+                filter: blur(0);
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% {
+                transform: translateX(0);
+            }
+
+            20%, 60% {
+                transform: translateX(-10px);
+            }
+
+            40%, 80% {
+                transform: translateX(10px);
+            }
+        }
+
+        @keyframes successPop {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(0.96);
+            }
+
+            100% {
+                transform: scale(1.02);
+                opacity: 0;
+                filter: blur(8px);
+            }
+        }
+
+        .animate-cyber-float {
+            animation: cyberFloat 5s ease-in-out infinite;
+        }
+
+        .y2k-enter {
+            animation: y2kPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .shake-error {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        .success-exit {
+            animation: successPop 0.5s ease-in-out forwards;
+        }
+
+        .glitch-hover:hover {
+            animation: glitchSnap 0.2s ease-in-out;
+        }
+
+        /* Y2K Grid Background Pattern */
+        .y2k-grid {
+            background-size: 30px 30px;
+            background-image: linear-gradient(to right, rgba(56, 189, 248, 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(56, 189, 248, 0.08) 1px, transparent 1px);
+        }
+
+        /* Y2K Cyber Glass Card Container */
+        .y2k-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 2px solid rgba(186, 230, 253, 0.85);
+            box-shadow: 6px 6px 0px 0px rgba(14, 165, 233, 0.15), 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+            border-radius: 1.75rem;
+        }
+
+        /* Input Hyper Focus Aura */
+        input:focus {
+            box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.25), 0 0 15px rgba(14, 165, 233, 0.2);
+        }
+    </style>
 </head>
-<body class="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+<body class="min-h-screen bg-slate-50 text-slate-800 flex items-center justify-center p-4 lg:p-10 relative overflow-x-hidden font-sans y2k-grid">
 
-    <main class="w-full max-w-md">
-        <div class="text-center mb-6">
-            <h1 class="text-2xl font-semibold text-slate-800">LearnHub</h1>
-            <p class="text-sm text-slate-500 mt-1">Sign in to continue learning</p>
+    <!-- INITIAL FULL SCREEN LOADING SCREEN -->
+    <div id="initialLoader" class="fixed inset-0 z-50 bg-gradient-to-br from-sky-50 via-blue-50 to-cyan-50 flex flex-col items-center justify-center gap-4 transition-opacity duration-500">
+        <div class="relative flex items-center justify-center">
+            <div class="w-16 h-16 rounded-2xl border-4 border-sky-300 border-t-blue-600 animate-spin"></div>
+            <span class="absolute text-2xl animate-bounce">⚡</span>
+        </div>
+        <div class="text-center">
+            <h3 class="text-lg font-black text-slate-900 tracking-tight">LearnHub OS</h3>
+            <p class="text-xs font-bold text-sky-600 mt-0.5">INITIALIZING Y2K_CORE_v2.6... 🚀</p>
+        </div>
+    </div>
+
+    <!-- AMBIENT BRIGHT BLUE & CYAN BACKGROUND ORBS -->
+    <div class="absolute -top-24 -left-24 w-[450px] h-[450px] bg-cyan-300/40 rounded-full blur-[100px] pointer-events-none animate-cyber-float"></div>
+    <div class="absolute -bottom-24 -right-24 w-[450px] h-[450px] bg-blue-300/40 rounded-full blur-[100px] pointer-events-none animate-cyber-float" style="animation-direction: reverse;"></div>
+
+    <!-- MAIN CONTAINER (SPLIT SCREEN LAYOUT) -->
+    <main id="mainApp" class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10 opacity-0 transition-opacity duration-700">
+
+        <!-- LEFT SIDE: RETRO Y2K HERO & STAT PILLS -->
+        <div class="lg:col-span-7 y2k-enter space-y-6 text-center lg:text-left pr-0 lg:pr-6">
+
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 border border-sky-300 shadow-sm backdrop-blur-md">
+                <span class="text-base animate-pulse">🔥</span>
+                <span class="text-xs font-black bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 bg-clip-text text-transparent uppercase tracking-wider">
+                    LearnHub Space v2.6
+                </span>
+            </div>
+
+            <h1 class="text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-[1.15]">
+                Learn smarter. <br />
+                <span class="bg-gradient-to-r from-blue-600 via-sky-500 to-cyan-500 bg-clip-text text-transparent">
+                    Level up faster.
+                </span> ⚡
+            </h1>
+
+            <p class="text-sm text-slate-600 max-w-md mx-auto lg:mx-0 leading-relaxed font-bold">
+                Your high-vibe learning corner. Lock in, track your streak, and unlock knowledge with your community. 🎓✨
+            </p>
+
+            <!-- Interactive Feature Pills & Stats -->
+            <div class="pt-2 grid grid-cols-3 gap-3 max-w-md mx-auto lg:mx-0">
+                <div class="p-3.5 rounded-2xl bg-white/90 border border-sky-200 shadow-sm backdrop-blur-md text-center hover:scale-105 transition-transform duration-200">
+                    <span class="text-2xl block mb-1">🔥</span>
+                    <span class="text-xs font-black text-slate-900 block">12 Days</span>
+                    <span class="text-[10px] text-slate-500 uppercase tracking-wide font-extrabold">Streak</span>
+                </div>
+                <div class="p-3.5 rounded-2xl bg-white/90 border border-sky-200 shadow-sm backdrop-blur-md text-center hover:scale-105 transition-transform duration-200">
+                    <span class="text-2xl block mb-1">🏆</span>
+                    <span class="text-xs font-black text-slate-900 block">Top 5%</span>
+                    <span class="text-[10px] text-slate-500 uppercase tracking-wide font-extrabold">Rank</span>
+                </div>
+                <div class="p-3.5 rounded-2xl bg-white/90 border border-sky-200 shadow-sm backdrop-blur-md text-center hover:scale-105 transition-transform duration-200">
+                    <span class="text-2xl block mb-1">🧠</span>
+                    <span class="text-xs font-black text-slate-900 block">98%</span>
+                    <span class="text-[10px] text-slate-500 uppercase tracking-wide font-extrabold">Accuracy</span>
+                </div>
+            </div>
+
+            <!-- Floating Badge Widget -->
+            <div class="hidden sm:flex items-center gap-3 p-3 rounded-2xl bg-white/90 border border-sky-200 max-w-sm mx-auto lg:mx-0 shadow-sm">
+                <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white text-xl font-black">
+                    🎯
+                </div>
+                <div>
+                    <h4 class="text-xs font-black text-slate-900">Ready to Lock In?</h4>
+                    <p class="text-[11px] font-bold text-slate-500">Sign in on the right to continue where you left off!</p>
+                </div>
+            </div>
+
         </div>
 
-        <div class="bg-white rounded-xl border border-slate-200 p-6">
-            <div id="alertBox" class="mb-4"></div>
+        <!-- RIGHT SIDE: Y2K LOGIN CARD -->
+        <div class="lg:col-span-5 w-full max-w-md mx-auto lg:ml-auto">
+            <div id="cardContainer" class="y2k-card rounded-3xl p-7 lg:p-8 y2k-enter transition-all duration-300 relative overflow-hidden">
 
-            <form id="loginForm" class="space-y-4" novalidate>
-                <div>
-                    <label for="email" class="block text-sm font-medium text-slate-700 mb-1">Email</label>
-                    <input id="email" type="email" autocomplete="username"
-                           class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <!-- Scanline FX -->
+                <div class="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-400/5 to-transparent h-12 w-full pointer-events-none animate-[scanline_8s_linear_infinite]"></div>
+
+                <!-- Card Header with Y2K Badge -->
+                <div class="text-center mb-6 relative z-10">
+
+                    <!-- Clean Y2K Avatar Frame (No concentric spinning circles) -->
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-600 via-sky-500 to-cyan-400 p-[3px] shadow-md shadow-sky-500/20 mx-auto mb-3">
+                        <div class="w-full h-full bg-white rounded-[13px] flex items-center justify-center text-2xl font-black">
+                            👋
+                        </div>
+                    </div>
+
+                    <h2 class="text-2xl font-black text-slate-900 tracking-tight">Welcome Back!</h2>
+                    <p class="text-xs font-bold text-slate-500 mt-1">Please sign in to continue 🚀</p>
                 </div>
 
-                <div>
-                    <label for="password" class="block text-sm font-medium text-slate-700 mb-1">Password</label>
-                    <input id="password" type="password" autocomplete="current-password"
-                           class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                </div>
+                <div id="alertBox" class="mb-5 relative z-10"></div>
 
-                <button id="submitBtn" type="submit"
-                        class="w-full rounded-lg bg-blue-600 text-white py-2 text-sm font-medium hover:bg-blue-700">
-                    Sign in
-                </button>
-            </form>
+                <form id="loginForm" class="space-y-4 relative z-10" novalidate>
+
+                    <!-- Email Field -->
+                    <div class="space-y-1.5">
+                        <label for="email" class="block text-xs font-black text-slate-700 tracking-wider uppercase flex items-center gap-1">
+                            Email 📧
+                        </label>
+                        <div class="relative group">
+                            <i data-lucide="mail" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors"></i>
+                            <input id="email" type="email" autocomplete="username" placeholder="you@learnhub.com"
+                                   class="w-full rounded-2xl bg-white border border-slate-200 pl-10 pr-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-all duration-200 font-bold" />
+                        </div>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="space-y-1.5">
+                        <div class="flex items-center justify-between">
+                            <label for="password" class="block text-xs font-black text-slate-700 tracking-wider uppercase flex items-center gap-1">
+                                Password 🔑
+                            </label>
+                            <a href="#" class="text-xs text-blue-600 font-bold hover:text-blue-700 hover:underline transition-colors">Forgot?</a>
+                        </div>
+                        <div class="relative group">
+                            <i data-lucide="lock" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors"></i>
+                            <input id="password" type="password" autocomplete="current-password" placeholder="••••••••"
+                                   class="w-full rounded-2xl bg-white border border-slate-200 pl-10 pr-10 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-all duration-200 font-bold" />
+                            <button type="button" id="togglePasswordBtn" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors focus:outline-none">
+                                <i data-lucide="eye" id="eyeIcon" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Glitch-Hover Submit Button -->
+                    <button id="submitBtn" type="submit"
+                            class="glitch-hover w-full relative group overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 font-black text-sm transition-all duration-200 active:scale-[0.97] mt-3 shadow-md shadow-sky-500/20">
+                        <div class="w-full h-full bg-white/0 group-hover:bg-white/10 rounded-[14px] py-3.5 px-4 flex items-center justify-center gap-2 text-white transition-colors">
+                            <span id="btnText" class="tracking-wide">Sign In</span>
+                            <span id="btnEmoji" class="text-base group-hover:translate-x-1 transition-transform">🚀</span>
+                        </div>
+                    </button>
+                </form>
+
+            </div>
         </div>
 
-        <p class="text-center text-sm text-slate-500 mt-4">
-            New here?
-            <a href="/register.html" class="text-blue-600 hover:underline">Create an account</a>
-        </p>
     </main>
 
     <script src="/js/auth.js"></script>
     <script src="/js/api.js"></script>
     <script src="/js/ui.js"></script>
     <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        const initialLoader = document.getElementById("initialLoader");
+        const mainApp = document.getElementById("mainApp");
         const alertBox = document.getElementById("alertBox");
         const form = document.getElementById("loginForm");
         const submitBtn = document.getElementById("submitBtn");
+        const cardContainer = document.getElementById("cardContainer");
+        const passwordInput = document.getElementById("password");
+        const togglePasswordBtn = document.getElementById("togglePasswordBtn");
+        const eyeIcon = document.getElementById("eyeIcon");
+        const btnText = document.getElementById("btnText");
+        const btnEmoji = document.getElementById("btnEmoji");
 
-        // Already logged in? Go straight to your dashboard.
-        const existingUser = Auth.getToken() ? Auth.getUser() : null;
+        // Initial loading screen sequence
+        window.addEventListener("load", () => {
+            setTimeout(() => {
+                initialLoader.classList.add("opacity-0", "pointer-events-none");
+                mainApp.classList.remove("opacity-0");
+                setTimeout(() => initialLoader.remove(), 500);
+            }, 700);
+        });
+
+        // Toggle Password Visibility
+        togglePasswordBtn.addEventListener("click", () => {
+            const isPassword = passwordInput.type === "password";
+            passwordInput.type = isPassword ? "text" : "password";
+            eyeIcon.setAttribute("data-lucide", isPassword ? "eye-off" : "eye");
+            lucide.createIcons();
+        });
+
+        // Check existing user session
+        const existingUser = typeof Auth !== "undefined" && Auth.getToken() ? Auth.getUser() : null;
         if (existingUser) {
             window.location.replace(Auth.homeFor(existingUser.role));
         }
 
-        // Messages from other pages, e.g. /login.html?registered=1
+        // Handle URL parameters
         const params = new URLSearchParams(window.location.search);
         if (params.get("registered")) {
-            Ui.showAlert(alertBox, "Account created. Please sign in.", "success");
+            showAlert("Account created! Please sign in.", "success", "🎉");
         } else if (params.get("expired")) {
-            Ui.showAlert(alertBox, "Your session has ended. Please sign in again.", "info");
+            showAlert("Session expired. Please sign in again.", "info", "⏰");
         }
 
+        // Form Submit Handler
         form.addEventListener("submit", async (event) => {
             event.preventDefault();
-            Ui.clearAlert(alertBox);
+            clearAlert();
 
             const email = document.getElementById("email").value.trim();
-            const password = document.getElementById("password").value;
+            const password = passwordInput.value;
 
             if (!email || !password) {
-                Ui.showAlert(alertBox, "Please enter your email and password.");
+                triggerErrorState("Please enter both email and password!", "⚠️");
                 return;
             }
 
-            Ui.setBusy(submitBtn, true, "Signing in...");
+            setLoadingState(true);
 
             try {
                 const data = await Api.post("/api/auth/login", { email, password });
-                Auth.saveSession(data);
-                window.location.href = Auth.homeFor(data.user.role);
+
+                // Success exit animation
+                cardContainer.classList.add("success-exit");
+
+                setTimeout(() => {
+                    Auth.saveSession(data);
+                    window.location.href = Auth.homeFor(data.user.role);
+                }, 400);
+
             } catch (error) {
-                Ui.showAlert(alertBox, error.messages || ["Something went wrong. Please try again."]);
-                Ui.setBusy(submitBtn, false);
+                setLoadingState(false);
+                const msg = error.messages || ["Invalid email or password. Try again!"];
+                triggerErrorState(Array.isArray(msg) ? msg.join(" ") : msg, "❌");
             }
         });
+
+        // Trigger Shake + Emoji Error State
+        function triggerErrorState(message, emoji = "❌") {
+            showAlert(message, "error", emoji);
+            cardContainer.classList.remove("shake-error");
+            void cardContainer.offsetWidth; // Force Reflow
+            cardContainer.classList.add("shake-error");
+        }
+
+        // Render Y2K Alert Box
+        function showAlert(message, type = "error", emoji = "⚠️") {
+            const styles = {
+                error: "bg-rose-500/10 border-rose-300 text-rose-700",
+                success: "bg-emerald-500/10 border-emerald-300 text-emerald-700",
+                info: "bg-sky-500/10 border-sky-300 text-sky-700"
+            };
+
+            alertBox.innerHTML = `
+                    <div class="flex items-center gap-2.5 p-3.5 rounded-2xl border ${styles[type]} text-xs font-black backdrop-blur-md transition-all shadow-sm">
+                        <span class="text-base">${emoji}</span>
+                        <span>${message}</span>
+                    </div>
+                `;
+        }
+
+        function clearAlert() {
+            alertBox.innerHTML = "";
+        }
+
+        // Loading state trigger
+        function setLoadingState(isLoading) {
+            if (isLoading) {
+                submitBtn.disabled = true;
+                btnText.textContent = "Authenticating...";
+                btnEmoji.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>`;
+            } else {
+                submitBtn.disabled = false;
+                btnText.textContent = "Sign In";
+                btnEmoji.textContent = "🚀";
+            }
+            lucide.createIcons();
+        }
     </script>
 </body>
 </html>

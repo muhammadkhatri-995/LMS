@@ -4,49 +4,184 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Categories | LearnHub Admin</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="/js/auth.js"></script>
     <script>
         const allowed = Auth.requireRole("Admin");
     </script>
+    <style>
+        /* Y2K Keyframe Animations */
+        @keyframes cyberFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-8px) rotate(-1deg);
+            }
+        }
+
+        @keyframes scanline {
+            0% {
+                transform: translateY(-100%);
+            }
+
+            100% {
+                transform: translateY(1000%);
+            }
+        }
+
+        @keyframes glitchSnap {
+            0%, 100% {
+                transform: translate(0);
+            }
+
+            20% {
+                transform: translate(-3px, 2px);
+            }
+
+            40% {
+                transform: translate(3px, -2px);
+            }
+
+            60% {
+                transform: translate(-2px, -1px);
+            }
+
+            80% {
+                transform: translate(2px, 1px);
+            }
+        }
+
+        @keyframes y2kPop {
+            0% {
+                opacity: 0;
+                transform: scale(0.88) translateY(25px);
+                filter: blur(10px);
+            }
+
+            60% {
+                transform: scale(1.02) translateY(-4px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+                filter: blur(0);
+            }
+        }
+
+        .animate-cyber-float {
+            animation: cyberFloat 5s ease-in-out infinite;
+        }
+
+        .card-enter {
+            animation: y2kPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .glitch-hover:hover {
+            animation: glitchSnap 0.2s ease-in-out;
+        }
+
+        /* Y2K Tech Grid Pattern Background */
+        .y2k-grid {
+            background-size: 30px 30px;
+            background-image: linear-gradient(to right, rgba(56, 189, 248, 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(56, 189, 248, 0.08) 1px, transparent 1px);
+        }
+
+        /* Y2K Glass Card Container */
+        .y2k-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 2px solid rgba(186, 230, 253, 0.85);
+            box-shadow: 6px 6px 0px 0px rgba(14, 165, 233, 0.15), 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+            border-radius: 1.75rem;
+        }
+
+        /* Input Focus Pulse */
+        input:focus {
+            box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.25), 0 0 15px rgba(14, 165, 233, 0.2);
+        }
+    </style>
 </head>
-<body class="min-h-screen bg-slate-50">
+<body class="min-h-screen bg-slate-50 text-slate-800 relative overflow-x-hidden font-sans y2k-grid">
 
-    <div id="appHeader"></div>
+    <!-- AMBIENT BRIGHT BLUE & CYAN BACKGROUND ORBS -->
+    <div class="fixed -top-24 -left-24 w-[450px] h-[450px] bg-cyan-300/40 rounded-full blur-[100px] pointer-events-none animate-cyber-float z-0"></div>
+    <div class="fixed -bottom-24 -right-24 w-[450px] h-[450px] bg-blue-300/40 rounded-full blur-[100px] pointer-events-none animate-cyber-float z-0" style="animation-direction: reverse;"></div>
 
-    <main class="max-w-3xl mx-auto px-4 py-8 space-y-6">
-        <h1 class="text-xl font-semibold text-slate-800">Categories</h1>
+    <div id="appHeader" class="relative z-10"></div>
 
-        <!-- Add category -->
-        <section class="bg-white rounded-xl border border-slate-200 p-6">
-            <h2 class="text-sm font-semibold text-slate-700 mb-4">Add category</h2>
+    <main class="max-w-4xl mx-auto px-4 py-8 space-y-8 relative z-10">
+
+        <!-- Page Header Banner -->
+        <div class="y2k-card p-6 rounded-3xl relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <!-- Scanline FX -->
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-400/5 to-transparent h-12 w-full pointer-events-none animate-[scanline_8s_linear_infinite]"></div>
+
+            <div class="relative z-10">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-100/80 border border-sky-300 text-sky-800 text-xs font-black tracking-wider uppercase mb-2">
+                    <span>⚡ Admin Control Center</span>
+                </div>
+                <h1 class="text-3xl font-black text-slate-900 tracking-tight">Category Terminal 🏷️</h1>
+                <p class="text-xs font-bold text-slate-500 mt-1">Organize and structure learning taxonomies across the platform</p>
+            </div>
+
+            <!-- Quick Stat Badge -->
+            <div class="relative z-10 flex items-center gap-3 bg-white/90 border border-sky-200 px-4 py-3 rounded-2xl shadow-sm">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-sky-500 to-cyan-400 p-[2px] shadow-md shadow-sky-500/20">
+                    <div class="w-full h-full bg-white rounded-[10px] flex items-center justify-center text-xl font-black">
+                        📂
+                    </div>
+                </div>
+                <div>
+                    <span id="countInfo" class="text-xs font-black text-slate-900 block">Loading categories...</span>
+                    <span class="text-[10px] text-sky-600 uppercase tracking-wider font-extrabold">Active System Tags</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Category Form -->
+        <section class="y2k-card p-6 rounded-3xl relative overflow-hidden card-enter">
+            <h2 class="text-xs font-black text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                <span>✨ Create New Category</span>
+            </h2>
             <div id="addAlert" class="mb-4"></div>
 
             <form id="addForm" class="flex flex-col sm:flex-row gap-3" novalidate>
-                <input id="newName" type="text" maxlength="100" placeholder="e.g. Data Science"
-                       aria-label="New category name"
-                       class="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <div class="flex-1 relative group">
+                    <i data-lucide="tag" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors"></i>
+                    <input id="newName" type="text" maxlength="100" placeholder="e.g. Data Science, Cloud Computing..."
+                           aria-label="New category name"
+                           class="w-full rounded-2xl bg-white border border-slate-200 pl-10 pr-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-all font-bold shadow-sm" />
+                </div>
                 <button id="addBtn" type="submit"
-                        class="rounded-lg bg-blue-600 text-white px-4 py-2 text-sm font-medium hover:bg-blue-700">
-                    Add category
+                        class="glitch-hover inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 text-white px-6 py-3 text-xs font-black transition-all shadow-md active:scale-95 hover:from-blue-700 hover:to-cyan-700">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    <span>Add Category</span>
                 </button>
             </form>
         </section>
 
         <div id="listAlert"></div>
 
-        <!-- Category list -->
-        <section class="bg-white rounded-xl border border-slate-200 overflow-hidden">
-            <table class="w-full text-sm text-left">
-                <thead class="bg-slate-50 text-slate-500">
-                    <tr>
-                        <th class="px-4 py-3 font-medium">Name</th>
-                        <th class="px-4 py-3 font-medium w-48">Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="categoryBody"></tbody>
-            </table>
-            <div class="px-4 py-3 border-t border-slate-100 text-sm text-slate-500" id="countInfo"></div>
+        <!-- Category List Table Container -->
+        <section class="y2k-card overflow-hidden card-enter relative">
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left">
+                    <thead class="bg-sky-50/70 border-b border-sky-100 text-slate-700 font-black text-xs uppercase tracking-wider">
+                        <tr>
+                            <th class="px-5 py-4">Category Name</th>
+                            <th class="px-5 py-4 text-right w-52">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="categoryBody" class="divide-y divide-sky-100"></tbody>
+                </table>
+            </div>
         </section>
     </main>
 
@@ -69,47 +204,93 @@
 
             Layout.renderHeader(document.getElementById("appHeader"));
 
-            function smallButton(label, cssClass, handler) {
-                const button = Ui.el("button", "rounded-lg border px-3 py-1 text-xs " + cssClass, label);
+            // Custom Notification Helper with 1-Second Auto Dismissal
+            function showNotification(container, message, type = "error", emoji = "⚠️", autoDismiss = false) {
+                const styles = {
+                    error: "bg-rose-500/10 border-rose-300 text-rose-700",
+                    success: "bg-emerald-500/10 border-emerald-300 text-emerald-700",
+                    info: "bg-sky-500/10 border-sky-300 text-sky-700"
+                };
+
+                const msg = Array.isArray(message) ? message.join(" ") : message;
+
+                container.innerHTML = `
+                        <div class="flex items-center gap-2.5 p-3.5 rounded-2xl border ${styles[type]} text-xs font-black backdrop-blur-md">
+                            <span class="text-base">${emoji}</span>
+                            <span>${msg}</span>
+                        </div>
+                    `;
+
+                if (autoDismiss) {
+                    setTimeout(() => {
+                        container.innerHTML = "";
+                    }, 1000);
+                }
+            }
+
+            function clearNotification(container) {
+                container.innerHTML = "";
+            }
+
+            function smallButton(label, cssClass, emoji, handler) {
+                const button = document.createElement("button");
                 button.type = "button";
+                button.className = "glitch-hover inline-flex items-center gap-1 rounded-xl border px-3 py-1.5 text-xs font-black transition-all active:scale-95 disabled:opacity-50 " + cssClass;
+                button.innerHTML = `<span>${emoji}</span><span>${label}</span>`;
                 button.addEventListener("click", () => handler(button));
                 return button;
             }
 
             function buildRow(category) {
-                const row = Ui.el("tr", "border-t border-slate-100");
-                const nameCell = Ui.el("td", "px-4 py-3");
-                const actionCell = Ui.el("td", "px-4 py-3");
+                const row = document.createElement("tr");
+                row.className = "hover:bg-sky-50/50 transition-colors group";
+
+                const nameCell = document.createElement("td");
+                nameCell.className = "px-5 py-4";
+
+                const actionCell = document.createElement("td");
+                actionCell.className = "px-5 py-4 text-right";
+
                 row.append(nameCell, actionCell);
 
                 // Normal view: name + Edit/Delete buttons.
                 function showView() {
-                    nameCell.replaceChildren(Ui.el("span", "font-medium text-slate-800", category.name));
+                    const flexBox = document.createElement("div");
+                    flexBox.className = "flex items-center gap-3";
+                    flexBox.innerHTML = `
+                            <div class="w-8 h-8 rounded-xl bg-sky-100 border border-sky-200 flex items-center justify-center text-sky-700 font-black text-xs shrink-0">
+                                🏷️
+                            </div>
+                            <span class="font-black text-slate-900 group-hover:text-blue-600 transition-colors">${category.name}</span>
+                        `;
+                    nameCell.replaceChildren(flexBox);
 
-                    const group = Ui.el("div", "flex gap-2");
-                    group.appendChild(smallButton("Edit", "border-slate-300 hover:bg-slate-100", showEdit));
+                    const group = document.createElement("div");
+                    group.className = "flex items-center justify-end gap-2";
+                    group.appendChild(smallButton("Edit", "border-slate-200 bg-white text-slate-700 hover:border-blue-300 hover:text-blue-600", "✏️", showEdit));
                     group.appendChild(smallButton(
                         "Delete",
-                        "border-red-200 text-red-700 hover:bg-red-50",
+                        "border-rose-200 bg-rose-50/80 text-rose-600 hover:bg-rose-100",
+                        "🗑️",
                         (button) => removeCategory(category, button)));
                     actionCell.replaceChildren(group);
                 }
 
-                // Edit view: the name turns into a text box with Save/Cancel.
+                // Edit view: inline text input with Save/Cancel buttons.
                 function showEdit() {
                     const saveButton = smallButton(
                         "Save",
-                        "border-blue-200 text-blue-700 hover:bg-blue-50",
+                        "border-blue-300 bg-blue-50 text-blue-700 hover:bg-blue-100",
+                        "💾",
                         (button) => saveCategory(category, input, button));
-                    const cancelButton = smallButton("Cancel", "border-slate-300 hover:bg-slate-100", showView);
+                    const cancelButton = smallButton("Cancel", "border-slate-200 bg-white text-slate-700 hover:bg-slate-100", "❌", showView);
 
-                    const input = Ui.el(
-                        "input",
-                        "w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500");
+                    const input = document.createElement("input");
                     input.type = "text";
                     input.maxLength = 100;
                     input.value = category.name;
                     input.setAttribute("aria-label", "Category name");
+                    input.className = "w-full rounded-xl bg-white border border-blue-400 px-3 py-1.5 text-sm font-bold text-slate-900 focus:outline-none shadow-sm";
 
                     input.addEventListener("keydown", (event) => {
                         if (event.key === "Enter") {
@@ -122,7 +303,8 @@
 
                     nameCell.replaceChildren(input);
 
-                    const group = Ui.el("div", "flex gap-2");
+                    const group = document.createElement("div");
+                    group.className = "flex items-center justify-end gap-2";
                     group.append(saveButton, cancelButton);
                     actionCell.replaceChildren(group);
 
@@ -140,27 +322,32 @@
                     body.replaceChildren();
 
                     if (categories.length === 0) {
-                        const row = Ui.el("tr");
-                        const empty = Ui.el("td", "px-4 py-8 text-center text-slate-500", "No categories yet.");
-                        empty.colSpan = 2;
-                        row.appendChild(empty);
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                                <td colspan="2" class="px-5 py-16 text-center">
+                                    <span class="text-4xl block mb-2">🏷️</span>
+                                    <h3 class="text-base font-black text-slate-800">No categories found</h3>
+                                    <p class="text-xs font-bold text-slate-500">Add your first category above to begin organizing courses.</p>
+                                </td>
+                            `;
                         body.appendChild(row);
                     } else {
                         categories.forEach(category => body.appendChild(buildRow(category)));
                     }
 
                     countInfo.textContent = categories.length + (categories.length === 1 ? " category" : " categories");
+                    lucide.createIcons();
                 } catch (error) {
-                    Ui.showAlert(listAlert, error.messages || ["Could not load categories."]);
+                    showNotification(listAlert, error.messages || ["Could not load categories."], "error", "❌");
                 }
             }
 
             async function saveCategory(category, input, button) {
-                Ui.clearAlert(listAlert);
+                clearNotification(listAlert);
                 const name = input.value.trim();
 
                 if (name.length < 2) {
-                    Ui.showAlert(listAlert, "The name must be at least 2 characters.");
+                    showNotification(listAlert, "The name must be at least 2 characters.", "error", "⚠️");
                     return;
                 }
 
@@ -174,15 +361,15 @@
                 try {
                     const updated = await Api.put("/api/categories/" + category.id, { name });
                     await loadCategories();
-                    Ui.showAlert(listAlert, "Category renamed to \"" + updated.name + "\".", "success");
+                    showNotification(listAlert, "Category renamed to \"" + updated.name + "\".", "success", "🎉", true);
                 } catch (error) {
-                    Ui.showAlert(listAlert, error.messages || ["Could not rename the category."]);
+                    showNotification(listAlert, error.messages || ["Could not rename the category."], "error", "⚠️");
                     button.disabled = false;
                 }
             }
 
             async function removeCategory(category, button) {
-                Ui.clearAlert(listAlert);
+                clearNotification(listAlert);
 
                 if (!window.confirm("Delete the category \"" + category.name + "\"?")) {
                     return;
@@ -193,22 +380,21 @@
                 try {
                     await Api.del("/api/categories/" + category.id);
                     await loadCategories();
-                    Ui.showAlert(listAlert, "Category deleted.", "success");
+                    showNotification(listAlert, "Category deleted.", "success", "🗑️", true);
                 } catch (error) {
-                    // For example: "This category is used by courses and cannot be deleted."
-                    Ui.showAlert(listAlert, error.messages || ["Could not delete the category."]);
+                    showNotification(listAlert, error.messages || ["Could not delete the category."], "error", "⚠️");
                     button.disabled = false;
                 }
             }
 
             addForm.addEventListener("submit", async (event) => {
                 event.preventDefault();
-                Ui.clearAlert(addAlert);
+                clearNotification(addAlert);
 
                 const name = newName.value.trim();
 
                 if (name.length < 2) {
-                    Ui.showAlert(addAlert, "Please enter a name of at least 2 characters.");
+                    showNotification(addAlert, "Please enter a name of at least 2 characters.", "error", "⚠️");
                     return;
                 }
 
@@ -218,11 +404,12 @@
                     await Api.post("/api/categories", { name });
                     addForm.reset();
                     await loadCategories();
-                    Ui.showAlert(addAlert, "Category \"" + name + "\" added.", "success");
+                    showNotification(addAlert, "Category \"" + name + "\" added.", "success", "✨", true);
                 } catch (error) {
-                    Ui.showAlert(addAlert, error.messages || ["Something went wrong. Please try again."]);
+                    showNotification(addAlert, error.messages || ["Something went wrong. Please try again."], "error", "⚠️");
                 } finally {
                     Ui.setBusy(addBtn, false);
+                    lucide.createIcons();
                 }
             });
 

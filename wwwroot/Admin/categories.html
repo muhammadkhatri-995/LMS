@@ -1,0 +1,233 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Categories | LearnHub Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/js/auth.js"></script>
+    <script>
+        const allowed = Auth.requireRole("Admin");
+    </script>
+</head>
+<body class="min-h-screen bg-slate-50">
+
+    <div id="appHeader"></div>
+
+    <main class="max-w-3xl mx-auto px-4 py-8 space-y-6">
+        <h1 class="text-xl font-semibold text-slate-800">Categories</h1>
+
+        <!-- Add category -->
+        <section class="bg-white rounded-xl border border-slate-200 p-6">
+            <h2 class="text-sm font-semibold text-slate-700 mb-4">Add category</h2>
+            <div id="addAlert" class="mb-4"></div>
+
+            <form id="addForm" class="flex flex-col sm:flex-row gap-3" novalidate>
+                <input id="newName" type="text" maxlength="100" placeholder="e.g. Data Science"
+                       aria-label="New category name"
+                       class="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <button id="addBtn" type="submit"
+                        class="rounded-lg bg-blue-600 text-white px-4 py-2 text-sm font-medium hover:bg-blue-700">
+                    Add category
+                </button>
+            </form>
+        </section>
+
+        <div id="listAlert"></div>
+
+        <!-- Category list -->
+        <section class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <table class="w-full text-sm text-left">
+                <thead class="bg-slate-50 text-slate-500">
+                    <tr>
+                        <th class="px-4 py-3 font-medium">Name</th>
+                        <th class="px-4 py-3 font-medium w-48">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="categoryBody"></tbody>
+            </table>
+            <div class="px-4 py-3 border-t border-slate-100 text-sm text-slate-500" id="countInfo"></div>
+        </section>
+    </main>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/layout.js"></script>
+    <script>
+        if (allowed) {
+            initPage();
+        }
+
+        function initPage() {
+            const body = document.getElementById("categoryBody");
+            const countInfo = document.getElementById("countInfo");
+            const listAlert = document.getElementById("listAlert");
+            const addAlert = document.getElementById("addAlert");
+            const addForm = document.getElementById("addForm");
+            const addBtn = document.getElementById("addBtn");
+            const newName = document.getElementById("newName");
+
+            Layout.renderHeader(document.getElementById("appHeader"));
+
+            function smallButton(label, cssClass, handler) {
+                const button = Ui.el("button", "rounded-lg border px-3 py-1 text-xs " + cssClass, label);
+                button.type = "button";
+                button.addEventListener("click", () => handler(button));
+                return button;
+            }
+
+            function buildRow(category) {
+                const row = Ui.el("tr", "border-t border-slate-100");
+                const nameCell = Ui.el("td", "px-4 py-3");
+                const actionCell = Ui.el("td", "px-4 py-3");
+                row.append(nameCell, actionCell);
+
+                // Normal view: name + Edit/Delete buttons.
+                function showView() {
+                    nameCell.replaceChildren(Ui.el("span", "font-medium text-slate-800", category.name));
+
+                    const group = Ui.el("div", "flex gap-2");
+                    group.appendChild(smallButton("Edit", "border-slate-300 hover:bg-slate-100", showEdit));
+                    group.appendChild(smallButton(
+                        "Delete",
+                        "border-red-200 text-red-700 hover:bg-red-50",
+                        (button) => removeCategory(category, button)));
+                    actionCell.replaceChildren(group);
+                }
+
+                // Edit view: the name turns into a text box with Save/Cancel.
+                function showEdit() {
+                    const saveButton = smallButton(
+                        "Save",
+                        "border-blue-200 text-blue-700 hover:bg-blue-50",
+                        (button) => saveCategory(category, input, button));
+                    const cancelButton = smallButton("Cancel", "border-slate-300 hover:bg-slate-100", showView);
+
+                    const input = Ui.el(
+                        "input",
+                        "w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500");
+                    input.type = "text";
+                    input.maxLength = 100;
+                    input.value = category.name;
+                    input.setAttribute("aria-label", "Category name");
+
+                    input.addEventListener("keydown", (event) => {
+                        if (event.key === "Enter") {
+                            event.preventDefault();
+                            saveCategory(category, input, saveButton);
+                        } else if (event.key === "Escape") {
+                            showView();
+                        }
+                    });
+
+                    nameCell.replaceChildren(input);
+
+                    const group = Ui.el("div", "flex gap-2");
+                    group.append(saveButton, cancelButton);
+                    actionCell.replaceChildren(group);
+
+                    input.focus();
+                    input.select();
+                }
+
+                showView();
+                return row;
+            }
+
+            async function loadCategories() {
+                try {
+                    const categories = await Api.get("/api/categories");
+                    body.replaceChildren();
+
+                    if (categories.length === 0) {
+                        const row = Ui.el("tr");
+                        const empty = Ui.el("td", "px-4 py-8 text-center text-slate-500", "No categories yet.");
+                        empty.colSpan = 2;
+                        row.appendChild(empty);
+                        body.appendChild(row);
+                    } else {
+                        categories.forEach(category => body.appendChild(buildRow(category)));
+                    }
+
+                    countInfo.textContent = categories.length + (categories.length === 1 ? " category" : " categories");
+                } catch (error) {
+                    Ui.showAlert(listAlert, error.messages || ["Could not load categories."]);
+                }
+            }
+
+            async function saveCategory(category, input, button) {
+                Ui.clearAlert(listAlert);
+                const name = input.value.trim();
+
+                if (name.length < 2) {
+                    Ui.showAlert(listAlert, "The name must be at least 2 characters.");
+                    return;
+                }
+
+                if (name === category.name) {
+                    await loadCategories();
+                    return;
+                }
+
+                button.disabled = true;
+
+                try {
+                    const updated = await Api.put("/api/categories/" + category.id, { name });
+                    await loadCategories();
+                    Ui.showAlert(listAlert, "Category renamed to \"" + updated.name + "\".", "success");
+                } catch (error) {
+                    Ui.showAlert(listAlert, error.messages || ["Could not rename the category."]);
+                    button.disabled = false;
+                }
+            }
+
+            async function removeCategory(category, button) {
+                Ui.clearAlert(listAlert);
+
+                if (!window.confirm("Delete the category \"" + category.name + "\"?")) {
+                    return;
+                }
+
+                button.disabled = true;
+
+                try {
+                    await Api.del("/api/categories/" + category.id);
+                    await loadCategories();
+                    Ui.showAlert(listAlert, "Category deleted.", "success");
+                } catch (error) {
+                    // For example: "This category is used by courses and cannot be deleted."
+                    Ui.showAlert(listAlert, error.messages || ["Could not delete the category."]);
+                    button.disabled = false;
+                }
+            }
+
+            addForm.addEventListener("submit", async (event) => {
+                event.preventDefault();
+                Ui.clearAlert(addAlert);
+
+                const name = newName.value.trim();
+
+                if (name.length < 2) {
+                    Ui.showAlert(addAlert, "Please enter a name of at least 2 characters.");
+                    return;
+                }
+
+                Ui.setBusy(addBtn, true, "Adding...");
+
+                try {
+                    await Api.post("/api/categories", { name });
+                    addForm.reset();
+                    await loadCategories();
+                    Ui.showAlert(addAlert, "Category \"" + name + "\" added.", "success");
+                } catch (error) {
+                    Ui.showAlert(addAlert, error.messages || ["Something went wrong. Please try again."]);
+                } finally {
+                    Ui.setBusy(addBtn, false);
+                }
+            });
+
+            loadCategories();
+        }
+    </script>
+</body>
+</html>

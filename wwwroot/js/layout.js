@@ -14,6 +14,7 @@
             { label: "Dashboard", href: "/admin/dashboard.html" },
             { label: "Users", href: "/admin/users.html" },
             { label: "Courses", href: "/admin/courses.html" },
+            { label: "Categories", href: "/admin/categories.html" },
             { label: "Profile", href: "/profile.html" }
         ]
     };

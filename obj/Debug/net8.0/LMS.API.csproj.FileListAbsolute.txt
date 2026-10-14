@@ -123,4 +123,3 @@ C:\Users\DELL\Desktop\LMS.API\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols
 C:\Users\DELL\Desktop\LMS.API\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Users\DELL\Desktop\LMS.API\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
 C:\Users\DELL\Desktop\LMS.API\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
-C:\Users\DELL\Desktop\LMS.API\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

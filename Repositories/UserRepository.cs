@@ -1,4 +1,5 @@
-﻿using LMS.API.Data;
+﻿using LMS.API.Common;
+using LMS.API.Data;
 using LMS.API.Enums;
 using LMS.API.Interfaces;
 using LMS.API.Models;
@@ -18,6 +19,11 @@ public class UserRepository : IUserRepository
     public async Task<bool> EmailExistsAsync(string email)
     {
         return await _db.Users.AnyAsync(u => u.Email == email);
+    }
+
+    public async Task<bool> EmailExistsForOtherUserAsync(string email, Guid excludeUserId)
+    {
+        return await _db.Users.AnyAsync(u => u.Email == email && u.Id != excludeUserId);
     }
 
     public async Task<User?> GetByEmailAsync(string email)
@@ -42,7 +48,8 @@ public class UserRepository : IUserRepository
 
         if (!string.IsNullOrWhiteSpace(search))
         {
-            var pattern = "%" + EscapeLike(search.Trim()) + "%";
+            var pattern = SqlLike.ContainsPattern(search);
+
             query = query.Where(u =>
                 EF.Functions.ILike(u.FullName, pattern, "\\") ||
                 EF.Functions.ILike(u.Email, pattern, "\\"));
@@ -52,11 +59,17 @@ public class UserRepository : IUserRepository
 
         var items = await query
             .OrderByDescending(u => u.CreatedAt)
+            .ThenBy(u => u.Id)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
 
         return (items, totalCount);
+    }
+
+    public async Task<bool> HasCoursesAsync(Guid userId)
+    {
+        return await _db.Courses.AnyAsync(c => c.InstructorId == userId);
     }
 
     public async Task AddAsync(User user)
@@ -71,28 +84,9 @@ public class UserRepository : IUserRepository
         await _db.SaveChangesAsync();
     }
 
-
-    public async Task DeleteAsync(Guid id)
+    public async Task DeleteAsync(User user)
     {
-        var user = await _db.Users.FindAsync(id);
-
-        if (user == null)
-        {
-            throw new KeyNotFoundException("User not found.");
-        }
-
         _db.Users.Remove(user);
         await _db.SaveChangesAsync();
-    }
-
-
-
-    // Stops a search for "50%" or "a_b" from acting as a wildcard.
-    private static string EscapeLike(string value)
-    {
-        return value
-            .Replace("\\", "\\\\")
-            .Replace("%", "\\%")
-            .Replace("_", "\\_");
     }
 }

@@ -427,6 +427,22 @@
   },
   {
     "ContainingType": "LMS.API.Controllers.UsersController",
+    "Method": "GetUser",
+    "RelativePath": "api/users/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "LMS.API.Controllers.UsersController",
     "Method": "UpdateUser",
     "RelativePath": "api/users/{id}",
     "HttpMethod": "PUT",

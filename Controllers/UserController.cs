@@ -23,45 +23,31 @@ public class UsersController : ApiControllerBase
     public async Task<IActionResult> GetProfile()
     {
         var result = await _userService.GetProfileAsync(CurrentUserId);
-
-        return result.Success
-            ? Ok(result.Data)
-            : ToErrorResponse(result);
+        return result.Success ? Ok(result.Data) : ToErrorResponse(result);
     }
 
     [HttpPut("profile")]
-    public async Task<IActionResult> UpdateProfile(
-        [FromBody] UpdateProfileRequestDto request)
+    public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileRequestDto request)
     {
-        var result = await _userService.UpdateProfileAsync(
-            CurrentUserId, request);
-
-        return result.Success
-            ? Ok(result.Data)
-            : ToErrorResponse(result);
+        var result = await _userService.UpdateProfileAsync(CurrentUserId, request);
+        return result.Success ? Ok(result.Data) : ToErrorResponse(result);
     }
 
     [HttpPut("change-password")]
-    public async Task<IActionResult> ChangePassword(
-        [FromBody] ChangePasswordRequestDto request)
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequestDto request)
     {
-        var result = await _userService.ChangePasswordAsync(
-            CurrentUserId, request);
+        var result = await _userService.ChangePasswordAsync(CurrentUserId, request);
 
         if (!result.Success)
         {
             return ToErrorResponse(result);
         }
 
-        return Ok(new
-        {
-            message = "Password changed successfully."
-        });
+        return Ok(new { message = "Password changed successfully." });
     }
 
     // ---------- Admin only ----------
 
-    // READ: Get paginated users
     [Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<IActionResult> GetUsers(
@@ -70,19 +56,21 @@ public class UsersController : ApiControllerBase
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 20)
     {
-        var result = await _userService.GetUsersAsync(
-            search, role, page, pageSize);
-
-        return result.Success
-            ? Ok(result.Data)
-            : ToErrorResponse(result);
+        var result = await _userService.GetUsersAsync(search, role, page, pageSize);
+        return result.Success ? Ok(result.Data) : ToErrorResponse(result);
     }
 
-    // CREATE: Create a user
+    [Authorize(Roles = "Admin")]
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetUser(Guid id)
+    {
+        var result = await _userService.GetUserAsync(id);
+        return result.Success ? Ok(result.Data) : ToErrorResponse(result);
+    }
+
     [Authorize(Roles = "Admin")]
     [HttpPost]
-    public async Task<IActionResult> CreateUser(
-        [FromBody] CreateUserRequestDto request)
+    public async Task<IActionResult> CreateUser([FromBody] CreateUserRequestDto request)
     {
         var result = await _userService.CreateUserAsync(request);
 
@@ -91,54 +79,30 @@ public class UsersController : ApiControllerBase
             return ToErrorResponse(result);
         }
 
-        return StatusCode(
-            StatusCodes.Status201Created,
-            result.Data);
+        return CreatedAtAction(nameof(GetUser), new { id = result.Data!.Id }, result.Data);
     }
 
-    // UPDATE: Update user status
-    [Authorize(Roles = "Admin")]
-    [HttpPut("{id:guid}/status")]
-    public async Task<IActionResult> SetStatus(
-        Guid id,
-        [FromBody] SetUserStatusRequestDto request)
-    {
-        var result = await _userService.SetStatusAsync(
-            id, request.IsActive!.Value, CurrentUserId);
-
-        return result.Success
-            ? Ok(result.Data)
-            : ToErrorResponse(result);
-    }
     [Authorize(Roles = "Admin")]
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> UpdateUser(
-    Guid id,
-    [FromBody] UpdateUserRequestDto request)
+    public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UpdateUserRequestDto request)
     {
-        var result = await _userService.UpdateUserAsync(
-            id, request, CurrentUserId);
-
-        return result.Success
-            ? Ok(result.Data)
-            : ToErrorResponse(result);
+        var result = await _userService.UpdateUserAsync(id, request);
+        return result.Success ? Ok(result.Data) : ToErrorResponse(result);
     }
 
-    // DELETE: Delete a user
+    [Authorize(Roles = "Admin")]
+    [HttpPut("{id:guid}/status")]
+    public async Task<IActionResult> SetStatus(Guid id, [FromBody] SetUserStatusRequestDto request)
+    {
+        var result = await _userService.SetStatusAsync(id, request.IsActive!.Value, CurrentUserId);
+        return result.Success ? Ok(result.Data) : ToErrorResponse(result);
+    }
 
     [Authorize(Roles = "Admin")]
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteUser(Guid id)
     {
-        var result = await _userService.DeleteUserAsync(
-            id, CurrentUserId);
-
-        if (!result.Success)
-        {
-            return ToErrorResponse(result);
-        }
-
-        return NoContent();
+        var result = await _userService.DeleteUserAsync(id, CurrentUserId);
+        return result.Success ? NoContent() : ToErrorResponse(result);
     }
-
 }

@@ -782,8 +782,8 @@
         }
       }
     },
-    "/api/users/{id}/status": {
-      "put": {
+    "/api/users/{id}": {
+      "get": {
         "tags": [
           "Users"
         ],
@@ -798,33 +798,12 @@
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SetUserStatusRequestDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SetUserStatusRequestDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/SetUserStatusRequestDto"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "OK"
           }
         }
-      }
-    },
-    "/api/users/{id}": {
+      },
       "put": {
         "tags": [
           "Users"
@@ -880,6 +859,48 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/users/{id}/status": {
+      "put": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetUserStatusRequestDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetUserStatusRequestDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetUserStatusRequestDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -1106,18 +1127,33 @@
         "additionalProperties": false
       },
       "UpdateUserRequestDto": {
+        "required": [
+          "email",
+          "fullName",
+          "role"
+        ],
         "type": "object",
         "properties": {
           "fullName": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 100,
+            "minLength": 2,
+            "type": "string"
           },
           "email": {
+            "maxLength": 255,
+            "minLength": 0,
             "type": "string",
-            "nullable": true
+            "format": "email"
           },
           "role": {
             "$ref": "#/components/schemas/UserRole"
+          },
+          "password": {
+            "maxLength": 72,
+            "minLength": 8,
+            "pattern": "^(?=.*[A-Za-z])(?=.*\\d).+$",
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

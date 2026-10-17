@@ -98,12 +98,21 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+builder.Services.AddScoped<ICurriculumRepository, CurriculumRepository>();
+builder.Services.AddScoped<IStreamingRepository, StreamingRepository>();
+
+// Local disk now. In the AWS phase this single line points at S3StorageService instead.
+builder.Services.AddSingleton<IStorageService, LocalStorageService>();
+builder.Services.AddSingleton<IStreamTicketService, StreamTicketService>();
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICourseService, CourseService>();
+builder.Services.AddScoped<ICurriculumService, CurriculumService>();
+builder.Services.AddScoped<IMediaService, MediaService>();
+builder.Services.AddScoped<IStreamingService, StreamingService>();
 
 // ---------- Controllers and Swagger ----------
 builder.Services.AddControllers()
@@ -150,6 +159,14 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Tells browsers to trust the file type we send and never guess it from the content.
+app.Use(async (context, next) =>
+{
+    context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+    await next();
+});
+
 app.UseDefaultFiles();
 app.UseStaticFiles();
 

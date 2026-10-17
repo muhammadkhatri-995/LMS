@@ -148,11 +148,14 @@
     <div id="initialLoader" class="fixed inset-0 z-50 bg-gradient-to-br from-sky-50 via-blue-50 to-cyan-50 flex flex-col items-center justify-center gap-4 transition-opacity duration-500">
         <div class="relative flex items-center justify-center">
             <div class="w-16 h-16 rounded-2xl border-4 border-sky-300 border-t-blue-600 animate-spin"></div>
-            <span class="absolute text-2xl animate-bounce">⚡</span>
+            <i data-lucide="zap" class="absolute w-7 h-7 text-blue-600 animate-bounce"></i>
         </div>
         <div class="text-center">
             <h3 class="text-lg font-black text-slate-900 tracking-tight">LearnHub OS</h3>
-            <p class="text-xs font-bold text-sky-600 mt-0.5">INITIALIZING Y2K_CORE_v2.6... 🚀</p>
+            <p class="text-xs font-bold text-sky-600 mt-0.5 flex items-center justify-center gap-1.5 uppercase">
+                <span>INITIALIZING Y2K_CORE_v2.6...</span>
+                <i data-lucide="rocket" class="w-3.5 h-3.5"></i>
+            </p>
         </div>
     </div>
 
@@ -167,7 +170,7 @@
         <div class="lg:col-span-7 y2k-enter space-y-6 text-center lg:text-left pr-0 lg:pr-6">
 
             <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 border border-sky-300 shadow-sm backdrop-blur-md">
-                <span class="text-base animate-pulse">🔥</span>
+                <i data-lucide="flame" class="w-4 h-4 text-orange-500 animate-pulse"></i>
                 <span class="text-xs font-black bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 bg-clip-text text-transparent uppercase tracking-wider">
                     LearnHub Space v2.6
                 </span>
@@ -177,27 +180,28 @@
                 Learn smarter. <br />
                 <span class="bg-gradient-to-r from-blue-600 via-sky-500 to-cyan-500 bg-clip-text text-transparent">
                     Level up faster.
-                </span> ⚡
+                </span>
+                <i data-lucide="zap" class="inline-block w-8 h-8 text-blue-600 fill-blue-600/20 align-sub"></i>
             </h1>
 
             <p class="text-sm text-slate-600 max-w-md mx-auto lg:mx-0 leading-relaxed font-bold">
-                Your high-vibe learning corner. Lock in, track your streak, and unlock knowledge with your community. 🎓✨
+                Your high-vibe learning corner. Lock in, track your streak, and unlock knowledge with your community.
             </p>
 
             <!-- Interactive Feature Pills & Stats -->
             <div class="pt-2 grid grid-cols-3 gap-3 max-w-md mx-auto lg:mx-0">
                 <div class="p-3.5 rounded-2xl bg-white/90 border border-sky-200 shadow-sm backdrop-blur-md text-center hover:scale-105 transition-transform duration-200">
-                    <span class="text-2xl block mb-1">🔥</span>
+                    <i data-lucide="flame" class="w-6 h-6 mx-auto mb-1 text-orange-500"></i>
                     <span class="text-xs font-black text-slate-900 block">12 Days</span>
                     <span class="text-[10px] text-slate-500 uppercase tracking-wide font-extrabold">Streak</span>
                 </div>
                 <div class="p-3.5 rounded-2xl bg-white/90 border border-sky-200 shadow-sm backdrop-blur-md text-center hover:scale-105 transition-transform duration-200">
-                    <span class="text-2xl block mb-1">🏆</span>
+                    <i data-lucide="trophy" class="w-6 h-6 mx-auto mb-1 text-amber-500"></i>
                     <span class="text-xs font-black text-slate-900 block">Top 5%</span>
                     <span class="text-[10px] text-slate-500 uppercase tracking-wide font-extrabold">Rank</span>
                 </div>
                 <div class="p-3.5 rounded-2xl bg-white/90 border border-sky-200 shadow-sm backdrop-blur-md text-center hover:scale-105 transition-transform duration-200">
-                    <span class="text-2xl block mb-1">🧠</span>
+                    <i data-lucide="brain" class="w-6 h-6 mx-auto mb-1 text-sky-600"></i>
                     <span class="text-xs font-black text-slate-900 block">98%</span>
                     <span class="text-[10px] text-slate-500 uppercase tracking-wide font-extrabold">Accuracy</span>
                 </div>
@@ -205,8 +209,8 @@
 
             <!-- Floating Badge Widget -->
             <div class="hidden sm:flex items-center gap-3 p-3 rounded-2xl bg-white/90 border border-sky-200 max-w-sm mx-auto lg:mx-0 shadow-sm">
-                <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white text-xl font-black">
-                    🎯
+                <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shrink-0">
+                    <i data-lucide="target" class="w-5 h-5"></i>
                 </div>
                 <div>
                     <h4 class="text-xs font-black text-slate-900">Ready to Lock In?</h4>
@@ -226,15 +230,18 @@
                 <!-- Card Header with Y2K Badge -->
                 <div class="text-center mb-6 relative z-10">
 
-                    <!-- Clean Y2K Avatar Frame (No concentric spinning circles) -->
+                    <!-- Clean Y2K Avatar Frame -->
                     <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-600 via-sky-500 to-cyan-400 p-[3px] shadow-md shadow-sky-500/20 mx-auto mb-3">
-                        <div class="w-full h-full bg-white rounded-[13px] flex items-center justify-center text-2xl font-black">
-                            👋
+                        <div class="w-full h-full bg-white rounded-[13px] flex items-center justify-center text-blue-600">
+                            <i data-lucide="sparkles" class="w-7 h-7"></i>
                         </div>
                     </div>
 
                     <h2 class="text-2xl font-black text-slate-900 tracking-tight">Welcome Back!</h2>
-                    <p class="text-xs font-bold text-slate-500 mt-1">Please sign in to continue 🚀</p>
+                    <p class="text-xs font-bold text-slate-500 mt-1 flex items-center justify-center gap-1">
+                        <span>Please sign in to continue</span>
+                        <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-blue-600"></i>
+                    </p>
                 </div>
 
                 <div id="alertBox" class="mb-5 relative z-10"></div>
@@ -243,8 +250,9 @@
 
                     <!-- Email Field -->
                     <div class="space-y-1.5">
-                        <label for="email" class="block text-xs font-black text-slate-700 tracking-wider uppercase flex items-center gap-1">
-                            Email 📧
+                        <label for="email" class="block text-xs font-black text-slate-700 tracking-wider uppercase flex items-center gap-1.5">
+                            <i data-lucide="mail" class="w-3.5 h-3.5 text-blue-600"></i>
+                            <span>Email</span>
                         </label>
                         <div class="relative group">
                             <i data-lucide="mail" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors"></i>
@@ -256,8 +264,9 @@
                     <!-- Password Field -->
                     <div class="space-y-1.5">
                         <div class="flex items-center justify-between">
-                            <label for="password" class="block text-xs font-black text-slate-700 tracking-wider uppercase flex items-center gap-1">
-                                Password 🔑
+                            <label for="password" class="block text-xs font-black text-slate-700 tracking-wider uppercase flex items-center gap-1.5">
+                                <i data-lucide="key-round" class="w-3.5 h-3.5 text-blue-600"></i>
+                                <span>Password</span>
                             </label>
                             <a href="#" class="text-xs text-blue-600 font-bold hover:text-blue-700 hover:underline transition-colors">Forgot?</a>
                         </div>
@@ -276,7 +285,9 @@
                             class="glitch-hover w-full relative group overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 font-black text-sm transition-all duration-200 active:scale-[0.97] mt-3 shadow-md shadow-sky-500/20">
                         <div class="w-full h-full bg-white/0 group-hover:bg-white/10 rounded-[14px] py-3.5 px-4 flex items-center justify-center gap-2 text-white transition-colors">
                             <span id="btnText" class="tracking-wide">Sign In</span>
-                            <span id="btnEmoji" class="text-base group-hover:translate-x-1 transition-transform">🚀</span>
+                            <span id="btnIcon" class="inline-flex items-center group-hover:translate-x-1 transition-transform">
+                                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </span>
                         </div>
                     </button>
                 </form>
@@ -303,7 +314,7 @@
         const togglePasswordBtn = document.getElementById("togglePasswordBtn");
         const eyeIcon = document.getElementById("eyeIcon");
         const btnText = document.getElementById("btnText");
-        const btnEmoji = document.getElementById("btnEmoji");
+        const btnIcon = document.getElementById("btnIcon");
 
         // Initial loading screen sequence
         window.addEventListener("load", () => {
@@ -331,9 +342,9 @@
         // Handle URL parameters
         const params = new URLSearchParams(window.location.search);
         if (params.get("registered")) {
-            showAlert("Account created! Please sign in.", "success", "🎉");
+            showAlert("Account created! Please sign in.", "success", "check-circle");
         } else if (params.get("expired")) {
-            showAlert("Session expired. Please sign in again.", "info", "⏰");
+            showAlert("Session expired. Please sign in again.", "info", "clock");
         }
 
         // Form Submit Handler
@@ -345,7 +356,7 @@
             const password = passwordInput.value;
 
             if (!email || !password) {
-                triggerErrorState("Please enter both email and password!", "⚠️");
+                triggerErrorState("Please enter both email and password!", "alert-circle");
                 return;
             }
 
@@ -365,20 +376,20 @@
             } catch (error) {
                 setLoadingState(false);
                 const msg = error.messages || ["Invalid email or password. Try again!"];
-                triggerErrorState(Array.isArray(msg) ? msg.join(" ") : msg, "❌");
+                triggerErrorState(Array.isArray(msg) ? msg.join(" ") : msg, "x-circle");
             }
         });
 
-        // Trigger Shake + Emoji Error State
-        function triggerErrorState(message, emoji = "❌") {
-            showAlert(message, "error", emoji);
+        // Trigger Shake + SVG Error State
+        function triggerErrorState(message, iconName = "x-circle") {
+            showAlert(message, "error", iconName);
             cardContainer.classList.remove("shake-error");
             void cardContainer.offsetWidth; // Force Reflow
             cardContainer.classList.add("shake-error");
         }
 
-        // Render Y2K Alert Box
-        function showAlert(message, type = "error", emoji = "⚠️") {
+        // Render Y2K Alert Box with Lucide SVG Icons
+        function showAlert(message, type = "error", iconName = "alert-circle") {
             const styles = {
                 error: "bg-rose-500/10 border-rose-300 text-rose-700",
                 success: "bg-emerald-500/10 border-emerald-300 text-emerald-700",
@@ -387,10 +398,11 @@
 
             alertBox.innerHTML = `
                     <div class="flex items-center gap-2.5 p-3.5 rounded-2xl border ${styles[type]} text-xs font-black backdrop-blur-md transition-all shadow-sm">
-                        <span class="text-base">${emoji}</span>
+                        <i data-lucide="${iconName}" class="w-4 h-4 shrink-0"></i>
                         <span>${message}</span>
                     </div>
                 `;
+            lucide.createIcons();
         }
 
         function clearAlert() {
@@ -402,11 +414,11 @@
             if (isLoading) {
                 submitBtn.disabled = true;
                 btnText.textContent = "Authenticating...";
-                btnEmoji.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>`;
+                btnIcon.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>`;
             } else {
                 submitBtn.disabled = false;
                 btnText.textContent = "Sign In";
-                btnEmoji.textContent = "🚀";
+                btnIcon.innerHTML = `<i data-lucide="arrow-right" class="w-4 h-4"></i>`;
             }
             lucide.createIcons();
         }

@@ -1,0 +1,843 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Curriculum | LearnHub</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="/js/auth.js"></script>
+    <script>
+        const allowed = Auth.requireRole("Instructor");
+    </script>
+    <style>
+        /* Y2K Keyframe Animations */
+        @keyframes cyberFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-8px) rotate(-1deg);
+            }
+        }
+
+        @keyframes scanline {
+            0% {
+                transform: translateY(-100%);
+            }
+
+            100% {
+                transform: translateY(1000%);
+            }
+        }
+
+        @keyframes glitchSnap {
+            0%, 100% {
+                transform: translate(0);
+            }
+
+            20% {
+                transform: translate(-3px, 2px);
+            }
+
+            40% {
+                transform: translate(3px, -2px);
+            }
+
+            60% {
+                transform: translate(-2px, -1px);
+            }
+
+            80% {
+                transform: translate(2px, 1px);
+            }
+        }
+
+        @keyframes y2kPop {
+            0% {
+                opacity: 0;
+                transform: scale(0.88) translateY(25px);
+                filter: blur(10px);
+            }
+
+            60% {
+                transform: scale(1.02) translateY(-4px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+                filter: blur(0);
+            }
+        }
+
+        .animate-cyber-float {
+            animation: cyberFloat 5s ease-in-out infinite;
+        }
+
+        .card-enter {
+            animation: y2kPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .glitch-hover:hover {
+            animation: glitchSnap 0.2s ease-in-out;
+        }
+
+        /* Y2K Tech Grid Pattern Background */
+        .y2k-grid {
+            background-size: 30px 30px;
+            background-image: linear-gradient(to right, rgba(56, 189, 248, 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(56, 189, 248, 0.08) 1px, transparent 1px);
+        }
+
+        /* Y2K Glass Card Container */
+        .y2k-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 2px solid rgba(186, 230, 253, 0.85);
+            box-shadow: 6px 6px 0px 0px rgba(14, 165, 233, 0.15), 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+            border-radius: 1.75rem;
+        }
+
+        /* Modal Dialog Animations */
+        dialog[open] {
+            animation: y2kPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        /* Input & Textarea Focus Glow */
+        input:focus, select:focus, textarea:focus {
+            box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.25), 0 0 15px rgba(14, 165, 233, 0.2);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-800 relative overflow-x-hidden font-sans y2k-grid">
+
+    <!-- AMBIENT BRIGHT BLUE & CYAN BACKGROUND ORBS -->
+    <div class="fixed -top-24 -left-24 w-[450px] h-[450px] bg-cyan-300/40 rounded-full blur-[100px] pointer-events-none animate-cyber-float z-0"></div>
+    <div class="fixed -bottom-24 -right-24 w-[450px] h-[450px] bg-blue-300/40 rounded-full blur-[100px] pointer-events-none animate-cyber-float z-0" style="animation-direction: reverse;"></div>
+
+    <div id="appHeader" class="relative z-10"></div>
+
+    <main class="max-w-4xl mx-auto px-4 py-8 space-y-6 relative z-10">
+        <!-- Back Link Button -->
+        <div>
+            <a id="backLink" href="/instructor/courses.html" class="glitch-hover inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-white border border-sky-200 text-xs font-black text-slate-800 hover:text-blue-600 hover:border-blue-300 transition-all shadow-sm">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                <span>Back to course</span>
+            </a>
+        </div>
+
+        <!-- Page Header Banner -->
+        <div class="y2k-card p-6 rounded-3xl relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <!-- Scanline FX -->
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-400/5 to-transparent h-12 w-full pointer-events-none animate-[scanline_8s_linear_infinite]"></div>
+
+            <div class="relative z-10 space-y-1">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-100/80 border border-sky-300 text-sky-800 text-xs font-black tracking-wider uppercase mb-1">
+                    <i data-lucide="layers" class="w-3.5 h-3.5 text-sky-600"></i>
+                    <span>Curriculum Manager</span>
+                </div>
+                <h1 id="courseTitle" class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Curriculum</h1>
+                <div class="flex flex-wrap items-center gap-2.5 pt-1">
+                    <span id="courseStatus"></span>
+                    <span id="summary" class="text-xs font-extrabold text-sky-700 bg-sky-50 border border-sky-200 px-3 py-1 rounded-full"></span>
+                </div>
+            </div>
+
+            <!-- Action Button -->
+            <div class="relative z-10 shrink-0">
+                <button id="addSectionBtn" type="button" disabled
+                        class="glitch-hover inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 text-white px-5 py-3 text-xs font-black transition-all shadow-md active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed hover:from-blue-700 hover:to-cyan-700">
+                    <i data-lucide="folder-plus" class="w-4 h-4"></i>
+                    <span>Add Section</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Draft & Info Hints -->
+        <div id="draftHint" class="hidden p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-bold flex items-center gap-2.5 shadow-sm">
+            <i data-lucide="alert-circle" class="w-4 h-4 shrink-0 text-amber-600"></i>
+            <span>This course is a draft. Publish at least one lecture, then publish the course from the course page.</span>
+        </div>
+
+        <div class="p-3.5 rounded-2xl bg-white/80 border border-sky-200 text-slate-600 text-[11px] font-extrabold flex items-center gap-2 shadow-sm">
+            <i data-lucide="shield-check" class="w-4 h-4 text-sky-500 shrink-0"></i>
+            <span>Uploaded videos are stored privately on the server. Students will be able to watch them once streaming is added.</span>
+        </div>
+
+        <div id="pageAlert"></div>
+
+        <!-- Sections Container -->
+        <div id="sections" class="space-y-4"></div>
+    </main>
+
+    <!-- SECTION DIALOG -->
+    <dialog id="sectionDialog" class="w-full max-w-md rounded-3xl p-0 bg-transparent backdrop:bg-slate-900/50 backdrop:backdrop-blur-sm border-0">
+        <form id="sectionForm" class="y2k-card p-6 md:p-8 space-y-5" novalidate>
+            <div class="flex items-center justify-between border-b border-sky-100 pb-3">
+                <h2 id="sectionDialogTitle" class="text-base font-black text-slate-900 tracking-tight flex items-center gap-2">
+                    <i data-lucide="folder" class="w-4 h-4 text-blue-600"></i>
+                    <span>Add Section</span>
+                </h2>
+                <button type="button" onclick="document.getElementById('sectionDialog').close()" class="p-1 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-sky-50 transition-colors">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <div id="sectionAlert"></div>
+
+            <div class="space-y-1.5">
+                <label for="sectionTitle" class="block text-xs font-black text-slate-700 uppercase tracking-wider">Section Title</label>
+                <input id="sectionTitle" type="text" maxlength="200" placeholder="e.g. Getting Started & Setup"
+                       class="w-full rounded-2xl bg-white border border-slate-200 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-all font-bold shadow-sm" />
+            </div>
+
+            <div class="flex items-center justify-end gap-2.5 pt-2">
+                <button id="sectionCancel" type="button"
+                        class="glitch-hover px-4 py-2.5 rounded-2xl border border-slate-200 bg-white text-xs font-black text-slate-700 hover:bg-slate-100 transition-all">
+                    Cancel
+                </button>
+                <button id="sectionSave" type="submit"
+                        class="glitch-hover inline-flex items-center gap-1.5 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 text-white text-xs font-black transition-all shadow-md active:scale-95">
+                    <i data-lucide="check" class="w-4 h-4"></i>
+                    <span>Save</span>
+                </button>
+            </div>
+        </form>
+    </dialog>
+
+    <!-- LECTURE DIALOG -->
+    <dialog id="lectureDialog" class="w-full max-w-md rounded-3xl p-0 bg-transparent backdrop:bg-slate-900/50 backdrop:backdrop-blur-sm border-0">
+        <form id="lectureForm" class="y2k-card p-6 md:p-8 space-y-4" novalidate>
+            <div class="flex items-center justify-between border-b border-sky-100 pb-3">
+                <h2 id="lectureDialogTitle" class="text-base font-black text-slate-900 tracking-tight flex items-center gap-2">
+                    <i data-lucide="video" class="w-4 h-4 text-blue-600"></i>
+                    <span>Add Lecture</span>
+                </h2>
+                <button type="button" onclick="document.getElementById('lectureDialog').close()" class="p-1 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-sky-50 transition-colors">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <div id="lectureAlert"></div>
+
+            <div class="space-y-1.5">
+                <label for="lectureTitle" class="block text-xs font-black text-slate-700 uppercase tracking-wider">Title</label>
+                <input id="lectureTitle" type="text" maxlength="200" placeholder="e.g. Introduction & Architecture Overview"
+                       class="w-full rounded-2xl bg-white border border-slate-200 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-all font-bold shadow-sm" />
+            </div>
+
+            <div class="space-y-1.5">
+                <label for="lectureDescription" class="block text-xs font-black text-slate-700 uppercase tracking-wider">Description (optional)</label>
+                <textarea id="lectureDescription" rows="3" maxlength="2000" placeholder="Summary of topics covered in this lecture..."
+                          class="w-full rounded-2xl bg-white border border-slate-200 p-3.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-all font-bold shadow-sm"></textarea>
+            </div>
+
+            <div class="space-y-1.5">
+                <label for="lectureDuration" class="block text-xs font-black text-slate-700 uppercase tracking-wider">Duration (minutes)</label>
+                <input id="lectureDuration" type="number" min="0" max="600" step="1" value="0"
+                       class="w-full rounded-2xl bg-white border border-slate-200 px-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-blue-500 transition-all font-bold shadow-sm" />
+            </div>
+
+            <div class="flex items-center justify-end gap-2.5 pt-2">
+                <button id="lectureCancel" type="button"
+                        class="glitch-hover px-4 py-2.5 rounded-2xl border border-slate-200 bg-white text-xs font-black text-slate-700 hover:bg-slate-100 transition-all">
+                    Cancel
+                </button>
+                <button id="lectureSave" type="submit"
+                        class="glitch-hover inline-flex items-center gap-1.5 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 text-white text-xs font-black transition-all shadow-md active:scale-95">
+                    <i data-lucide="check" class="w-4 h-4"></i>
+                    <span>Save</span>
+                </button>
+            </div>
+        </form>
+    </dialog>
+
+    <!-- VIDEO UPLOAD DIALOG -->
+    <dialog id="videoDialog" class="w-full max-w-md rounded-3xl p-0 bg-transparent backdrop:bg-slate-900/50 backdrop:backdrop-blur-sm border-0">
+        <form id="videoForm" class="y2k-card p-6 md:p-8 space-y-4" novalidate>
+            <div class="flex items-center justify-between border-b border-sky-100 pb-3">
+                <h2 id="videoDialogTitle" class="text-base font-black text-slate-900 tracking-tight flex items-center gap-2">
+                    <i data-lucide="upload-cloud" class="w-4 h-4 text-blue-600"></i>
+                    <span>Upload Video</span>
+                </h2>
+                <button type="button" onclick="if(!uploading) document.getElementById('videoDialog').close()" class="p-1 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-sky-50 transition-colors">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <p id="videoLectureName" class="text-xs font-extrabold text-sky-700 bg-sky-50 p-2.5 rounded-xl border border-sky-100 break-words"></p>
+            <div id="videoAlert"></div>
+
+            <div class="space-y-1.5">
+                <label for="videoFile" class="block text-xs font-black text-slate-700 uppercase tracking-wider">Video File</label>
+                <input id="videoFile" type="file" accept="video/mp4,video/webm,.mp4,.webm"
+                       class="block w-full text-xs font-bold text-slate-600 file:mr-3 file:rounded-xl file:border-0 file:bg-sky-100 file:px-3 file:py-2 file:text-xs file:font-black file:text-sky-900 hover:file:bg-sky-200 cursor-pointer" />
+                <p id="videoInfo" class="text-[11px] font-extrabold text-slate-500 mt-1">MP4 or WebM, up to 500 MB.</p>
+            </div>
+
+            <div id="progressWrap" class="hidden space-y-1.5">
+                <div class="h-2.5 bg-sky-100 rounded-full overflow-hidden p-0.5 border border-sky-200">
+                    <div id="progressBar" class="h-full bg-gradient-to-r from-blue-600 to-cyan-500 rounded-full transition-all duration-200" style="width: 0%"></div>
+                </div>
+                <p id="progressText" class="text-[11px] font-black text-blue-600 text-right"></p>
+            </div>
+
+            <div class="flex items-center justify-end gap-2.5 pt-2">
+                <button id="videoCancel" type="button"
+                        class="glitch-hover px-4 py-2.5 rounded-2xl border border-slate-200 bg-white text-xs font-black text-slate-700 hover:bg-slate-100 transition-all disabled:opacity-40 disabled:cursor-not-allowed">
+                    Cancel
+                </button>
+                <button id="videoSave" type="submit"
+                        class="glitch-hover inline-flex items-center gap-1.5 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 text-white text-xs font-black transition-all shadow-md active:scale-95">
+                    <i data-lucide="upload" class="w-4 h-4"></i>
+                    <span>Upload</span>
+                </button>
+            </div>
+        </form>
+    </dialog>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/layout.js"></script>
+    <script src="/js/courses.js"></script>
+    <script>
+        let uploading = false;
+
+        if (allowed) {
+            initPage();
+        }
+
+        function initPage() {
+            const courseId = new URLSearchParams(window.location.search).get("courseId");
+
+            const pageAlert = document.getElementById("pageAlert");
+            const sectionsBox = document.getElementById("sections");
+            const addSectionBtn = document.getElementById("addSectionBtn");
+
+            const sectionDialog = document.getElementById("sectionDialog");
+            const sectionForm = document.getElementById("sectionForm");
+            const sectionAlert = document.getElementById("sectionAlert");
+            const sectionTitleInput = document.getElementById("sectionTitle");
+            const sectionSave = document.getElementById("sectionSave");
+
+            const lectureDialog = document.getElementById("lectureDialog");
+            const lectureForm = document.getElementById("lectureForm");
+            const lectureAlert = document.getElementById("lectureAlert");
+            const lectureTitleInput = document.getElementById("lectureTitle");
+            const lectureDescriptionInput = document.getElementById("lectureDescription");
+            const lectureDurationInput = document.getElementById("lectureDuration");
+            const lectureSave = document.getElementById("lectureSave");
+
+            const videoDialog = document.getElementById("videoDialog");
+            const videoForm = document.getElementById("videoForm");
+            const videoAlert = document.getElementById("videoAlert");
+            const videoFileInput = document.getElementById("videoFile");
+            const videoInfo = document.getElementById("videoInfo");
+            const videoCancel = document.getElementById("videoCancel");
+            const videoSave = document.getElementById("videoSave");
+            const progressWrap = document.getElementById("progressWrap");
+            const progressBar = document.getElementById("progressBar");
+            const progressText = document.getElementById("progressText");
+
+            let editingSection = null;   // null means "adding a new section"
+            let targetSection = null;    // the section a lecture is being added to
+            let editingLecture = null;   // null means "adding a new lecture"
+            let videoLecture = null;     // the lecture a video is being uploaded for
+
+            Layout.renderHeader(document.getElementById("appHeader"));
+
+            if (!Courses.isGuid(courseId)) {
+                showAlert(pageAlert, "Course not found.", "error", "search");
+                return;
+            }
+
+            document.getElementById("backLink").href = Courses.detailsUrl(courseId);
+
+            function showAlert(container, message, type = "error", iconName = "alert-triangle", autoDismiss = false) {
+                const styles = {
+                    error: "bg-rose-500/10 border-rose-300 text-rose-700",
+                    success: "bg-emerald-500/10 border-emerald-300 text-emerald-700",
+                    info: "bg-sky-500/10 border-sky-300 text-sky-700"
+                };
+
+                const msg = Array.isArray(message) ? message.join(" ") : message;
+
+                container.innerHTML = `
+                        <div class="flex items-center gap-2.5 p-3.5 rounded-2xl border ${styles[type]} text-xs font-black backdrop-blur-md">
+                            <i data-lucide="${iconName}" class="w-4 h-4 shrink-0"></i>
+                            <span>${msg}</span>
+                        </div>
+                    `;
+                lucide.createIcons();
+
+                if (autoDismiss) {
+                    setTimeout(() => {
+                        container.innerHTML = "";
+                    }, 1000);
+                }
+            }
+
+            function clearAlert(container) {
+                container.innerHTML = "";
+            }
+
+            function smallButton(label, cssClass, iconName, handler, options = {}) {
+                const button = document.createElement("button");
+                button.type = "button";
+                button.className = "glitch-hover inline-flex items-center gap-1 rounded-xl border px-2.5 py-1.5 text-xs font-black transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed " + cssClass;
+
+                if (iconName) {
+                    button.innerHTML = `<i data-lucide="${iconName}" class="w-3.5 h-3.5"></i>${label ? `<span>${label}</span>` : ''}`;
+                } else {
+                    button.textContent = label;
+                }
+
+                if (options.title) {
+                    button.title = options.title;
+                    button.setAttribute("aria-label", options.title);
+                }
+
+                if (options.disabled) {
+                    button.disabled = true;
+                } else {
+                    button.addEventListener("click", () => handler(button));
+                }
+
+                return button;
+            }
+
+            async function run(button, action, successMessage) {
+                clearAlert(pageAlert);
+                button.disabled = true;
+
+                try {
+                    await action();
+                    const loaded = await loadCurriculum();
+
+                    if (loaded && successMessage) {
+                        showAlert(pageAlert, successMessage, "success", "check-circle", true);
+                    }
+                } catch (error) {
+                    showAlert(pageAlert, error.messages || ["Something went wrong. Please try again."], "error", "alert-triangle");
+                    button.disabled = false;
+                }
+            }
+
+            // ---------- Drawing UI ----------
+
+            function buildLectureRow(section, lecture, index, total) {
+                const row = document.createElement("li");
+                row.className = "flex flex-wrap items-center justify-between gap-3 px-5 py-3.5 hover:bg-sky-50/40 transition-colors";
+
+                const info = document.createElement("div");
+                info.className = "flex-1 min-w-0 space-y-0.5";
+
+                const titleBox = document.createElement("div");
+                titleBox.className = "flex items-center gap-2";
+                titleBox.innerHTML = `
+                        <i data-lucide="play-circle" class="w-4 h-4 text-blue-600 shrink-0"></i>
+                        <p class="text-xs font-black text-slate-900 break-words">${index + 1}. ${lecture.title}</p>
+                    `;
+                info.appendChild(titleBox);
+
+                const meta = [];
+                const duration = Courses.formatDuration(lecture.durationMinutes);
+                if (duration) {
+                    meta.push(duration);
+                }
+                meta.push(lecture.hasVideo ? "Video uploaded" : "No video yet");
+
+                const metaText = document.createElement("p");
+                metaText.className = "text-[11px] font-extrabold text-slate-500 pl-6";
+                metaText.textContent = meta.join(" \u00B7 ");
+                info.appendChild(metaText);
+
+                row.appendChild(info);
+                row.appendChild(Courses.statusBadge(lecture.isPublished ? "Published" : "Draft"));
+
+                const tools = document.createElement("div");
+                tools.className = "flex flex-wrap items-center gap-1.5";
+
+                tools.appendChild(smallButton("", "border-slate-200 bg-white text-slate-700 hover:bg-slate-100", "arrow-up",
+                    (button) => run(button, () => Api.post("/api/lectures/" + lecture.id + "/move", { direction: "Up" })),
+                    { title: "Move lecture up", disabled: index === 0 }));
+
+                tools.appendChild(smallButton("", "border-slate-200 bg-white text-slate-700 hover:bg-slate-100", "arrow-down",
+                    (button) => run(button, () => Api.post("/api/lectures/" + lecture.id + "/move", { direction: "Down" })),
+                    { title: "Move lecture down", disabled: index === total - 1 }));
+
+                tools.appendChild(smallButton("Edit", "border-slate-200 bg-white text-slate-700 hover:border-blue-300 hover:text-blue-600", "edit-3",
+                    () => openLectureDialog(section, lecture)));
+
+                tools.appendChild(smallButton(
+                    lecture.hasVideo ? "Replace Video" : "Upload Video",
+                    "border-sky-300 bg-sky-50/80 text-sky-900 hover:bg-sky-100",
+                    "upload-cloud",
+                    () => openVideoDialog(lecture)));
+
+                if (lecture.hasVideo) {
+                    tools.appendChild(smallButton("Remove Video", "border-slate-200 bg-white text-slate-700 hover:bg-slate-100", "video-off",
+                        (button) => {
+                            if (window.confirm("Remove the video from \"" + lecture.title + "\"? The file will be deleted.")) {
+                                run(button, () => Api.del("/api/lectures/" + lecture.id + "/video"), "Video removed.");
+                            }
+                        }));
+                }
+
+                tools.appendChild(smallButton(
+                    lecture.isPublished ? "Unpublish" : "Publish",
+                    "border-sky-300 bg-sky-50/80 text-sky-900 hover:bg-sky-100",
+                    lecture.isPublished ? "lock" : "rocket",
+                    (button) => run(
+                        button,
+                        () => Api.post("/api/lectures/" + lecture.id + (lecture.isPublished ? "/unpublish" : "/publish")),
+                        "\"" + lecture.title + "\" was " + (lecture.isPublished ? "unpublished." : "published."))));
+
+                tools.appendChild(smallButton("Delete", "border-rose-200 bg-rose-50/80 text-rose-600 hover:bg-rose-100", "trash-2",
+                    (button) => {
+                        if (window.confirm("Delete the lecture \"" + lecture.title + "\"? This cannot be undone.")) {
+                            run(button, () => Api.del("/api/lectures/" + lecture.id), "Lecture deleted.");
+                        }
+                    }));
+
+                row.appendChild(tools);
+                return row;
+            }
+
+            function buildSectionCard(section, index, total) {
+                const card = document.createElement("section");
+                card.className = "y2k-card overflow-hidden relative border border-sky-100 shadow-sm";
+
+                const head = document.createElement("div");
+                head.className = "flex flex-wrap items-center justify-between gap-3 px-5 py-3.5 bg-sky-50/70 border-b border-sky-100";
+
+                const titleHeading = document.createElement("h2");
+                titleHeading.className = "text-xs font-black text-slate-900 flex items-center gap-2";
+                titleHeading.innerHTML = `
+                        <span class="w-5 h-5 rounded-lg bg-sky-200/60 text-sky-900 flex items-center justify-center text-[10px] font-black">${index + 1}</span>
+                        <span>Section: ${section.title}</span>
+                    `;
+                head.appendChild(titleHeading);
+
+                const tools = document.createElement("div");
+                tools.className = "flex flex-wrap items-center gap-1.5";
+
+                tools.appendChild(smallButton("", "border-slate-200 bg-white text-slate-700 hover:bg-slate-100", "arrow-up",
+                    (button) => run(button, () => Api.post("/api/sections/" + section.id + "/move", { direction: "Up" })),
+                    { title: "Move section up", disabled: index === 0 }));
+
+                tools.appendChild(smallButton("", "border-slate-200 bg-white text-slate-700 hover:bg-slate-100", "arrow-down",
+                    (button) => run(button, () => Api.post("/api/sections/" + section.id + "/move", { direction: "Down" })),
+                    { title: "Move section down", disabled: index === total - 1 }));
+
+                tools.appendChild(smallButton("Rename", "border-slate-200 bg-white text-slate-700 hover:border-blue-300 hover:text-blue-600", "type",
+                    () => openSectionDialog(section)));
+
+                tools.appendChild(smallButton("Add Lecture", "border-sky-300 bg-sky-50/80 text-sky-900 hover:bg-sky-100", "plus-circle",
+                    () => openLectureDialog(section, null)));
+
+                tools.appendChild(smallButton("Delete", "border-rose-200 bg-rose-50/80 text-rose-600 hover:bg-rose-100", "trash-2",
+                    (button) => {
+                        const count = section.lectures.length;
+                        const question = "Delete the section \"" + section.title + "\"" +
+                            (count > 0 ? " and its " + count + (count === 1 ? " lecture" : " lectures") + " (including any videos)" : "") +
+                            "? This cannot be undone.";
+
+                        if (window.confirm(question)) {
+                            run(button, () => Api.del("/api/sections/" + section.id), "Section deleted.");
+                        }
+                    }));
+
+                head.appendChild(tools);
+                card.appendChild(head);
+
+                if (section.lectures.length === 0) {
+                    const empty = document.createElement("div");
+                    empty.className = "px-5 py-6 text-center text-xs font-bold text-slate-500 space-y-1";
+                    empty.innerHTML = `
+                            <i data-lucide="folder-open" class="w-6 h-6 mx-auto text-sky-400 mb-1"></i>
+                            <p>No lectures yet. Click "Add Lecture" to create the first one.</p>
+                        `;
+                    card.appendChild(empty);
+                } else {
+                    const list = document.createElement("ul");
+                    list.className = "divide-y divide-sky-100";
+                    section.lectures.forEach((lecture, lectureIndex) => {
+                        list.appendChild(buildLectureRow(section, lecture, lectureIndex, section.lectures.length));
+                    });
+                    card.appendChild(list);
+                }
+
+                return card;
+            }
+
+            function render(data) {
+                sectionsBox.replaceChildren();
+
+                if (data.sections.length === 0) {
+                    const empty = document.createElement("div");
+                    empty.className = "y2k-card p-12 text-center text-slate-500 space-y-2";
+                    empty.innerHTML = `
+                            <i data-lucide="layers" class="w-10 h-10 mx-auto text-sky-400 mb-2"></i>
+                            <h3 class="text-base font-black text-slate-900">No sections added yet</h3>
+                            <p class="text-xs font-bold text-slate-500">Click "Add Section" above to start constructing your course curriculum.</p>
+                        `;
+                    sectionsBox.appendChild(empty);
+                } else {
+                    data.sections.forEach((section, index) => {
+                        sectionsBox.appendChild(buildSectionCard(section, index, data.sections.length));
+                    });
+                }
+
+                const published = data.sections
+                    .flatMap(section => section.lectures)
+                    .filter(lecture => lecture.isPublished).length;
+
+                const duration = Courses.formatDuration(data.totalDurationMinutes);
+                const parts = [
+                    data.sections.length + (data.sections.length === 1 ? " section" : " sections"),
+                    data.totalLectures + (data.totalLectures === 1 ? " lecture" : " lectures") + " (" + published + " published)"
+                ];
+
+                if (duration) {
+                    parts.push(duration);
+                }
+
+                document.getElementById("summary").textContent = parts.join(" \u00B7 ");
+                lucide.createIcons();
+            }
+
+            async function loadCurriculum() {
+                try {
+                    const data = await Api.get("/api/courses/" + courseId + "/curriculum");
+                    render(data);
+                    return true;
+                } catch (error) {
+                    showAlert(pageAlert, error.messages || ["Could not load the curriculum."], "error", "x-circle");
+                    return false;
+                }
+            }
+
+            // ---------- Section Dialog Logic ----------
+
+            function openSectionDialog(section) {
+                editingSection = section;
+                clearAlert(sectionAlert);
+                document.getElementById("sectionDialogTitle").querySelector("span").textContent = section ? "Rename Section" : "Add Section";
+                sectionTitleInput.value = section ? section.title : "";
+                sectionDialog.showModal();
+                sectionTitleInput.focus();
+                lucide.createIcons();
+            }
+
+            document.getElementById("sectionCancel").addEventListener("click", () => sectionDialog.close());
+            addSectionBtn.addEventListener("click", () => openSectionDialog(null));
+
+            sectionForm.addEventListener("submit", async (event) => {
+                event.preventDefault();
+                clearAlert(sectionAlert);
+
+                const title = sectionTitleInput.value.trim();
+
+                if (title.length < 2) {
+                    showAlert(sectionAlert, "Please enter a title of at least 2 characters.", "error", "alert-triangle");
+                    return;
+                }
+
+                Ui.setBusy(sectionSave, true, "Saving...");
+
+                try {
+                    if (editingSection) {
+                        await Api.put("/api/sections/" + editingSection.id, { title });
+                    } else {
+                        await Api.post("/api/courses/" + courseId + "/sections", { title });
+                    }
+
+                    sectionDialog.close();
+                    const loaded = await loadCurriculum();
+
+                    if (loaded) {
+                        showAlert(pageAlert, editingSection ? "Section renamed." : "Section added.", "success", "check-circle", true);
+                    }
+                } catch (error) {
+                    showAlert(sectionAlert, error.messages || ["Something went wrong. Please try again."], "error", "alert-circle");
+                } finally {
+                    Ui.setBusy(sectionSave, false);
+                }
+            });
+
+            // ---------- Lecture Dialog Logic ----------
+
+            function openLectureDialog(section, lecture) {
+                targetSection = section;
+                editingLecture = lecture;
+                clearAlert(lectureAlert);
+
+                document.getElementById("lectureDialogTitle").querySelector("span").textContent = lecture ? "Edit Lecture" : "Add Lecture";
+                lectureTitleInput.value = lecture ? lecture.title : "";
+                lectureDescriptionInput.value = lecture ? lecture.description : "";
+                lectureDurationInput.value = lecture ? lecture.durationMinutes : 0;
+
+                lectureDialog.showModal();
+                lectureTitleInput.focus();
+                lucide.createIcons();
+            }
+
+            document.getElementById("lectureCancel").addEventListener("click", () => lectureDialog.close());
+
+            lectureForm.addEventListener("submit", async (event) => {
+                event.preventDefault();
+                clearAlert(lectureAlert);
+
+                const title = lectureTitleInput.value.trim();
+                const description = lectureDescriptionInput.value.trim();
+                const durationText = lectureDurationInput.value.trim();
+                const durationMinutes = durationText === "" ? 0 : Number(durationText);
+
+                if (title.length < 2) {
+                    showAlert(lectureAlert, "Please enter a title of at least 2 characters.", "error", "alert-triangle");
+                    return;
+                }
+
+                if (!Number.isInteger(durationMinutes) || durationMinutes < 0 || durationMinutes > 600) {
+                    showAlert(lectureAlert, "Duration must be a whole number of minutes from 0 to 600.", "error", "alert-triangle");
+                    return;
+                }
+
+                const payload = { title, description, durationMinutes };
+                Ui.setBusy(lectureSave, true, "Saving...");
+
+                try {
+                    if (editingLecture) {
+                        await Api.put("/api/lectures/" + editingLecture.id, payload);
+                    } else {
+                        await Api.post("/api/sections/" + targetSection.id + "/lectures", payload);
+                    }
+
+                    lectureDialog.close();
+                    const loaded = await loadCurriculum();
+
+                    if (loaded) {
+                        showAlert(pageAlert, editingLecture ? "Lecture updated." : "Lecture added as a draft.", "success", "check-circle", true);
+                    }
+                } catch (error) {
+                    showAlert(lectureAlert, error.messages || ["Something went wrong. Please try again."], "error", "alert-circle");
+                } finally {
+                    Ui.setBusy(lectureSave, false);
+                }
+            });
+
+            // ---------- Video Upload Dialog Logic ----------
+
+            function setProgress(percent) {
+                progressBar.style.width = percent + "%";
+                progressText.textContent = percent < 100 ? "Uploading... " + percent + "%" : "Saving on the server...";
+            }
+
+            function openVideoDialog(lecture) {
+                videoLecture = lecture;
+                videoForm.reset();
+                clearAlert(videoAlert);
+                progressWrap.classList.add("hidden");
+                setProgress(0);
+
+                document.getElementById("videoDialogTitle").querySelector("span").textContent = lecture.hasVideo ? "Replace Video" : "Upload Video";
+                document.getElementById("videoLectureName").textContent = "Lecture: " + lecture.title;
+                videoInfo.textContent = "MP4 or WebM, up to 500 MB.";
+
+                videoDialog.showModal();
+                lucide.createIcons();
+            }
+
+            videoFileInput.addEventListener("change", () => {
+                const file = videoFileInput.files[0];
+
+                videoInfo.textContent = file
+                    ? file.name + " (" + Courses.formatBytes(file.size) + ")"
+                    : "MP4 or WebM, up to 500 MB.";
+            });
+
+            videoCancel.addEventListener("click", () => videoDialog.close());
+
+            // Prevent Esc key from closing dialog during upload
+            videoDialog.addEventListener("cancel", (event) => {
+                if (uploading) {
+                    event.preventDefault();
+                }
+            });
+
+            videoForm.addEventListener("submit", async (event) => {
+                event.preventDefault();
+                clearAlert(videoAlert);
+
+                const file = videoFileInput.files[0];
+                const problem = Courses.checkFile(file, "video");
+
+                if (problem) {
+                    showAlert(videoAlert, problem, "error", "alert-triangle");
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append("file", file);
+
+                uploading = true;
+                videoCancel.disabled = true;
+                videoFileInput.disabled = true;
+                progressWrap.classList.remove("hidden");
+                setProgress(0);
+                Ui.setBusy(videoSave, true, "Uploading...");
+
+                try {
+                    await Api.upload("/api/lectures/" + videoLecture.id + "/video", formData, setProgress);
+
+                    videoDialog.close();
+                    const loaded = await loadCurriculum();
+
+                    if (loaded) {
+                        showAlert(pageAlert, "Video uploaded successfully.", "success", "check-circle", true);
+                    }
+                } catch (error) {
+                    showAlert(videoAlert, error.messages || ["Something went wrong. Please try again."], "error", "alert-circle");
+                    progressWrap.classList.add("hidden");
+                } finally {
+                    uploading = false;
+                    videoCancel.disabled = false;
+                    videoFileInput.disabled = false;
+                    Ui.setBusy(videoSave, false);
+                }
+            });
+
+            // ---------- Start Execution ----------
+
+            async function start() {
+                try {
+                    const course = await Api.get("/api/courses/" + courseId);
+
+                    if (course.instructorId !== Auth.getUser().id) {
+                        window.location.replace("/instructor/courses.html");
+                        return;
+                    }
+
+                    document.title = "Curriculum: " + course.title + " | LearnHub";
+                    document.getElementById("courseTitle").textContent = course.title;
+                    document.getElementById("courseStatus").replaceChildren(Courses.statusBadge(course.status));
+                    document.getElementById("draftHint").classList.toggle("hidden", course.status === "Published");
+                    addSectionBtn.disabled = false;
+                } catch (error) {
+                    showAlert(pageAlert, error.messages || ["Could not load the course."], "error", "x-circle");
+                    return;
+                }
+
+                await loadCurriculum();
+            }
+
+            start();
+        }
+    </script>
+</body>
+</html>

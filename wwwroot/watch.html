@@ -1,0 +1,512 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Watch | LearnHub</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="/js/auth.js"></script>
+    <script>
+        const allowed = Auth.requireLogin();
+    </script>
+    <style>
+        /* Ambient Y2K Keyframes */
+        @keyframes cyberFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-8px) rotate(-1deg);
+            }
+        }
+
+        @keyframes scanline {
+            0% {
+                transform: translateY(-100%);
+            }
+
+            100% {
+                transform: translateY(1000%);
+            }
+        }
+
+        @keyframes glitchSnap {
+            0%, 100% {
+                transform: translate(0);
+            }
+
+            20% {
+                transform: translate(-3px, 2px);
+            }
+
+            40% {
+                transform: translate(3px, -2px);
+            }
+
+            60% {
+                transform: translate(-2px, -1px);
+            }
+
+            80% {
+                transform: translate(2px, 1px);
+            }
+        }
+
+        @keyframes y2kPop {
+            0% {
+                opacity: 0;
+                transform: scale(0.88) translateY(25px);
+                filter: blur(10px);
+            }
+
+            60% {
+                transform: scale(1.02) translateY(-4px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+                filter: blur(0);
+            }
+        }
+
+        .animate-cyber-float {
+            animation: cyberFloat 5s ease-in-out infinite;
+        }
+
+        .card-enter {
+            animation: y2kPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .glitch-hover:hover {
+            animation: glitchSnap 0.2s ease-in-out;
+        }
+
+        /* Y2K Tech Grid Pattern Background */
+        .y2k-grid {
+            background-size: 30px 30px;
+            background-image: linear-gradient(to right, rgba(56, 189, 248, 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(56, 189, 248, 0.08) 1px, transparent 1px);
+        }
+
+        /* Y2K Glass Card Container */
+        .y2k-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 2px solid rgba(186, 230, 253, 0.85);
+            box-shadow: 6px 6px 0px 0px rgba(14, 165, 233, 0.15), 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+            border-radius: 1.75rem;
+        }
+
+        /* Dark Glass Screen Wrapper for Video Player */
+        .y2k-player-screen {
+            background: rgba(15, 23, 42, 0.95);
+            border: 2px solid rgba(56, 189, 248, 0.3);
+            box-shadow: inset 0 0 20px rgba(14, 165, 233, 0.2), 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            border-radius: 1.5rem;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-800 relative overflow-x-hidden font-sans y2k-grid">
+
+    <!-- AMBIENT BRIGHT BLUE & CYAN BACKGROUND ORBS -->
+    <div class="fixed -top-24 -left-24 w-[450px] h-[450px] bg-cyan-300/40 rounded-full blur-[100px] pointer-events-none animate-cyber-float z-0"></div>
+    <div class="fixed -bottom-24 -right-24 w-[450px] h-[450px] bg-blue-300/40 rounded-full blur-[100px] pointer-events-none animate-cyber-float z-0" style="animation-direction: reverse;"></div>
+
+    <div id="appHeader" class="relative z-10"></div>
+
+    <main class="max-w-6xl mx-auto px-4 py-6 space-y-5 relative z-10">
+        <!-- Back Link Button -->
+        <div>
+            <a id="backLink" href="#" class="glitch-hover inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-white border border-sky-200 text-xs font-black text-slate-800 hover:text-blue-600 hover:border-blue-300 transition-all shadow-sm">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                <span>Back to course</span>
+            </a>
+        </div>
+
+        <div id="pageAlert"></div>
+
+        <div id="content" class="hidden card-enter">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                <!-- Main Video & Player Metadata Area -->
+                <section class="lg:col-span-2 space-y-5 min-w-0">
+
+                    <!-- Video Container -->
+                    <div class="y2k-player-screen overflow-hidden aspect-video relative flex items-center justify-center">
+                        <!-- Scanline FX Overlay -->
+                        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-400/5 to-transparent h-12 w-full pointer-events-none animate-[scanline_8s_linear_infinite] z-10"></div>
+
+                        <video id="player" class="w-full h-full object-contain relative z-0" controls controlsList="nodownload" preload="metadata" playsinline></video>
+                        <div id="playerMessage" class="hidden p-6 text-center z-20 space-y-2">
+                            <i data-lucide="video-off" class="w-10 h-10 mx-auto text-sky-400"></i>
+                            <p id="playerText" class="text-xs font-black text-slate-300"></p>
+                        </div>
+                    </div>
+
+                    <!-- Lecture Info Card -->
+                    <div class="y2k-card p-6 space-y-4">
+                        <div class="space-y-1.5 border-b border-sky-100 pb-4">
+                            <p id="courseName" class="text-xs font-black text-sky-600 uppercase tracking-wider flex items-center gap-1.5">
+                                <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
+                                <span></span>
+                            </p>
+                            <h1 id="lectureTitle" class="text-xl md:text-2xl font-black text-slate-900 break-words tracking-tight"></h1>
+                            <p id="lectureMeta" class="text-xs font-extrabold text-slate-500 flex flex-wrap items-center gap-2 pt-1"></p>
+                        </div>
+
+                        <p id="lectureDescription" class="text-xs font-bold text-slate-600 leading-relaxed whitespace-pre-line break-words"></p>
+
+                        <!-- Next/Previous Buttons -->
+                        <div class="flex items-center gap-3 pt-2">
+                            <button id="prevBtn" type="button"
+                                    class="glitch-hover inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-2.5 text-xs font-black text-slate-700 hover:border-blue-300 hover:text-blue-600 transition-all shadow-sm disabled:opacity-40 disabled:cursor-not-allowed active:scale-95">
+                                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                                <span>Previous Lecture</span>
+                            </button>
+                            <button id="nextBtn" type="button"
+                                    class="glitch-hover inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 text-white px-5 py-2.5 text-xs font-black transition-all shadow-md active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed hover:from-blue-700 hover:to-cyan-700">
+                                <span>Next Lecture</span>
+                                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Course Content Sidebar -->
+                <aside class="y2k-card overflow-hidden self-start border border-sky-100 shadow-sm">
+                    <div class="px-5 py-4 bg-sky-50/80 border-b border-sky-100 flex items-center justify-between">
+                        <h2 class="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                            <i data-lucide="layers" class="w-4 h-4 text-blue-600"></i>
+                            <span>Course Content</span>
+                        </h2>
+                    </div>
+                    <div id="sidebar" class="divide-y divide-sky-100 max-h-[600px] overflow-y-auto"></div>
+                </aside>
+
+            </div>
+        </div>
+    </main>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/layout.js"></script>
+    <script src="/js/courses.js"></script>
+    <script>
+        if (allowed) {
+            initPage();
+        }
+
+        function initPage() {
+            const user = Auth.getUser();
+            const params = new URLSearchParams(window.location.search);
+            const courseId = params.get("courseId");
+            const requestedLectureId = params.get("lectureId");
+
+            const pageAlert = document.getElementById("pageAlert");
+            const content = document.getElementById("content");
+            const player = document.getElementById("player");
+            const playerMessage = document.getElementById("playerMessage");
+            const playerText = document.getElementById("playerText");
+            const sidebar = document.getElementById("sidebar");
+            const prevBtn = document.getElementById("prevBtn");
+            const nextBtn = document.getElementById("nextBtn");
+
+            let entries = [];          // every lecture in order: { lecture, sectionTitle, number }
+            let current = null;        // the entry being shown
+            let canSeeDrafts = false;
+            let lastRecoveryAt = 0;    // when we last tried to get a fresh ticket after an error
+
+            Layout.renderHeader(document.getElementById("appHeader"));
+
+            if (!Courses.isGuid(courseId)) {
+                showAlert(pageAlert, "Course not found.", "error", "search");
+                return;
+            }
+
+            document.getElementById("backLink").href = Courses.detailsUrl(courseId);
+
+            function showAlert(container, message, type = "error", iconName = "alert-triangle", autoDismiss = false) {
+                const styles = {
+                    error: "bg-rose-500/10 border-rose-300 text-rose-700",
+                    success: "bg-emerald-500/10 border-emerald-300 text-emerald-700",
+                    info: "bg-sky-500/10 border-sky-300 text-sky-700"
+                };
+
+                const msg = Array.isArray(message) ? message.join(" ") : message;
+
+                container.innerHTML = `
+                    <div class="flex items-center gap-2.5 p-3.5 rounded-2xl border ${styles[type]} text-xs font-black backdrop-blur-md">
+                        <i data-lucide="${iconName}" class="w-4 h-4 shrink-0"></i>
+                        <span>${msg}</span>
+                    </div>
+                `;
+                lucide.createIcons();
+
+                if (autoDismiss) {
+                    setTimeout(() => {
+                        container.innerHTML = "";
+                    }, 1000);
+                }
+            }
+
+            function clearAlert(container) {
+                container.innerHTML = "";
+            }
+
+            // ---------- Video Player Logic ----------
+
+            function showMessage(text) {
+                player.classList.add("hidden");
+                playerText.textContent = text;
+                playerMessage.classList.remove("hidden");
+                lucide.createIcons();
+            }
+
+            function showPlayer() {
+                playerMessage.classList.add("hidden");
+                player.classList.remove("hidden");
+            }
+
+            function stopPlayer() {
+                player.pause();
+                player.removeAttribute("src");
+                player.load();
+            }
+
+            // Asks the API for a short-lived ticket, then points the <video> tag at the ticket URL.
+            async function startPlayback(autoplay, resumeAt) {
+                const entry = current;
+                const lecture = entry.lecture;
+
+                if (!lecture.hasVideo) {
+                    showMessage("This lecture does not have a video yet.");
+                    return;
+                }
+
+                try {
+                    const ticket = await Api.post("/api/lectures/" + lecture.id + "/stream-ticket");
+
+                    // The viewer may have picked another lecture while we were waiting.
+                    if (current !== entry) {
+                        return;
+                    }
+
+                    showPlayer();
+
+                    if (resumeAt > 0) {
+                        player.addEventListener("loadedmetadata", () => {
+                            player.currentTime = resumeAt;
+                        }, { once: true });
+                    }
+
+                    player.src = ticket.url;
+
+                    if (autoplay) {
+                        player.play().catch(() => { /* autoplay blocked by browser */ });
+                    }
+                } catch (error) {
+                    if (current === entry) {
+                        showMessage((error.messages || ["Could not load the video."]).join(" "));
+                    }
+                }
+            }
+
+            // Ticket recovery or file error
+            player.addEventListener("error", () => {
+                if (!current || !player.getAttribute("src")) {
+                    return;
+                }
+
+                const now = Date.now();
+
+                if (now - lastRecoveryAt < 15000) {
+                    showMessage("This video could not be played. The file may be damaged or in an unsupported format.");
+                    return;
+                }
+
+                lastRecoveryAt = now;
+                startPlayback(!player.paused, player.currentTime);
+            });
+
+            // Autoplay next lecture upon completion
+            player.addEventListener("ended", () => {
+                const next = neighbour(1);
+
+                if (next) {
+                    selectLecture(next, true);
+                }
+            });
+
+            // ---------- Navigation & Sidebar ----------
+
+            function neighbour(direction) {
+                const index = entries.indexOf(current);
+
+                for (let i = index + direction; i >= 0 && i < entries.length; i += direction) {
+                    if (entries[i].lecture.hasVideo) {
+                        return entries[i];
+                    }
+                }
+
+                return null;
+            }
+
+            function updateNavButtons() {
+                prevBtn.disabled = neighbour(-1) === null;
+                nextBtn.disabled = neighbour(1) === null;
+            }
+
+            function renderSidebar() {
+                sidebar.replaceChildren();
+
+                const sections = [];
+                entries.forEach(entry => {
+                    if (!sections.includes(entry.sectionTitle)) {
+                        sections.push(entry.sectionTitle);
+                    }
+                });
+
+                sections.forEach((sectionTitle, sectionIndex) => {
+                    const head = document.createElement("div");
+                    head.className = "px-5 py-2.5 bg-sky-50/60 border-t border-sky-100 text-[11px] font-black text-sky-800 uppercase tracking-wider flex items-center gap-1.5";
+                    head.innerHTML = `
+                        <i data-lucide="folder" class="w-3.5 h-3.5 text-sky-600"></i>
+                        <span>Section ${sectionIndex + 1}: ${sectionTitle}</span>
+                    `;
+                    sidebar.appendChild(head);
+
+                    entries.filter(entry => entry.sectionTitle === sectionTitle).forEach(entry => {
+                        const lecture = entry.lecture;
+                        const isCurrent = entry === current;
+
+                        const item = document.createElement("button");
+                        item.type = "button";
+                        item.disabled = !lecture.hasVideo;
+                        item.className = "w-full text-left flex items-start justify-between gap-3 px-5 py-3 transition-colors text-xs font-bold " +
+                            (isCurrent
+                                ? "bg-sky-100/80 text-blue-700 font-black border-l-4 border-blue-600"
+                                : lecture.hasVideo
+                                    ? "hover:bg-sky-50/60 text-slate-800"
+                                    : "text-slate-400 cursor-not-allowed opacity-60");
+
+                        const titleBox = document.createElement("div");
+                        titleBox.className = "flex items-start gap-2 min-w-0";
+                        titleBox.innerHTML = `
+                            <i data-lucide="${isCurrent ? 'play' : 'play-circle'}" class="w-4 h-4 shrink-0 ${isCurrent ? 'text-blue-600' : 'text-slate-400'} mt-0.5"></i>
+                            <span class="break-words">${entry.number}. ${lecture.title}</span>
+                        `;
+                        item.appendChild(titleBox);
+
+                        const side = document.createElement("div");
+                        side.className = "flex items-center gap-2 shrink-0 text-[11px] text-slate-500 font-extrabold";
+
+                        if (canSeeDrafts && !lecture.isPublished) {
+                            side.appendChild(Courses.statusBadge("Draft"));
+                        }
+
+                        const durationSpan = document.createElement("span");
+                        durationSpan.className = "whitespace-nowrap";
+                        durationSpan.textContent = lecture.hasVideo ? Courses.formatDuration(lecture.durationMinutes) : "No video";
+                        side.appendChild(durationSpan);
+
+                        item.appendChild(side);
+
+                        item.addEventListener("click", () => selectLecture(entry, true));
+                        sidebar.appendChild(item);
+                    });
+                });
+
+                lucide.createIcons();
+            }
+
+            function selectLecture(entry, autoplay) {
+                current = entry;
+                const lecture = entry.lecture;
+
+                document.title = lecture.title + " | LearnHub";
+                document.getElementById("lectureTitle").textContent = lecture.title;
+                document.getElementById("lectureDescription").textContent = lecture.description || "";
+
+                const meta = ["Section: " + entry.sectionTitle];
+                const duration = Courses.formatDuration(lecture.durationMinutes);
+                if (duration) {
+                    meta.push(duration);
+                }
+                if (canSeeDrafts && !lecture.isPublished) {
+                    meta.push("Draft (Visible only to owners and admins)");
+                }
+                document.getElementById("lectureMeta").textContent = meta.join(" \u00B7 ");
+
+                // Update URL query state without page reload
+                const url = new URL(window.location.href);
+                url.searchParams.set("lectureId", lecture.id);
+                window.history.replaceState(null, "", url);
+
+                renderSidebar();
+                updateNavButtons();
+                stopPlayer();
+                lastRecoveryAt = 0;
+                startPlayback(autoplay, 0);
+            }
+
+            prevBtn.addEventListener("click", () => {
+                const previous = neighbour(-1);
+
+                if (previous) {
+                    selectLecture(previous, true);
+                }
+            });
+
+            nextBtn.addEventListener("click", () => {
+                const next = neighbour(1);
+
+                if (next) {
+                    selectLecture(next, true);
+                }
+            });
+
+            // ---------- Start Execution ----------
+
+            async function start() {
+                try {
+                    const course = await Api.get("/api/courses/" + courseId);
+                    const curriculum = await Api.get("/api/courses/" + courseId + "/curriculum");
+
+                    canSeeDrafts = (user.role === "Instructor" && course.instructorId === user.id) || user.role === "Admin";
+                    document.getElementById("courseName").querySelector("span").textContent = course.title;
+
+                    let number = 0;
+                    curriculum.sections.forEach(section => {
+                        section.lectures.forEach(lecture => {
+                            number++;
+                            entries.push({ lecture, sectionTitle: section.title, number });
+                        });
+                    });
+
+                    if (entries.length === 0) {
+                        showAlert(pageAlert, "This course has no lectures yet.", "info", "info");
+                        return;
+                    }
+
+                    // Selected lecture priority: Requested ID -> First with Video -> First available
+                    const startEntry = entries.find(entry => entry.lecture.id === requestedLectureId)
+                        || entries.find(entry => entry.lecture.hasVideo)
+                        || entries[0];
+
+                    content.classList.remove("hidden");
+                    selectLecture(startEntry, false);
+                } catch (error) {
+                    showAlert(pageAlert, error.messages || ["Could not load the course."], "error", "x-circle");
+                }
+            }
+
+            start();
+        }
+    </script>
+</body>
+</html>

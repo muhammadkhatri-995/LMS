@@ -12,6 +12,8 @@ public class AppDbContext : DbContext
     public DbSet<User> Users => Set<User>();
     public DbSet<Course> Courses => Set<Course>();
     public DbSet<Category> Categories => Set<Category>();
+    public DbSet<Section> Sections => Set<Section>();
+    public DbSet<Lecture> Lectures => Set<Lecture>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

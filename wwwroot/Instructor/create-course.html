@@ -3,50 +3,202 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Course | LearnHub</title>
+    <title>Create Course | LearnHub</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="/js/auth.js"></script>
     <script>
         const allowed = Auth.requireRole("Instructor");
     </script>
+    <style>
+        /* Ambient Y2K Keyframes */
+        @keyframes cyberFloat {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-8px) rotate(-1deg);
+            }
+        }
+
+        @keyframes scanline {
+            0% {
+                transform: translateY(-100%);
+            }
+
+            100% {
+                transform: translateY(1000%);
+            }
+        }
+
+        @keyframes glitchSnap {
+            0%, 100% {
+                transform: translate(0);
+            }
+
+            20% {
+                transform: translate(-3px, 2px);
+            }
+
+            40% {
+                transform: translate(3px, -2px);
+            }
+
+            60% {
+                transform: translate(-2px, -1px);
+            }
+
+            80% {
+                transform: translate(2px, 1px);
+            }
+        }
+
+        @keyframes y2kPop {
+            0% {
+                opacity: 0;
+                transform: scale(0.88) translateY(25px);
+                filter: blur(10px);
+            }
+
+            60% {
+                transform: scale(1.02) translateY(-4px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+                filter: blur(0);
+            }
+        }
+
+        .animate-cyber-float {
+            animation: cyberFloat 5s ease-in-out infinite;
+        }
+
+        .card-enter {
+            animation: y2kPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .glitch-hover:hover {
+            animation: glitchSnap 0.2s ease-in-out;
+        }
+
+        /* Y2K Tech Grid Pattern Background */
+        .y2k-grid {
+            background-size: 30px 30px;
+            background-image: linear-gradient(to right, rgba(56, 189, 248, 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(56, 189, 248, 0.08) 1px, transparent 1px);
+        }
+
+        /* Y2K Glass Card Container */
+        .y2k-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 2px solid rgba(186, 230, 253, 0.85);
+            box-shadow: 6px 6px 0px 0px rgba(14, 165, 233, 0.15), 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+            border-radius: 1.75rem;
+        }
+
+        /* Input Focus Glow */
+        input:focus, select:focus, textarea:focus {
+            box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.25), 0 0 15px rgba(14, 165, 233, 0.2);
+        }
+    </style>
 </head>
-<body class="min-h-screen bg-slate-50">
+<body class="min-h-screen bg-slate-50 text-slate-800 relative overflow-x-hidden font-sans y2k-grid">
 
-    <div id="appHeader"></div>
+    <!-- AMBIENT BRIGHT BLUE & CYAN BACKGROUND ORBS -->
+    <div class="fixed -top-24 -left-24 w-[450px] h-[450px] bg-cyan-300/40 rounded-full blur-[100px] pointer-events-none animate-cyber-float z-0"></div>
+    <div class="fixed -bottom-24 -right-24 w-[450px] h-[450px] bg-blue-300/40 rounded-full blur-[100px] pointer-events-none animate-cyber-float z-0" style="animation-direction: reverse;"></div>
 
-    <main class="max-w-2xl mx-auto px-4 py-8 space-y-4">
-        <a href="/instructor/courses.html" class="text-sm text-blue-600 hover:underline">&larr; Back to my courses</a>
+    <div id="appHeader" class="relative z-10"></div>
 
-        <h1 id="pageTitle" class="text-xl font-semibold text-slate-800">Create course</h1>
+    <main class="max-w-3xl mx-auto px-4 py-8 space-y-6 relative z-10">
+        <!-- Back Link Button -->
+        <div>
+            <a href="/instructor/courses.html" class="glitch-hover inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-white border border-sky-200 text-xs font-black text-slate-800 hover:text-blue-600 hover:border-blue-300 transition-all shadow-sm">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                <span>Back to my courses</span>
+            </a>
+        </div>
 
-        <section class="bg-white rounded-xl border border-slate-200 p-6">
-            <div id="alertBox" class="mb-4"></div>
+        <!-- Page Header Banner -->
+        <div class="y2k-card p-6 rounded-3xl relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <!-- Scanline FX -->
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-400/5 to-transparent h-12 w-full pointer-events-none animate-[scanline_8s_linear_infinite]"></div>
 
-            <form id="courseForm" class="space-y-4" novalidate>
-                <div>
-                    <label for="title" class="block text-sm font-medium text-slate-700 mb-1">Title</label>
-                    <input id="title" type="text" maxlength="200"
-                           class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <div class="relative z-10">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-100/80 border border-sky-300 text-sky-800 text-xs font-black tracking-wider uppercase mb-2">
+                    <i data-lucide="sparkles" class="w-3.5 h-3.5 text-sky-600"></i>
+                    <span>Course Builder</span>
+                </div>
+                <h1 id="pageTitle" class="text-3xl font-black text-slate-900 tracking-tight">Create Course</h1>
+                <p class="text-xs font-bold text-slate-500 mt-1">Configure metadata and publish options for your module</p>
+            </div>
+
+            <div class="relative z-10 flex items-center gap-3 bg-white/90 border border-sky-200 p-3.5 rounded-2xl shadow-sm">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-sky-500 to-cyan-400 p-[2px] shadow-md shadow-sky-500/20">
+                    <div class="w-full h-full bg-white rounded-[10px] flex items-center justify-center text-blue-600 font-black">
+                        <i data-lucide="layout" class="w-5 h-5"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="alertBox"></div>
+
+        <!-- Course Form Glass Card -->
+        <section class="y2k-card p-6 md:p-8 rounded-3xl relative overflow-hidden card-enter">
+            <form id="courseForm" class="space-y-5" novalidate>
+                <!-- Title Field -->
+                <div class="space-y-1.5">
+                    <label for="title" class="block text-xs font-black text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                        <i data-lucide="heading" class="w-3.5 h-3.5 text-blue-600"></i>
+                        <span>Title</span>
+                    </label>
+                    <input id="title" type="text" maxlength="200" placeholder="e.g. Full-Stack Web Development with ASP.NET Core"
+                           class="w-full rounded-2xl bg-white border border-slate-200 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-all font-bold shadow-sm" />
                 </div>
 
-                <div>
-                    <label for="category" class="block text-sm font-medium text-slate-700 mb-1">Category</label>
-                    <select id="category"
-                            class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </select>
+                <!-- Category Field -->
+                <div class="space-y-1.5">
+                    <label for="category" class="block text-xs font-black text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                        <i data-lucide="tag" class="w-3.5 h-3.5 text-blue-600"></i>
+                        <span>Category</span>
+                    </label>
+                    <div class="relative group">
+                        <select id="category"
+                                class="w-full rounded-2xl bg-white border border-slate-200 px-4 py-3 text-sm text-slate-900 focus:outline-none focus:border-blue-500 transition-all font-bold appearance-none shadow-sm cursor-pointer">
+                        </select>
+                        <i data-lucide="chevron-down" class="w-4 h-4 absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></i>
+                    </div>
                 </div>
 
-                <div>
-                    <label for="description" class="block text-sm font-medium text-slate-700 mb-1">Description</label>
-                    <textarea id="description" rows="7" maxlength="4000"
-                              class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-                    <p class="text-xs text-slate-500 mt-1">At least 10 characters. New courses start as a draft.</p>
+                <!-- Description Field -->
+                <div class="space-y-1.5">
+                    <label for="description" class="block text-xs font-black text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                        <i data-lucide="file-text" class="w-3.5 h-3.5 text-blue-600"></i>
+                        <span>Description</span>
+                    </label>
+                    <textarea id="description" rows="7" maxlength="4000" placeholder="Write a comprehensive description covering goals, requirements, and curriculum structure..."
+                              class="w-full rounded-2xl bg-white border border-slate-200 p-4 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-all font-bold shadow-sm leading-relaxed"></textarea>
+                    <p class="text-[11px] font-extrabold text-slate-500 flex items-center gap-1.5 pt-1">
+                        <i data-lucide="info" class="w-3.5 h-3.5 text-sky-500"></i>
+                        <span>At least 10 characters. New courses start as a draft.</span>
+                    </p>
                 </div>
 
-                <button id="saveBtn" type="submit"
-                        class="rounded-lg bg-blue-600 text-white px-4 py-2 text-sm font-medium hover:bg-blue-700">
-                    Save course
-                </button>
+                <!-- Action Button -->
+                <div class="pt-2">
+                    <button id="saveBtn" type="submit"
+                            class="glitch-hover w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 text-white px-8 py-3.5 text-xs font-black transition-all shadow-md active:scale-95 hover:from-blue-700 hover:to-cyan-700">
+                        <i data-lucide="save" class="w-4 h-4"></i>
+                        <span>Save Course</span>
+                    </button>
+                </div>
             </form>
         </section>
     </main>
@@ -73,13 +225,41 @@
 
             Layout.renderHeader(document.getElementById("appHeader"));
 
+            function showAlert(message, type = "error", iconName = "alert-triangle", autoDismiss = false) {
+                const styles = {
+                    error: "bg-rose-500/10 border-rose-300 text-rose-700",
+                    success: "bg-emerald-500/10 border-emerald-300 text-emerald-700",
+                    info: "bg-sky-500/10 border-sky-300 text-sky-700"
+                };
+
+                const msg = Array.isArray(message) ? message.join(" ") : message;
+
+                alertBox.innerHTML = `
+                        <div class="flex items-center gap-2.5 p-3.5 rounded-2xl border ${styles[type]} text-xs font-black backdrop-blur-md">
+                            <i data-lucide="${iconName}" class="w-4 h-4 shrink-0"></i>
+                            <span>${msg}</span>
+                        </div>
+                    `;
+                lucide.createIcons();
+
+                if (autoDismiss) {
+                    setTimeout(() => {
+                        alertBox.innerHTML = "";
+                    }, 1000);
+                }
+            }
+
+            function clearAlert() {
+                alertBox.innerHTML = "";
+            }
+
             async function setup() {
                 if (isEdit) {
-                    document.getElementById("pageTitle").textContent = "Edit course";
-                    document.title = "Edit course | LearnHub";
+                    document.getElementById("pageTitle").textContent = "Edit Course";
+                    document.title = "Edit Course | LearnHub";
 
                     if (!Courses.isGuid(courseId)) {
-                        Ui.showAlert(alertBox, "Course not found.");
+                        showAlert("Course not found.", "error", "search");
                         form.classList.add("hidden");
                         return;
                     }
@@ -101,32 +281,34 @@
                         descriptionInput.value = course.description;
                         categorySelect.value = course.categoryId;
                     }
+
+                    lucide.createIcons();
                 } catch (error) {
-                    Ui.showAlert(alertBox, error.messages || ["Could not load the page."]);
+                    showAlert(error.messages || ["Could not load the page."], "error", "x-circle");
                     form.classList.add("hidden");
                 }
             }
 
             form.addEventListener("submit", async (event) => {
                 event.preventDefault();
-                Ui.clearAlert(alertBox);
+                clearAlert();
 
                 const title = titleInput.value.trim();
                 const description = descriptionInput.value.trim();
                 const categoryId = categorySelect.value;
 
                 if (title.length < 3) {
-                    Ui.showAlert(alertBox, "Please enter a title of at least 3 characters.");
+                    showAlert("Please enter a title of at least 3 characters.", "error", "alert-triangle");
                     return;
                 }
 
                 if (description.length < 10) {
-                    Ui.showAlert(alertBox, "Please enter a description of at least 10 characters.");
+                    showAlert("Please enter a description of at least 10 characters.", "error", "alert-triangle");
                     return;
                 }
 
                 if (!categoryId) {
-                    Ui.showAlert(alertBox, "Please choose a category.");
+                    showAlert("Please choose a category.", "error", "alert-triangle");
                     return;
                 }
 
@@ -138,10 +320,15 @@
                         ? await Api.put("/api/courses/" + courseId, payload)
                         : await Api.post("/api/courses", payload);
 
-                    window.location.href = Courses.detailsUrl(saved.id);
+                    showAlert("Course saved successfully!", "success", "check-circle", true);
+
+                    setTimeout(() => {
+                        window.location.href = Courses.detailsUrl(saved.id);
+                    }, 1000);
                 } catch (error) {
-                    Ui.showAlert(alertBox, error.messages || ["Something went wrong. Please try again."]);
+                    showAlert(error.messages || ["Something went wrong. Please try again."], "error", "alert-circle");
                     Ui.setBusy(saveBtn, false);
+                    lucide.createIcons();
                 }
             });
 

@@ -3,3 +3,13 @@ bin/
 bin/ 
 *.user 
 *.suo 
+LMS.API/App_Data/
+LMS.API/wwwroot/uploads/
+obj/
+bin/
+LMS.API/App_Data/
+LMS.API/wwwroot/uploads/
+obj/
+bin/
+LMS.API/App_Data/
+LMS.API/wwwroot/uploads/

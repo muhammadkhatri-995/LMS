@@ -86,7 +86,7 @@
             animation: glitchSnap 0.2s ease-in-out;
         }
 
-        /* Y2K Tech Grid Background */
+        /* Y2K Tech Grid Pattern Background */
         .y2k-grid {
             background-size: 30px 30px;
             background-image: linear-gradient(to right, rgba(56, 189, 248, 0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(56, 189, 248, 0.08) 1px, transparent 1px);
@@ -111,66 +111,77 @@
 
     <div id="appHeader" class="relative z-10"></div>
 
-    <main class="max-w-3xl mx-auto px-4 py-8 space-y-6 relative z-10">
+    <main class="max-w-4xl mx-auto px-4 py-8 space-y-6 relative z-10">
         <!-- Back Link Button -->
         <div>
             <a id="backLink" href="#" class="glitch-hover inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-white border border-sky-200 text-xs font-black text-slate-800 hover:text-blue-600 hover:border-blue-300 transition-all shadow-sm">
                 <i data-lucide="arrow-left" class="w-4 h-4"></i>
-                <span>Back to Courses</span>
+                <span>Back to courses</span>
             </a>
         </div>
 
         <div id="pageAlert"></div>
 
-        <!-- Course Details Glass Card -->
-        <article id="courseCard" class="hidden y2k-card rounded-3xl overflow-hidden card-enter relative">
+        <!-- Course Main Glass Card -->
+        <article id="courseCard" class="hidden y2k-card overflow-hidden card-enter relative border border-sky-100 shadow-md">
+            <!-- Scanline FX -->
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-400/5 to-transparent h-12 w-full pointer-events-none animate-[scanline_8s_linear_infinite]"></div>
 
-            <!-- Dynamic Banner Header with Y2K Scanlines -->
-            <div id="thumb" class="h-48 bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-500 flex items-center justify-center text-6xl font-black text-white relative overflow-hidden">
-                <!-- Scanline FX -->
-                <div class="absolute inset-0 bg-gradient-to-b from-transparent via-white/10 to-transparent h-10 w-full pointer-events-none animate-[scanline_6s_linear_infinite]"></div>
-                <span class="absolute -right-4 -bottom-4 text-9xl opacity-15 select-none">🎓</span>
-                <span id="thumbText" class="drop-shadow-lg transform hover:scale-110 transition-transform duration-300 select-none"></span>
-            </div>
+            <div id="thumbBox" class="relative overflow-hidden border-b border-sky-100"></div>
 
-            <div class="p-6 md:p-8 space-y-6 relative z-10">
-                <!-- Category & Status Badges -->
-                <div class="flex flex-wrap items-center gap-2">
-                    <span id="categoryBadge" class="inline-flex items-center gap-1.5 rounded-full bg-sky-100 border border-sky-300 text-sky-900 px-3.5 py-1 text-xs font-black uppercase tracking-wider shadow-sm">
-                        <span>🏷️</span>
-                        <span id="categoryName"></span>
-                    </span>
-                    <span id="statusBadge" class="inline-flex items-center gap-1"></span>
+            <div class="p-6 md:p-8 space-y-5 relative z-10">
+                <!-- Thumbnail Management Controls (Owner Only) -->
+                <div id="thumbControls" class="hidden flex flex-wrap items-center gap-3 p-3.5 bg-sky-50/80 rounded-2xl border border-sky-200"></div>
+
+                <!-- Badges Row -->
+                <div class="flex flex-wrap items-center gap-2.5">
+                    <span id="categoryBadge" class="inline-flex items-center gap-1.5 rounded-full bg-sky-100 border border-sky-300 text-sky-900 px-3 py-1 text-xs font-black uppercase tracking-wider"></span>
+                    <span id="statusBadge"></span>
                 </div>
 
-                <!-- Course Header Info -->
-                <div class="space-y-2">
-                    <h1 id="title" class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight leading-snug"></h1>
-
-                    <div class="flex items-center gap-2 text-xs font-bold text-slate-600">
-                        <span class="p-1 rounded-lg bg-sky-50 border border-sky-200 text-xs">👨‍🏫</span>
-                        <p id="instructor" class="text-slate-900 font-black"></p>
-                    </div>
+                <!-- Title & Instructor -->
+                <div class="space-y-1.5">
+                    <h1 id="title" class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight"></h1>
+                    <p id="instructor" class="text-xs font-extrabold text-slate-500 flex items-center gap-1.5 pt-1">
+                        <i data-lucide="user" class="w-4 h-4 text-sky-600"></i>
+                        <span></span>
+                    </p>
                 </div>
-
-                <hr class="border-sky-100" />
 
                 <!-- Description -->
-                <div class="space-y-1.5">
-                    <h2 class="text-xs font-black text-slate-400 tracking-wider uppercase">Course Overview 📖</h2>
-                    <p id="description" class="text-sm text-slate-800 leading-relaxed whitespace-pre-line font-bold bg-white/90 p-4 rounded-2xl border border-sky-100 shadow-sm"></p>
-                </div>
+                <p id="description" class="text-sm font-bold text-slate-600 leading-relaxed whitespace-pre-line border-t border-b border-sky-100 py-4"></p>
 
-                <!-- Timestamps -->
-                <div class="flex items-center gap-2 text-xs font-bold text-slate-500 bg-white/90 p-3.5 rounded-2xl border border-sky-100 shadow-sm">
-                    <i data-lucide="calendar" class="w-4 h-4 text-blue-600"></i>
-                    <p id="dates"></p>
-                </div>
+                <!-- Dates Info -->
+                <p id="dates" class="text-[11px] font-black text-slate-400 flex items-center gap-1.5">
+                    <i data-lucide="clock" class="w-3.5 h-3.5 text-sky-500"></i>
+                    <span></span>
+                </p>
 
-                <!-- Action Buttons Container -->
-                <div id="actions" class="flex flex-wrap gap-3 pt-3"></div>
+                <!-- Dynamic Action Buttons -->
+                <div id="actions" class="flex flex-wrap items-center gap-3 pt-2"></div>
             </div>
         </article>
+
+        <!-- Course Content & Curriculum Box -->
+        <section id="curriculumBox" class="hidden y2k-card p-6 md:p-8 space-y-5 relative overflow-hidden card-enter">
+            <div class="flex flex-wrap items-center justify-between gap-4 border-b border-sky-100 pb-4">
+                <div>
+                    <h2 class="text-lg font-black text-slate-900 tracking-tight flex items-center gap-2">
+                        <i data-lucide="layers" class="w-5 h-5 text-blue-600"></i>
+                        <span>Course Content</span>
+                    </h2>
+                    <p id="curriculumSummary" class="text-xs font-extrabold text-sky-700 mt-1"></p>
+                </div>
+
+                <a id="watchBtn" href="#"
+                   class="hidden glitch-hover inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 text-white px-5 py-2.5 text-xs font-black transition-all shadow-md active:scale-95 hover:from-blue-700 hover:to-cyan-700">
+                    <i data-lucide="play" class="w-4 h-4 fill-white"></i>
+                    <span>Start Watching</span>
+                </a>
+            </div>
+
+            <div id="curriculumList" class="space-y-4"></div>
+        </section>
     </main>
 
     <script src="/js/api.js"></script>
@@ -200,47 +211,190 @@
             Layout.renderHeader(document.getElementById("appHeader"));
             document.getElementById("backLink").href = backUrl;
 
+            function watchUrl(lectureId) {
+                return "/watch.html?courseId=" + encodeURIComponent(courseId) +
+                    "&lectureId=" + encodeURIComponent(lectureId);
+            }
+
+            function showAlert(message, type = "error", iconName = "alert-triangle", autoDismiss = false) {
+                const styles = {
+                    error: "bg-rose-500/10 border-rose-300 text-rose-700",
+                    success: "bg-emerald-500/10 border-emerald-300 text-emerald-700",
+                    info: "bg-sky-500/10 border-sky-300 text-sky-700"
+                };
+
+                const msg = Array.isArray(message) ? message.join(" ") : message;
+
+                pageAlert.innerHTML = `
+                        <div class="flex items-center gap-2.5 p-3.5 rounded-2xl border ${styles[type]} text-xs font-black backdrop-blur-md">
+                            <i data-lucide="${iconName}" class="w-4 h-4 shrink-0"></i>
+                            <span>${msg}</span>
+                        </div>
+                    `;
+                lucide.createIcons();
+
+                if (autoDismiss) {
+                    setTimeout(() => {
+                        pageAlert.innerHTML = "";
+                    }, 1000);
+                }
+            }
+
+            function clearAlert() {
+                pageAlert.innerHTML = "";
+            }
+
+            function isOwnerOf(course) {
+                return user.role === "Instructor" && course.instructorId === user.id;
+            }
+
             function render(course) {
                 document.title = course.title + " | LearnHub";
-                document.getElementById("thumbText").textContent = course.title.charAt(0).toUpperCase();
-                document.getElementById("categoryName").textContent = course.categoryName;
+                document.getElementById("thumbBox").replaceChildren(Courses.thumbnail(course, "h-56 w-full object-cover"));
+
+                const catBadge = document.getElementById("categoryBadge");
+                catBadge.innerHTML = `<i data-lucide="tag" class="w-3 h-3 text-sky-600"></i><span>${course.categoryName}</span>`;
+
                 document.getElementById("statusBadge").replaceChildren(Courses.statusBadge(course.status));
                 document.getElementById("title").textContent = course.title;
-                document.getElementById("instructor").textContent = "Instructor: " + course.instructorName;
+                document.getElementById("instructor").querySelector("span").textContent = "Instructor: " + course.instructorName;
                 document.getElementById("description").textContent = course.description;
 
                 let dates = "Created " + Ui.formatDate(course.createdAt);
                 if (course.publishedAt) {
                     dates += " \u00B7 Published " + Ui.formatDate(course.publishedAt);
                 }
-                document.getElementById("dates").textContent = dates;
+                document.getElementById("dates").querySelector("span").textContent = dates;
 
+                buildThumbnailControls(course);
                 buildActions(course);
                 card.classList.remove("hidden");
                 lucide.createIcons();
             }
 
-            function actionButton(label, cssClass, emoji, handler) {
+            function actionButton(label, cssClass, iconName, handler) {
                 const button = document.createElement("button");
                 button.type = "button";
                 button.className = "glitch-hover inline-flex items-center gap-2 rounded-2xl px-5 py-2.5 text-xs font-black transition-all shadow-md active:scale-95 disabled:opacity-50 " + cssClass;
-
-                button.innerHTML = `<span>${emoji}</span><span>${label}</span>`;
+                if (iconName) {
+                    button.innerHTML = `<i data-lucide="${iconName}" class="w-4 h-4"></i><span>${label}</span>`;
+                } else {
+                    button.textContent = label;
+                }
                 button.addEventListener("click", () => handler(button));
                 return button;
             }
 
+            // ---------- Thumbnail Controls (Owner Only) ----------
+
+            function buildThumbnailControls(course) {
+                const box = document.getElementById("thumbControls");
+                box.replaceChildren();
+
+                const isOwner = isOwnerOf(course);
+                box.classList.toggle("hidden", !isOwner);
+
+                if (!isOwner) {
+                    return;
+                }
+
+                const input = document.createElement("input");
+                input.type = "file";
+                input.accept = "image/png,image/jpeg,image/webp,.png,.jpg,.jpeg,.webp";
+                input.className = "hidden";
+
+                const chooseButton = actionButton(
+                    course.thumbnailUrl ? "Change Thumbnail" : "Upload Thumbnail",
+                    "border border-slate-200 bg-white text-slate-700 hover:border-blue-300 hover:text-blue-600",
+                    "image",
+                    () => input.click());
+
+                input.addEventListener("change", () => {
+                    if (input.files.length > 0) {
+                        uploadThumbnail(course, input.files[0], chooseButton);
+                    }
+                    input.value = "";
+                });
+
+                box.append(input, chooseButton);
+
+                if (course.thumbnailUrl) {
+                    box.appendChild(actionButton(
+                        "Remove Thumbnail",
+                        "border border-rose-200 bg-rose-50/80 text-rose-600 hover:bg-rose-100",
+                        "trash-2",
+                        (button) => removeThumbnail(course, button)));
+                }
+
+                const infoTag = document.createElement("span");
+                infoTag.className = "text-[11px] font-black text-slate-500 flex items-center gap-1 ml-auto";
+                infoTag.innerHTML = `<i data-lucide="info" class="w-3.5 h-3.5 text-sky-500"></i><span>JPG, PNG, or WebP, up to 2 MB.</span>`;
+                box.appendChild(infoTag);
+
+                lucide.createIcons();
+            }
+
+            async function uploadThumbnail(course, file, button) {
+                clearAlert();
+
+                const problem = Courses.checkFile(file, "image");
+
+                if (problem) {
+                    showAlert(problem, "error", "alert-triangle");
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append("file", file);
+
+                button.disabled = true;
+                button.querySelector("span").textContent = "Uploading...";
+
+                try {
+                    const result = await Api.upload("/api/courses/" + course.id + "/thumbnail", formData);
+                    course.thumbnailUrl = result.thumbnailUrl;
+                    render(course);
+                    showAlert("Thumbnail updated successfully.", "success", "check-circle", true);
+                } catch (error) {
+                    showAlert(error.messages || ["Could not upload the thumbnail."], "error", "alert-circle");
+                    render(course);
+                }
+            }
+
+            async function removeThumbnail(course, button) {
+                clearAlert();
+                button.disabled = true;
+
+                try {
+                    await Api.del("/api/courses/" + course.id + "/thumbnail");
+                    course.thumbnailUrl = null;
+                    render(course);
+                    showAlert("Thumbnail removed successfully.", "success", "check-circle", true);
+                } catch (error) {
+                    showAlert(error.messages || ["Could not remove the thumbnail."], "error", "alert-circle");
+                    button.disabled = false;
+                }
+            }
+
+            // ---------- Course Actions ----------
+
             function buildActions(course) {
                 actions.replaceChildren();
 
-                const isOwner = user.role === "Instructor" && course.instructorId === user.id;
+                const isOwner = isOwnerOf(course);
                 const isAdmin = user.role === "Admin";
 
                 if (isOwner) {
+                    const curriculum = document.createElement("a");
+                    curriculum.className = "glitch-hover inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 text-white px-5 py-2.5 text-xs font-black transition-all shadow-md active:scale-95 hover:from-blue-700 hover:to-cyan-700";
+                    curriculum.href = "/instructor/curriculum.html?courseId=" + encodeURIComponent(course.id);
+                    curriculum.innerHTML = `<i data-lucide="layers" class="w-4 h-4"></i><span>Manage Curriculum</span>`;
+                    actions.appendChild(curriculum);
+
                     const edit = document.createElement("a");
-                    edit.className = "glitch-hover inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-2.5 text-xs font-black text-slate-800 hover:border-blue-300 hover:text-blue-600 transition-all active:scale-95 shadow-sm";
+                    edit.className = "glitch-hover inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-2.5 text-xs font-black text-slate-700 hover:border-blue-300 hover:text-blue-600 transition-all shadow-sm active:scale-95";
                     edit.href = "/instructor/create-course.html?id=" + encodeURIComponent(course.id);
-                    edit.innerHTML = `<span>✏️</span><span>Edit Course</span>`;
+                    edit.innerHTML = `<i data-lucide="edit-3" class="w-4 h-4"></i><span>Edit Details</span>`;
                     actions.appendChild(edit);
                 }
 
@@ -248,36 +402,39 @@
                     const isPublished = course.status === "Published";
 
                     actions.appendChild(actionButton(
-                        isPublished ? "Unpublish" : "Publish",
-                        "bg-gradient-to-r from-blue-600 via-sky-600 to-cyan-600 text-white shadow-sky-500/20 hover:from-blue-700 hover:to-cyan-700",
-                        isPublished ? "🔒" : "🚀",
+                        isPublished ? "Unpublish Course" : "Publish Course",
+                        "border border-sky-300 bg-sky-50/80 text-sky-900 hover:bg-sky-100",
+                        isPublished ? "lock" : "rocket",
                         (button) => togglePublish(course, button)));
 
                     actions.appendChild(actionButton(
-                        "Delete",
-                        "border border-rose-200 bg-rose-50/60 text-rose-600 hover:bg-rose-100 hover:text-rose-700",
-                        "🗑️",
+                        "Delete Course",
+                        "border border-rose-200 bg-rose-50/80 text-rose-600 hover:bg-rose-100",
+                        "trash-2",
                         (button) => deleteCourse(course, button)));
                 }
+
+                lucide.createIcons();
             }
 
             async function togglePublish(course, button) {
                 const publish = course.status !== "Published";
+                clearAlert();
                 button.disabled = true;
 
                 try {
                     const updated = await Api.post(
                         "/api/courses/" + course.id + (publish ? "/publish" : "/unpublish"));
                     render(updated);
-                    showAlert(pageAlert, publish ? "Course published successfully!" : "Course unpublished.", "success", publish ? "🎉" : "🔒");
+                    showAlert(publish ? "Course published." : "Course unpublished.", "success", publish ? "sparkles" : "lock", true);
                 } catch (error) {
-                    showAlert(pageAlert, error.messages || ["Could not update the course."], "error", "⚠️");
+                    showAlert(error.messages || ["Could not update the course."], "error", "alert-circle");
                     button.disabled = false;
                 }
             }
 
             async function deleteCourse(course, button) {
-                if (!window.confirm("Delete \"" + course.title + "\"? This cannot be undone.")) {
+                if (!window.confirm("Delete \"" + course.title + "\" and all its sections, lectures, and videos? This cannot be undone.")) {
                     return;
                 }
 
@@ -287,39 +444,163 @@
                     await Api.del("/api/courses/" + course.id);
                     window.location.href = backUrl + "?deleted=1";
                 } catch (error) {
-                    showAlert(pageAlert, error.messages || ["Could not delete the course."], "error", "⚠️");
+                    showAlert(error.messages || ["Could not delete the course."], "error", "alert-circle");
                     button.disabled = false;
                 }
             }
 
-            function showAlert(container, message, type = "error", emoji = "⚠️") {
-                const styles = {
-                    error: "bg-rose-500/10 border-rose-300 text-rose-700",
-                    success: "bg-emerald-500/10 border-emerald-300 text-emerald-700",
-                    info: "bg-sky-500/10 border-sky-300 text-sky-700"
-                };
+            // ---------- Course Curriculum Content ----------
 
-                const msg = Array.isArray(message) ? message.join(" ") : message;
+            function renderCurriculum(data, canSeeDrafts) {
+                const box = document.getElementById("curriculumBox");
+                const list = document.getElementById("curriculumList");
+                const summary = document.getElementById("curriculumSummary");
+                const watchBtn = document.getElementById("watchBtn");
 
-                container.innerHTML = `
-                        <div class="flex items-center gap-2.5 p-3.5 rounded-2xl border ${styles[type]} text-xs font-black backdrop-blur-md transition-all shadow-sm">
-                            <span class="text-base">${emoji}</span>
-                            <span>${msg}</span>
-                        </div>
-                    `;
+                list.replaceChildren();
+
+                const parts = [
+                    data.sections.length + (data.sections.length === 1 ? " section" : " sections"),
+                    data.totalLectures + (data.totalLectures === 1 ? " lecture" : " lectures")
+                ];
+
+                const duration = Courses.formatDuration(data.totalDurationMinutes);
+                if (duration) {
+                    parts.push(duration);
+                }
+                summary.textContent = parts.join(" \u00B7 ");
+
+                // "Start watching" goes to the first lecture that has a video
+                const firstWatchable = data.sections
+                    .flatMap(section => section.lectures)
+                    .find(lecture => lecture.hasVideo);
+
+                if (firstWatchable) {
+                    watchBtn.href = watchUrl(firstWatchable.id);
+                    watchBtn.classList.remove("hidden");
+                } else {
+                    watchBtn.classList.add("hidden");
+                }
+
+                if (data.sections.length === 0) {
+                    const empty = document.createElement("div");
+                    empty.className = "p-8 text-center text-xs font-bold text-slate-500 space-y-1";
+                    empty.innerHTML = `
+                            <i data-lucide="folder-open" class="w-8 h-8 mx-auto text-sky-400 mb-2"></i>
+                            <p>${canSeeDrafts ? 'No content yet. Use "Manage Curriculum" to add sections and lectures.' : 'The content for this course is not available yet.'}</p>
+                        `;
+                    list.appendChild(empty);
+                }
+
+                data.sections.forEach((section, sectionIndex) => {
+                    const block = document.createElement("div");
+                    block.className = "y2k-card overflow-hidden border border-sky-100 shadow-sm";
+
+                    const head = document.createElement("h3");
+                    head.className = "px-5 py-3 bg-sky-50/70 border-b border-sky-100 text-xs font-black text-slate-900 flex items-center gap-2";
+                    head.innerHTML = `
+                            <span class="w-5 h-5 rounded-lg bg-sky-200/60 text-sky-900 flex items-center justify-center text-[10px] font-black">${sectionIndex + 1}</span>
+                            <span>Section: ${section.title}</span>
+                        `;
+                    block.appendChild(head);
+
+                    const lectureList = document.createElement("ol");
+                    lectureList.className = "divide-y divide-sky-100";
+
+                    section.lectures.forEach((lecture, lectureIndex) => {
+                        const item = document.createElement("li");
+                        item.className = "flex items-start justify-between gap-3 px-5 py-3 hover:bg-sky-50/40 transition-colors";
+
+                        const text = document.createElement("div");
+                        text.className = "min-w-0 space-y-0.5";
+
+                        const label = (lectureIndex + 1) + ". " + lecture.title;
+
+                        if (lecture.hasVideo) {
+                            const link = document.createElement("a");
+                            link.className = "text-xs font-black text-blue-600 hover:text-blue-800 hover:underline break-words flex items-center gap-2";
+                            link.href = watchUrl(lecture.id);
+                            link.innerHTML = `
+                                    <i data-lucide="play-circle" class="w-4 h-4 text-blue-600 shrink-0"></i>
+                                    <span>${label}</span>
+                                `;
+                            text.appendChild(link);
+                        } else {
+                            const titleBox = document.createElement("p");
+                            titleBox.className = "text-xs font-black text-slate-800 break-words flex items-center gap-2";
+                            titleBox.innerHTML = `
+                                    <i data-lucide="circle-dashed" class="w-4 h-4 text-slate-400 shrink-0"></i>
+                                    <span>${label}</span>
+                                `;
+                            text.appendChild(titleBox);
+                        }
+
+                        if (lecture.description) {
+                            const desc = document.createElement("p");
+                            desc.className = "text-[11px] font-extrabold text-slate-500 pl-6 line-clamp-2 leading-relaxed";
+                            desc.textContent = lecture.description;
+                            text.appendChild(desc);
+                        }
+
+                        item.appendChild(text);
+
+                        const side = document.createElement("div");
+                        side.className = "flex items-center gap-2 shrink-0";
+
+                        if (canSeeDrafts && !lecture.isPublished) {
+                            side.appendChild(Courses.statusBadge("Draft"));
+                        }
+
+                        if (!lecture.hasVideo) {
+                            const noVid = document.createElement("span");
+                            noVid.className = "text-[11px] font-extrabold text-slate-400 whitespace-nowrap";
+                            noVid.textContent = "No video yet";
+                            side.appendChild(noVid);
+                        }
+
+                        const lectureDuration = Courses.formatDuration(lecture.durationMinutes);
+                        if (lectureDuration) {
+                            const durationBadge = document.createElement("span");
+                            durationBadge.className = "text-[11px] font-black text-sky-700 bg-sky-50 border border-sky-200 px-2 py-0.5 rounded-md whitespace-nowrap flex items-center gap-1";
+                            durationBadge.innerHTML = `<i data-lucide="clock" class="w-3 h-3 text-sky-500"></i><span>${lectureDuration}</span>`;
+                            side.appendChild(durationBadge);
+                        }
+
+                        item.appendChild(side);
+                        lectureList.appendChild(item);
+                    });
+
+                    block.appendChild(lectureList);
+                    list.appendChild(block);
+                });
+
+                box.classList.remove("hidden");
+                lucide.createIcons();
+            }
+
+            async function loadCurriculum(course) {
+                const canSeeDrafts = isOwnerOf(course) || user.role === "Admin";
+
+                try {
+                    const data = await Api.get("/api/courses/" + course.id + "/curriculum");
+                    renderCurriculum(data, canSeeDrafts);
+                } catch (error) {
+                    showAlert(error.messages || ["Could not load the course content."], "error", "x-circle");
+                }
             }
 
             async function load() {
                 if (!Courses.isGuid(courseId)) {
-                    showAlert(pageAlert, "Course not found.", "error", "🔍");
+                    showAlert("Course not found.", "error", "search");
                     return;
                 }
 
                 try {
                     const course = await Api.get("/api/courses/" + courseId);
                     render(course);
+                    await loadCurriculum(course);
                 } catch (error) {
-                    showAlert(pageAlert, error.messages || ["Could not load the course."], "error", "❌");
+                    showAlert(error.messages || ["Could not load the course."], "error", "x-circle");
                 }
             }
 

@@ -12,11 +12,19 @@ public class CourseService : ICourseService
 
     private readonly ICourseRepository _courses;
     private readonly ICategoryRepository _categories;
+    private readonly ICurriculumRepository _curriculum;
+    private readonly IStorageService _storage;
 
-    public CourseService(ICourseRepository courses, ICategoryRepository categories)
+    public CourseService(
+        ICourseRepository courses,
+        ICategoryRepository categories,
+        ICurriculumRepository curriculum,
+        IStorageService storage)
     {
         _courses = courses;
         _categories = categories;
+        _curriculum = curriculum;
+        _storage = storage;
     }
 
     // ---------- Reading ----------
@@ -60,6 +68,8 @@ public class CourseService : ICourseService
             // A draft belongs to its owner. Everyone else is told it does not exist.
             return ServiceResult<CourseResponseDto>.Fail(CourseNotFoundMessage, ServiceErrorType.NotFound);
         }
+
+        ResolveThumbnailUrl(course);
 
         return ServiceResult<CourseResponseDto>.Ok(course);
     }
@@ -145,7 +155,16 @@ public class CourseService : ICourseService
             return Denied<CourseResponseDto>(course);
         }
 
-        // Module 3 will add a rule here: a course needs at least one lecture to be published.
+        // A course needs at least one published lecture to go live.
+        if (publish && course.Status != CourseStatus.published)
+        {
+            if (await _curriculum.CountPublishedLecturesAsync(course.Id) == 0)
+            {
+                return ServiceResult<CourseResponseDto>.Fail(
+                    "Add and publish at least one lecture before publishing the course.",
+                    ServiceErrorType.Conflict);
+            }
+        }
 
         var wanted = publish ? CourseStatus.published : CourseStatus.Draft;
 
@@ -175,7 +194,23 @@ public class CourseService : ICourseService
             return Denied<bool>(course);
         }
 
+        // Remember which files belong to this course before the rows disappear.
+        var videoKeys = await _curriculum.GetVideoKeysForCourseAsync(course.Id);
+        var thumbnailKey = course.ThumbnailPath;
+
+        // Sections and lectures are deleted by the database (ON DELETE CASCADE).
         await _courses.DeleteAsync(course);
+
+        // Only after the database delete succeeded do we delete the files.
+        foreach (var key in videoKeys)
+        {
+            await _storage.DeleteAsync(StorageCategory.Video, key);
+        }
+
+        if (!string.IsNullOrEmpty(thumbnailKey))
+        {
+            await _storage.DeleteAsync(StorageCategory.Thumbnail, thumbnailKey);
+        }
 
         return ServiceResult<bool>.Ok(true);
     }
@@ -210,13 +245,25 @@ public class CourseService : ICourseService
             : ServiceResult<T>.Fail(CourseNotFoundMessage, ServiceErrorType.NotFound);
     }
 
+    // The repository puts the stored file key in ThumbnailUrl. The storage service turns it into
+    // a real address (or null). Swapping local disk for S3 later changes only the storage service.
+    private void ResolveThumbnailUrl(CourseResponseDto course)
+    {
+        course.ThumbnailUrl = _storage.GetPublicUrl(StorageCategory.Thumbnail, course.ThumbnailUrl);
+    }
+
     private async Task<ServiceResult<CourseResponseDto>> ReloadAsync(Guid id)
     {
         var course = await _courses.GetDetailsAsync(id);
 
-        return course is null
-            ? ServiceResult<CourseResponseDto>.Fail(CourseNotFoundMessage, ServiceErrorType.NotFound)
-            : ServiceResult<CourseResponseDto>.Ok(course);
+        if (course is null)
+        {
+            return ServiceResult<CourseResponseDto>.Fail(CourseNotFoundMessage, ServiceErrorType.NotFound);
+        }
+
+        ResolveThumbnailUrl(course);
+
+        return ServiceResult<CourseResponseDto>.Ok(course);
     }
 
     private static CourseFilter BuildFilter(
@@ -236,6 +283,11 @@ public class CourseService : ICourseService
     private async Task<ServiceResult<PagedResult<CourseResponseDto>>> QueryAsync(CourseFilter filter)
     {
         var (items, totalCount) = await _courses.GetPagedAsync(filter);
+
+        foreach (var item in items)
+        {
+            ResolveThumbnailUrl(item);
+        }
 
         var result = new PagedResult<CourseResponseDto>
         {
